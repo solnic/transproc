@@ -28,7 +28,7 @@ module Transproc
     alias_method :[], :call
 
     def compose(other)
-      self.class.new(-> value { other[fn[value]] })
+      self.class.new(-> *result { other[fn[*result]] }, args)
     end
     alias_method :+, :compose
   end
