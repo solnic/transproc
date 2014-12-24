@@ -25,6 +25,31 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
+  describe 'map_key' do
+    it 'applies function to value under specified key' do
+      transformation = Transproc(:map_key, :user, Transproc(:symbolize_keys))
+
+      input = { user: { 'name' => 'Jane' } }
+      output = { user: { name: 'Jane' } }
+
+      expect(transformation[input]).to eql(output)
+    end
+  end
+
+  describe 'nested transform' do
+    it 'applies functions to nested hashes' do
+      symbolize_keys = Transproc(:symbolize_keys)
+      map_user_key = Transproc(:map_key, :user, symbolize_keys)
+
+      transformation = symbolize_keys + map_user_key
+
+      input = { 'user' => { 'name' => 'Jane' } }
+      output = { user: { name: 'Jane' } }
+
+      expect(transformation[input]).to eql(output)
+    end
+  end
+
   describe 'combining transformations' do
     it 'applies functions to the hash' do
       symbolize_keys = Transproc(:symbolize_keys)

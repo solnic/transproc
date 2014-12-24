@@ -6,4 +6,8 @@ module Transproc
   register(:map) do |hash, mapping|
     Hash[hash.map { |k, v| [mapping[k], v] }]
   end
+
+  register(:map_key) do |hash, key, fn|
+    hash.update(key => fn[hash[key]])
+  end
 end
