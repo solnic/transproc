@@ -1,6 +1,18 @@
 require "transproc/version"
 
 module Transproc
+  def self.register(name, fn)
+    functions[name] = fn
+  end
+
+  def self.functions
+    @_functions ||= {}
+  end
+
+  def self.[](name)
+    functions.fetch(name)
+  end
+
   class Function
     attr_reader :fn
 
@@ -21,5 +33,8 @@ module Transproc
 end
 
 def Transproc(fn)
-  Transproc::Function.new(fn)
+  case fn
+  when Proc then Transproc::Function.new(fn)
+  when Symbol then Transproc::Function.new(Transproc[fn])
+  end
 end

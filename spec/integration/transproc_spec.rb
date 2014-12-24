@@ -14,4 +14,15 @@ describe Transproc do
       expect(result[input]).to eql(output)
     end
   end
+
+  describe 'function registration' do
+    it 'allows registering functions by name' do
+      Transproc.register(:to_boolean, -> value { value == 'true' })
+
+      result = Transproc(:to_s) + Transproc(:to_boolean)
+
+      expect(result[:true]).to be(true)
+      expect(result[:false]).to be(false)
+    end
+  end
 end
