@@ -31,4 +31,20 @@ describe 'Transproc / Coercions' do
       expect(Transproc(:to_date)['18th, November 1983']).to eql(date)
     end
   end
+
+  describe 'to_boolean' do
+    subject(:coercer) { Transproc(:to_boolean) }
+
+    Transproc::TRUE_VALUES.each do |value|
+      it "turns #{value.inspect} to true" do
+        expect(coercer[value]).to be(true)
+      end
+    end
+
+    Transproc::FALSE_VALUES.each do |value|
+      it "turns #{value.inspect} to false" do
+        expect(coercer[value]).to be(false)
+      end
+    end
+  end
 end
