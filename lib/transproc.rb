@@ -1,23 +1,25 @@
 require "transproc/version"
 
-class Transproc
-  attr_reader :fn
+module Transproc
+  class Function
+    attr_reader :fn
 
-  def initialize(fn)
-    @fn = fn
-  end
+    def initialize(fn)
+      @fn = fn
+    end
 
-  def call(value)
-    fn[value]
-  end
-  alias_method :[], :call
+    def call(value)
+      fn[value]
+    end
+    alias_method :[], :call
 
-  def compose(other)
-    self.class.new(-> value { other[fn[value]] })
+    def compose(other)
+      self.class.new(-> value { other[fn[value]] })
+    end
+    alias_method :+, :compose
   end
-  alias_method :+, :compose
 end
 
 def Transproc(fn)
-  Transproc.new(fn)
+  Transproc::Function.new(fn)
 end
