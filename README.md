@@ -1,6 +1,8 @@
 # Transproc
 
-TODO: Write a gem description
+Experimental functional transformations for Ruby.
+
+![I have no idea what I'm doing](http://thumbpress.com/wp-content/uploads/2013/05/I-Have-No-Idea-What-Im-Doing-1.jpg)
 
 ## Installation
 
@@ -20,7 +22,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+``` ruby
+require 'transproc/hash'
+
+# compose transformation functions
+transformation = Transproc(:symbolize_keys) + Transproc(:map, user_name: :name))
+
+# call the function
+transformation['user_name' => 'Jane']
+# => {:name=>"Jane"}
+```
 
 ## Contributing
 
