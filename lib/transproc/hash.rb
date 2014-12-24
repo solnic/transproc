@@ -3,7 +3,7 @@ module Transproc
     Hash[hash.map { |k, v| [k.to_sym, v] }]
   end
 
-  register(:map) do |hash, mapping|
+  register(:map_hash) do |hash, mapping|
     Hash[hash.map { |k, v| [mapping[k], v] }]
   end
 

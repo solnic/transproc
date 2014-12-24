@@ -14,9 +14,9 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map' do
+  describe 'map_hash' do
     it 'returns a new hash with applied functions' do
-      map = Transproc(:map, 'foo' => :foo)
+      map = Transproc(:map_hash, 'foo' => :foo)
 
       input = { 'foo' => 'bar' }
       output = { foo: 'bar' }
@@ -53,7 +53,7 @@ describe 'Hash mapping with Transproc' do
   describe 'combining transformations' do
     it 'applies functions to the hash' do
       symbolize_keys = Transproc(:symbolize_keys)
-      map = Transproc(:map, user_name: :name, user_email: :email)
+      map = Transproc(:map_hash, user_name: :name, user_email: :email)
 
       transformation = symbolize_keys + map
 
