@@ -32,6 +32,13 @@ describe 'Transproc / Coercions' do
     end
   end
 
+  describe 'to_datetime' do
+    it 'turns string into a date' do
+      datetime = DateTime.new(2012, 1, 23, 11, 7, 7)
+      expect(Transproc(:to_datetime)['2012-01-23 11:07:07']).to eql(datetime)
+    end
+  end
+
   describe 'to_boolean' do
     subject(:coercer) { Transproc(:to_boolean) }
 

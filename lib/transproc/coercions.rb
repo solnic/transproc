@@ -27,4 +27,8 @@ module Transproc
   register(:to_date) do |value|
     Date.parse(value)
   end
+
+  register(:to_datetime) do |value|
+    DateTime.parse(value)
+  end
 end
