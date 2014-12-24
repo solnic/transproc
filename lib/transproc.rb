@@ -1,8 +1,9 @@
 require "transproc/version"
 
 module Transproc
-  def self.register(name, fn)
-    functions[name] = fn
+  def self.register(*args, &block)
+    name, fn = *args
+    functions[name] = fn || block
   end
 
   def self.functions
