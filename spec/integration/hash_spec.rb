@@ -11,6 +11,20 @@ describe 'Hash mapping with Transproc' do
       output = { foo: 'bar' }
 
       expect(symbolize_keys[input]).to eql(output)
+      expect(input).to eql('foo' => 'bar')
+    end
+  end
+
+  describe 'symbolize_keys!' do
+    it 'returns updated hash with symbolized keys' do
+      symbolize_keys = Transproc(:symbolize_keys!)
+
+      input = { 'foo' => 'bar' }
+      output = { foo: 'bar' }
+
+      symbolize_keys[input]
+
+      expect(input).to eql(output)
     end
   end
 
@@ -22,6 +36,20 @@ describe 'Hash mapping with Transproc' do
       output = { foo: 'bar', bar: 'baz' }
 
       expect(map[input]).to eql(output)
+      expect(input).to eql('foo' => 'bar', :bar => 'baz')
+    end
+  end
+
+  describe 'map_hash!' do
+    it 'returns updated hash with applied functions' do
+      map = Transproc(:map_hash!, 'foo' => :foo)
+
+      input = { 'foo' => 'bar', :bar => 'baz' }
+      output = { foo: 'bar', bar: 'baz' }
+
+      map[input]
+
+      expect(input).to eql(output)
     end
   end
 
@@ -33,6 +61,20 @@ describe 'Hash mapping with Transproc' do
       output = { user: { name: 'Jane' } }
 
       expect(transformation[input]).to eql(output)
+      expect(input).to eql(user: { 'name' => 'Jane' })
+    end
+  end
+
+  describe 'map_key!' do
+    it 'applies function to value under specified key' do
+      transformation = Transproc(:map_key!, :user, Transproc(:symbolize_keys))
+
+      input = { user: { 'name' => 'Jane' } }
+      output = { user: { name: 'Jane' } }
+
+      transformation[input]
+
+      expect(input).to eql(output)
     end
   end
 
