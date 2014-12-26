@@ -18,8 +18,8 @@ describe 'Hash mapping with Transproc' do
     it 'returns a new hash with applied functions' do
       map = Transproc(:map_hash, 'foo' => :foo)
 
-      input = { 'foo' => 'bar' }
-      output = { foo: 'bar' }
+      input = { 'foo' => 'bar', :bar => 'baz' }
+      output = { foo: 'bar', bar: 'baz' }
 
       expect(map[input]).to eql(output)
     end

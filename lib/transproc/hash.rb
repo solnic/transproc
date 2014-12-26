@@ -4,7 +4,7 @@ module Transproc
   end
 
   register(:map_hash) do |hash, mapping|
-    Hash[hash.map { |k, v| [mapping[k], v] }]
+    Hash[hash.map { |k, v| [mapping[k] || k, v] }]
   end
 
   register(:map_key) do |hash, key, fn|
