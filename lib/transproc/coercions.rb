@@ -1,4 +1,6 @@
 require 'date'
+require 'bigdecimal'
+require 'bigdecimal/util'
 
 module Transproc
   TRUE_VALUES = [true, 1, '1', 'on', 't', 'true', 'y', 'yes'].freeze
@@ -18,6 +20,10 @@ module Transproc
 
   register(:to_float) do |value|
     value.to_f
+  end
+
+  register(:to_decimal) do |value|
+    value.to_d
   end
 
   register(:to_boolean) do |value|

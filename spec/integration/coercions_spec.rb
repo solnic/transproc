@@ -23,6 +23,20 @@ describe 'Transproc / Coercions' do
     end
   end
 
+  describe 'to_decimal' do
+    it 'turns string into a decimal' do
+      expect(Transproc(:to_decimal)['1.251']).to eql(BigDecimal('1.251'))
+    end
+
+    it 'turns float into a decimal' do
+      expect(Transproc(:to_decimal)[1.251]).to eql(BigDecimal('1.251'))
+    end
+
+    it 'turns integer into a decimal' do
+      expect(Transproc(:to_decimal)[1]).to eql(BigDecimal('1.0'))
+    end
+  end
+
   describe 'to_date' do
     it 'turns string into a date' do
       date = Date.new(1983, 11, 18)
