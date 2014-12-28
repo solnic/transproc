@@ -54,6 +54,20 @@ describe 'Array transformations with Transproc' do
 
       expect(wrap[input]).to eql(output)
     end
+
+    it 'returns a array new with deeply wrapped hashes' do
+      wrap =
+        Transproc(
+          :map_array,
+          Transproc(:fold, :user, [:name, :title]),
+          Transproc(:map_key, :user, Transproc(:fold, :task, [:title]))
+      )
+
+      input = [{ name: 'Jane', title: 'One' }]
+      output = [{ user: { name: 'Jane', task: { title: 'One' } } }]
+
+      expect(wrap[input]).to eql(output)
+    end
   end
 
   describe 'group' do

@@ -1,23 +1,14 @@
 module Transproc
-  register(:map_array) do |array, fn|
-    Transproc(:map_array!, fn)[array.dup]
+  register(:map_array) do |array, *fns|
+    Transproc(:map_array!, *fns)[array.dup]
   end
 
-  register(:map_array!) do |array, fn|
-    array.map! { |value| fn[value] }
+  register(:map_array!) do |array, *fns|
+    array.map! { |value| fns.reduce(:+)[value] }
   end
 
   register(:wrap) do |array, key, keys|
-    names = nil
-
-    array.map { |hash|
-      names ||= hash.keys - keys
-
-      root = Hash[names.zip(hash.values_at(*names))]
-      child = Hash[keys.zip(hash.values_at(*keys))]
-
-      root.merge(key => child.values.any? ? child : nil)
-    }
+    Transproc(:map_array, Transproc(:fold, key, keys))[array]
   end
 
   register(:group) do |array, key, keys|
