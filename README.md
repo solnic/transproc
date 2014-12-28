@@ -60,7 +60,7 @@ transformation['user_name' => 'Jane']
 
 This project is inspired by the work of following people:
 
-* [Markus Schirp](https://github.com/mbj) [morpher](https://github.com/mbj/morpher) project
+* [Markus Schirp](https://github.com/mbj) and [morpher](https://github.com/mbj/morpher) project
 * [Josep M. Bach](https://github.com/txus) and [kleisli](https://github.com/txus/kleisli) project
 
 ## Contributing
