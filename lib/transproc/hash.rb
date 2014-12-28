@@ -26,11 +26,12 @@ module Transproc
   end
 
   register(:nest) do |hash, key, keys|
-    names = hash.keys - keys
+    Transproc(:nest!, key, keys)[hash.dup]
+  end
 
-    root = Hash[names.zip(hash.values_at(*names))]
-    child = Hash[keys.zip(hash.values_at(*keys))]
+  register(:nest!) do |hash, root, keys|
+    child = Hash[keys.zip(keys.map { |key| hash.delete(key) })]
 
-    root.update(key => child.values.any? ? child : nil)
+    hash.update(root => child.values.any? ? child : nil)
   end
 end

@@ -28,6 +28,19 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
+  describe 'nest!' do
+    it 'returns new hash with keys nested under a new key' do
+      nest = Transproc(:nest!, :baz, ['foo'])
+
+      input = { 'foo' => 'bar' }
+      output = { baz: { 'foo' => 'bar' } }
+
+      nest[input]
+
+      expect(input).to eql(output)
+    end
+  end
+
   describe 'map_hash' do
     it 'returns a new hash with applied functions' do
       map = Transproc(:map_hash, 'foo' => :foo)
