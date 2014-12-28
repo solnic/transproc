@@ -1,8 +1,7 @@
 # Transproc
 
-Experimental functional transformations for Ruby.
-
-![I have no idea what I'm doing](http://thumbpress.com/wp-content/uploads/2013/05/I-Have-No-Idea-What-Im-Doing-1.jpg)
+Functional transformations for Ruby. It's currently used as one of the data
+mapping backends in [Ruby Object Mapper](http://rom-rb.org).
 
 ## Installation
 
@@ -33,9 +32,16 @@ transformation['user_name' => 'Jane']
 # => {:name=>"Jane"}
 ```
 
+## Credits
+
+This project is inspired by the work of following people:
+
+* [Markus Schirp](https://github.com/mbj) [morpher](https://github.com/mbj/morpher) project
+* [Josep M. Bach](https://github.com/txus) and [kleisli](https://github.com/txus/kleisli) project
+
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/transproc/fork )
+1. Fork it ( https://github.com/solnic/transproc/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
