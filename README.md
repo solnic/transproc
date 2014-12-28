@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
+[![Gem Version](https://badge.fury.io/rb/transproc.svg)][gem]
 [![Build Status](https://travis-ci.org/solnic/transproc.svg?branch=master)][travis]
 [![Dependency Status](https://gemnasium.com/solnic/transproc.png)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/solnic/transproc/badges/gpa.svg)][codeclimate]
