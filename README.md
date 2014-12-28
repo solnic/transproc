@@ -22,12 +22,22 @@ Or install it yourself as:
 ## Usage
 
 ``` ruby
-require 'transproc/hash'
+require 'transproc/all'
 
 # compose transformation functions
 transformation = Transproc(:symbolize_keys) + Transproc(:map_hash, user_name: :name))
 
 # call the function
+transformation['user_name' => 'Jane']
+# => {:name=>"Jane"}
+
+# or using a helper (no, it's not a good idea to include it here :))
+include Transproc::Composer
+
+transformation = compose do |fns|
+  fns << t(:symbolize_keys) << t(:map_hash, user_name: :name)
+end
+
 transformation['user_name' => 'Jane']
 # => {:name=>"Jane"}
 ```
