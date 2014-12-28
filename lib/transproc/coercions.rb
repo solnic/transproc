@@ -28,6 +28,10 @@ module Transproc
     Date.parse(value)
   end
 
+  register(:to_time) do |value|
+    Time.parse(value)
+  end
+
   register(:to_datetime) do |value|
     DateTime.parse(value)
   end
