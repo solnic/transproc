@@ -8,7 +8,7 @@ module Transproc
   end
 
   register(:wrap) do |array, key, keys|
-    Transproc(:map_array, Transproc(:fold, key, keys))[array]
+    Transproc(:map_array, Transproc(:nest, key, keys))[array]
   end
 
   register(:group) do |array, key, keys|

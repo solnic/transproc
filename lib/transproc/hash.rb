@@ -25,7 +25,7 @@ module Transproc
     hash.update(key => fn[hash[key]])
   end
 
-  register(:fold) do |hash, key, keys|
+  register(:nest) do |hash, key, keys|
     names = hash.keys - keys
 
     root = Hash[names.zip(hash.values_at(*names))]

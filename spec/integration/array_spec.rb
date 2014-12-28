@@ -59,8 +59,8 @@ describe 'Array transformations with Transproc' do
       wrap =
         Transproc(
           :map_array,
-          Transproc(:fold, :user, [:name, :title]),
-          Transproc(:map_key, :user, Transproc(:fold, :task, [:title]))
+          Transproc(:nest, :user, [:name, :title]),
+          Transproc(:map_key, :user, Transproc(:nest, :task, [:title]))
       )
 
       input = [{ name: 'Jane', title: 'One' }]
