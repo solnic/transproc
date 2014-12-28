@@ -1,10 +1,3 @@
-[![Gem Version](https://badge.fury.io/rb/transproc.svg)][gem]
-[![Build Status](https://travis-ci.org/solnic/transproc.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/solnic/transproc.png)][gemnasium]
-[![Code Climate](https://codeclimate.com/github/solnic/transproc/badges/gpa.svg)][codeclimate]
-[![Test Coverage](https://codeclimate.com/github/solnic/transproc/badges/coverage.svg)][codeclimate]
-[![Inline docs](http://inch-ci.org/github/solnic/transproc.svg?branch=master)][inchpages]
-
 [gem]: https://rubygems.org/gems/transproc
 [travis]: https://travis-ci.org/solnic/transproc
 [gemnasium]: https://gemnasium.com/solnic/transproc
@@ -13,6 +6,13 @@
 [inchpages]: http://inch-ci.org/github/solnic/transproc
 
 # Transproc
+
+[![Gem Version](https://badge.fury.io/rb/transproc.svg)][gem]
+[![Build Status](https://travis-ci.org/solnic/transproc.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/solnic/transproc.png)][gemnasium]
+[![Code Climate](https://codeclimate.com/github/solnic/transproc/badges/gpa.svg)][codeclimate]
+[![Test Coverage](https://codeclimate.com/github/solnic/transproc/badges/coverage.svg)][codeclimate]
+[![Inline docs](http://inch-ci.org/github/solnic/transproc.svg?branch=master)][inchpages]
 
 Functional transformations for Ruby. It's currently used as one of the data
 mapping backends in [Ruby Object Mapper](http://rom-rb.org).
