@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-require 'transproc/hash'
-
 describe 'Hash mapping with Transproc' do
   describe 'symbolize_keys' do
     it 'returns a new hash with symbolized keys' do

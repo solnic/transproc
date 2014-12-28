@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-require 'transproc/hash'
-require 'transproc/array'
-
 describe 'Array transformations with Transproc' do
   describe 'map_array' do
     it 'applies funtions to all values' do

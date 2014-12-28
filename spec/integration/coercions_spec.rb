@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-require 'transproc/coercions'
-
 describe 'Transproc / Coercions' do
   describe 'to_string' do
     it 'turns integer into a string' do
