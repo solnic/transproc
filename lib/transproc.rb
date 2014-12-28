@@ -1,5 +1,6 @@
 require 'transproc/version'
 require 'transproc/function'
+require 'transproc/composer'
 
 module Transproc
   def self.register(*args, &block)
