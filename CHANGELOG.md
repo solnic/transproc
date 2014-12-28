@@ -3,6 +3,10 @@
 ### Added
 
 * added bang-method equivalents to all functions (solnic)
+* group and wrap array transformations (solnic)
+* date, datetime and time coercions (solnic)
+* numeric coercions (solnic)
+* boolean coercions (solnic)
 * [hash] `:nest` which wraps a set of keys under a new key (solnic)
 
 [Compare v0.0.1...master](https://github.com/solnic/transproc/compare/v0.0.1...master)
