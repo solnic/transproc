@@ -11,6 +11,7 @@ module Transproc
 
       def <<(other)
         fns.concat(Array(other).compact)
+        self
       end
 
       def to_fn
