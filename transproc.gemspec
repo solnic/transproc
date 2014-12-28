@@ -5,7 +5,7 @@ require 'transproc/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "transproc"
-  spec.version       = Transproc::VERSION
+  spec.version       = Transproc::VERSION.dup
   spec.authors       = ["Piotr Solnica"]
   spec.email         = ["piotr.solnica@gmail.com"]
   spec.summary       = %q{Experimental functional transformations for Ruby}
