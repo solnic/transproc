@@ -1,0 +1,12 @@
+## v0.1.0 to-be-released
+
+### Added
+
+* added bang-method equivalents to all functions (solnic)
+* [hash] `:nest` which wraps a set of keys under a new key (solnic)
+
+[Compare v0.0.1...master](https://github.com/solnic/transproc/compare/v0.0.1...master)
+
+## v0.0.1 2014-12-24
+
+First public release \o/
