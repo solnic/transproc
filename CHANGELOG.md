@@ -1,4 +1,4 @@
-## v0.1.0 to-be-released
+## v0.1.0 2014-12-28
 
 ### Added
 
@@ -9,7 +9,7 @@
 * boolean coercions (solnic)
 * [hash] `:nest` which wraps a set of keys under a new key (solnic)
 
-[Compare v0.0.1...master](https://github.com/solnic/transproc/compare/v0.0.1...master)
+[Compare v0.0.1...v0.1.0](https://github.com/solnic/transproc/compare/v0.0.1...v0.1.0)
 
 ## v0.0.1 2014-12-24
 
