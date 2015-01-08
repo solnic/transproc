@@ -4,7 +4,8 @@ module Transproc
   end
 
   register(:map_array!) do |array, *fns|
-    array.map! { |value| fns.reduce(:+)[value] }
+    fn = fns.size == 1 ? fns[0] : fns.reduce(:+)
+    array.map! { |value| fn[value] }
   end
 
   register(:wrap) do |array, key, keys|
