@@ -13,17 +13,14 @@ module Transproc
   end
 
   register(:group) do |array, key, keys|
-    names = nil
-
-    array
-      .group_by { |hash|
-        names ||= hash.keys - keys
-        Hash[names.zip(hash.values_at(*names))]
-      }
-      .map { |root, children|
-        children.map! { |child| Hash[keys.zip(child.values_at(*keys))] }
-        children.select! { |child| child.values.any? }
-        root.merge(key => children)
-      }
+    grouped = Hash.new { |hash, key| hash[key] = [] }
+    array.each do |hash|
+      child = {}
+      keys.each { |k| child[k] = hash.delete(k) }
+      grouped[hash] << child
+    end
+    grouped.map do |root, children|
+      root.merge(key => children)
+    end
   end
 end
