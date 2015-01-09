@@ -15,6 +15,7 @@ module Transproc
   register(:group) do |array, key, keys|
     grouped = Hash.new { |hash, key| hash[key] = [] }
     array.each do |hash|
+      hash = hash.dup
       child = {}
       keys.each { |k| child[k] = hash.delete(k) }
       grouped[hash] << child
