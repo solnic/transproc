@@ -33,7 +33,7 @@ module Transproc
     nest_keys = hash.keys & keys
 
     if nest_keys.size > 0
-      child = Hash[keys.zip(nest_keys.map { |key| hash.delete(key) })]
+      child = Hash[nest_keys.zip(nest_keys.map { |key| hash.delete(key) })]
       hash.update(root => child)
     else
       hash.update(root => nil)

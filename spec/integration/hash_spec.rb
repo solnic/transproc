@@ -40,7 +40,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'nest!' do
     it 'returns new hash with keys nested under a new key' do
-      nest = Transproc(:nest!, :baz, ['one', 'two'])
+      nest = Transproc(:nest!, :baz, ['one', 'two', 'not-here'])
 
       input = { 'foo' => 'bar', 'one' => nil, 'two' => false }
       output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
