@@ -1,6 +1,6 @@
 module Transproc
   register(:symbolize_keys) do |hash|
-    Transproc(:symbolize_keys!)[hash.dup]
+    Transproc(:symbolize_keys!)[Hash[hash]]
   end
 
   register(:symbolize_keys!) do |hash|
@@ -9,7 +9,7 @@ module Transproc
   end
 
   register(:map_hash) do |hash, mapping|
-    Transproc(:map_hash!, mapping)[hash.dup]
+    Transproc(:map_hash!, mapping)[Hash[hash]]
   end
 
   register(:map_hash!) do |hash, mapping|
@@ -26,7 +26,7 @@ module Transproc
   end
 
   register(:nest) do |hash, key, keys|
-    Transproc(:nest!, key, keys)[hash.dup]
+    Transproc(:nest!, key, keys)[Hash[hash]]
   end
 
   register(:nest!) do |hash, root, keys|
