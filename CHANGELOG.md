@@ -1,3 +1,17 @@
+## v0.1.1 2015-03-13
+
+### Changed
+
+* `Transproc(:map_array)` performance improvements (splattael + solnic)
+* hash transformation performance improvements (solnic)
+
+### Fixed
+
+* `Transproc(:nest)` handles falsy values correctly now (solnic)
+* Missing `require "time"` added (splattael)
+
+[Compare v0.1.0...v0.1.1](https://github.com/solnic/transproc/compare/v0.1.0...v0.1.1)
+
 ## v0.1.0 2014-12-28
 
 ### Added
