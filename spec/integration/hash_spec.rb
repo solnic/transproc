@@ -26,12 +26,35 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
+  describe 'nest' do
+    it 'returns new hash with keys nested under a new key' do
+      nest = Transproc(:nest, :baz, ['foo'])
+
+      input = { 'foo' => 'bar' }
+      output = { baz: { 'foo' => 'bar' } }
+
+      expect(nest[input]).to eql(output)
+      expect(input).to eql('foo' => 'bar')
+    end
+  end
+
   describe 'nest!' do
     it 'returns new hash with keys nested under a new key' do
       nest = Transproc(:nest!, :baz, ['foo'])
 
       input = { 'foo' => 'bar' }
       output = { baz: { 'foo' => 'bar' } }
+
+      nest[input]
+
+      expect(input).to eql(output)
+    end
+
+    it 'returns new hash with nil nested under a new key when nest-keys are missing' do
+      nest = Transproc(:nest!, :baz, ['foo'])
+
+      input = { 'bar' => 'foo' }
+      output = { 'bar' => 'foo', baz: nil }
 
       nest[input]
 

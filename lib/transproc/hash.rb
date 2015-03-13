@@ -30,8 +30,13 @@ module Transproc
   end
 
   register(:nest!) do |hash, root, keys|
-    child = Hash[keys.zip(keys.map { |key| hash.delete(key) })]
+    nest_keys = hash.keys & keys
 
-    hash.update(root => child.values.any? ? child : nil)
+    if nest_keys.size > 0
+      child = Hash[keys.zip(nest_keys.map { |key| hash.delete(key) })]
+      hash.update(root => child)
+    else
+      hash.update(root => nil)
+    end
   end
 end
