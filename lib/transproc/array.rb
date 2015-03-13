@@ -1,6 +1,6 @@
 module Transproc
   register(:map_array) do |array, *fns|
-    Transproc(:map_array!, *fns)[array.dup]
+    Transproc(:map_array!, *fns)[Array[*array]]
   end
 
   register(:map_array!) do |array, *fns|
