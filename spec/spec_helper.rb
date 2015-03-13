@@ -4,3 +4,8 @@ if RUBY_ENGINE == "rbx"
 end
 
 require 'transproc/all'
+
+begin
+  require 'byebug'
+rescue LoadError
+end
