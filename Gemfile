@@ -7,5 +7,6 @@ group :test do
 end
 
 group :tools do
-  gem 'byebug'
+  gem 'byebug', platform: :mri
+  gem 'benchmark-ips'
 end
