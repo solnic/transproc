@@ -50,11 +50,11 @@ describe 'Hash mapping with Transproc' do
       expect(input).to eql(output)
     end
 
-    it 'returns new hash with nil nested under a new key when nest-keys are missing' do
+    it 'returns new hash with an empty hash under a new key when nest-keys are missing' do
       nest = Transproc(:nest!, :baz, ['foo'])
 
       input = { 'bar' => 'foo' }
-      output = { 'bar' => 'foo', baz: nil }
+      output = { 'bar' => 'foo', baz: {} }
 
       nest[input]
 

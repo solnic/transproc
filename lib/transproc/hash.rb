@@ -36,7 +36,7 @@ module Transproc
       child = Hash[nest_keys.zip(nest_keys.map { |key| hash.delete(key) })]
       hash.update(root => child)
     else
-      hash.update(root => nil)
+      hash.update(root => {})
     end
   end
 end
