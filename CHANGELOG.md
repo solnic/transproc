@@ -1,3 +1,11 @@
+## v0.1.2 2015-03-14
+
+### Changed
+
+* `:nest` creates an empty hash even when keys are not present
+
+[Compare v0.1.1...v0.1.2](https://github.com/solnic/transproc/compare/v0.1.1...v0.1.2)
+
 ## v0.1.1 2015-03-13
 
 ### Changed
