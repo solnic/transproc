@@ -13,7 +13,7 @@ module Transproc
     alias_method :[], :call
 
     def compose(other)
-      self.class.new(-> *result { other[fn[*result]] }, args)
+      self.class.new(-> *input { other[fn[*input]] }, args)
     end
     alias_method :+, :compose
   end
