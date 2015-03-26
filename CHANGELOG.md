@@ -1,3 +1,15 @@
+## v0.1.3 to-be-released
+
+### Added
+
+* Added `hash_recursion` and `array_recursion` functions (AMHOL)
+
+### Changed
+
+* Speedup transproc `group` (splattael)
+
+[Compare v0.1.2...master](https://github.com/solnic/transproc/compare/v0.1.2...master)
+
 ## v0.1.2 2015-03-14
 
 ### Changed
