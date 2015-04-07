@@ -1,5 +1,12 @@
 module Transproc
+  module Helper
+    def t(*args, &block)
+      Transproc(*args, &block)
+    end
+  end
+
   module Composer
+    include Helper
 
     class Factory
       attr_reader :fns, :default
@@ -19,15 +26,10 @@ module Transproc
       end
     end
 
-    def t(*args)
-      Transproc(*args)
-    end
-
     def compose(default = nil)
       factory = Factory.new(default)
       yield(factory)
       factory.to_fn
     end
-
   end
 end
