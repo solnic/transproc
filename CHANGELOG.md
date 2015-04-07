@@ -9,7 +9,7 @@
 
 * Speedup transproc `group` (splattael)
 
-[Compare v0.1.2...master](https://github.com/solnic/transproc/compare/v0.1.2...master)
+[Compare v0.1.2...v0.1.3](https://github.com/solnic/transproc/compare/v0.1.2...v0.1.3)
 
 ## v0.1.2 2015-03-14
 
