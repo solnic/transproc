@@ -39,4 +39,19 @@ module Transproc
       hash.update(root => {})
     end
   end
+
+  register(:unwrap) do |hash, root, keys|
+    copy = Hash[hash].merge(root => Hash[hash[root]])
+    Transproc(:unwrap!, root, keys)[copy]
+  end
+
+  register(:unwrap!) do |hash, root, keys|
+    if nested_hash = hash[root]
+      keys ||= nested_hash.keys
+      hash.update(Hash[keys.zip(keys.map { |key| nested_hash.delete(key) })])
+      hash.delete(root) if nested_hash.empty?
+    end
+
+    hash
+  end
 end
