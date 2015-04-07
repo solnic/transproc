@@ -16,5 +16,6 @@ module Transproc
       self.class.new(-> *input { other[fn[*input]] }, args)
     end
     alias_method :+, :compose
+    alias_method :>>, :compose
   end
 end

@@ -90,7 +90,7 @@ describe 'Array transformations with Transproc' do
 
       output = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
 
-      transformation = map + group
+      transformation = map >> group
 
       expect(transformation[input]).to eql(output)
     end

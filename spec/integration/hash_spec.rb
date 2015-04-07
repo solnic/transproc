@@ -156,7 +156,7 @@ describe 'Hash mapping with Transproc' do
       symbolize_keys = Transproc(:symbolize_keys)
       map_user_key = Transproc(:map_key, :user, symbolize_keys)
 
-      transformation = symbolize_keys + map_user_key
+      transformation = symbolize_keys >> map_user_key
 
       input = { 'user' => { 'name' => 'Jane' } }
       output = { user: { name: 'Jane' } }
@@ -170,7 +170,7 @@ describe 'Hash mapping with Transproc' do
       symbolize_keys = Transproc(:symbolize_keys)
       map = Transproc(:map_hash, user_name: :name, user_email: :email)
 
-      transformation = symbolize_keys + map
+      transformation = symbolize_keys >> map
 
       input = { 'user_name' => 'Jade', 'user_email' => 'jade@doe.org' }
       output = { name: 'Jade', email: 'jade@doe.org' }
