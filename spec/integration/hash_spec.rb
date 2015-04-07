@@ -62,6 +62,45 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
+  describe 'unwrap!' do
+    it 'returns updated hash with nested keys lifted to the root' do
+      unwrap = Transproc(:unwrap!, 'wrapped', ['one', 'two'])
+
+      input = { 'foo' => 'bar', 'wrapped' => { 'one' => nil, 'two' => false } }
+      output = { 'foo' => 'bar', 'one' => nil, 'two' => false }
+
+      unwrap[input]
+
+      expect(input).to eql(output)
+    end
+
+    it 'lifts all keys if none are passed' do
+      unwrap = Transproc(:unwrap!, 'wrapped')
+
+      input = { 'wrapped' => { 'one' => nil, 'two' => false } }
+      output = { 'one' => nil, 'two' => false }
+
+      unwrap[input]
+
+      expect(input).to eql(output)
+    end
+  end
+
+  describe 'unwrap' do
+    it 'returns new hash with nested keys lifted to the root' do
+      unwrap = Transproc(:unwrap, 'wrapped', ['one', 'two'])
+
+      input = {
+        'foo' => 'bar',
+        'wrapped' => { 'one' => nil, 'two' => false }
+      }.freeze
+
+      expect(unwrap[input]).to eql({'foo' => 'bar',
+                                    'one' => nil,
+                                    'two' => false})
+    end
+  end
+
   describe 'map_hash' do
     it 'returns a new hash with applied functions' do
       map = Transproc(:map_hash, 'foo' => :foo)
