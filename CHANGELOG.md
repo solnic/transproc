@@ -3,6 +3,7 @@
 ### Added
 
 * Added `hash_recursion` and `array_recursion` functions (AMHOL)
+* Added `unwrap` and `unwrap!` functions (aflatter)
 
 ### Changed
 
