@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Array transformations with Transproc' do
   describe 'map_array' do
     it 'applies funtions to all values' do
-      map = Transproc(:map_array, Transproc(:symbolize_keys))
+      map = t(:map_array, t(:symbolize_keys))
 
       original = [
         { 'name' => 'Jane', 'title' => 'One' },
@@ -24,7 +24,7 @@ describe 'Array transformations with Transproc' do
 
   describe 'map_array!' do
     it 'updates array with the result of the function applied to each value' do
-      map = Transproc(:map_array!, Transproc(:symbolize_keys))
+      map = t(:map_array!, t(:symbolize_keys))
 
       input = [
         { 'name' => 'Jane', 'title' => 'One' },
@@ -44,7 +44,7 @@ describe 'Array transformations with Transproc' do
 
   describe 'wrap' do
     it 'returns a new array with wrapped hashes' do
-      wrap = Transproc(:wrap, :task, [:title])
+      wrap = t(:wrap, :task, [:title])
 
       input = [{ name: 'Jane', title: 'One' }]
       output = [{ name: 'Jane', task: { title: 'One' } }]
@@ -54,10 +54,10 @@ describe 'Array transformations with Transproc' do
 
     it 'returns a array new with deeply wrapped hashes' do
       wrap =
-        Transproc(
+        t(
           :map_array,
-          Transproc(:nest, :user, [:name, :title]),
-          Transproc(:map_key, :user, Transproc(:nest, :task, [:title]))
+          t(:nest, :user, [:name, :title]),
+          t(:map_key, :user, t(:nest, :task, [:title]))
       )
 
       input = [{ name: 'Jane', title: 'One' }]
@@ -69,7 +69,7 @@ describe 'Array transformations with Transproc' do
 
   describe 'group' do
     it 'returns a new array with grouped hashes' do
-      group = Transproc(:group, :tasks, [:title])
+      group = t(:group, :tasks, [:title])
 
       input = [{ name: 'Jane', title: 'One' }, { name: 'Jane', title: 'Two' }]
       output = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
@@ -80,8 +80,8 @@ describe 'Array transformations with Transproc' do
 
   describe 'composition' do
     it 'allows composing transformations' do
-      map = Transproc(:map_array, Transproc(:symbolize_keys))
-      group = Transproc(:group, :tasks, [:title])
+      map = t(:map_array, t(:symbolize_keys))
+      group = t(:group, :tasks, [:title])
 
       input = [
         { 'name' => 'Jane', 'title' => 'One' },

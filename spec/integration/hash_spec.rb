@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Hash mapping with Transproc' do
   describe 'symbolize_keys' do
     it 'returns a new hash with symbolized keys' do
-      symbolize_keys = Transproc(:symbolize_keys)
+      symbolize_keys = t(:symbolize_keys)
 
       input = { 'foo' => 'bar' }
       output = { foo: 'bar' }
@@ -15,7 +15,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'symbolize_keys!' do
     it 'returns updated hash with symbolized keys' do
-      symbolize_keys = Transproc(:symbolize_keys!)
+      symbolize_keys = t(:symbolize_keys!)
 
       input = { 'foo' => 'bar' }
       output = { foo: 'bar' }
@@ -28,7 +28,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'nest' do
     it 'returns new hash with keys nested under a new key' do
-      nest = Transproc(:nest, :baz, ['foo'])
+      nest = t(:nest, :baz, ['foo'])
 
       input = { 'foo' => 'bar' }
       output = { baz: { 'foo' => 'bar' } }
@@ -40,7 +40,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'nest!' do
     it 'returns new hash with keys nested under a new key' do
-      nest = Transproc(:nest!, :baz, ['one', 'two', 'not-here'])
+      nest = t(:nest!, :baz, ['one', 'two', 'not-here'])
 
       input = { 'foo' => 'bar', 'one' => nil, 'two' => false }
       output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
@@ -51,7 +51,7 @@ describe 'Hash mapping with Transproc' do
     end
 
     it 'returns new hash with an empty hash under a new key when nest-keys are missing' do
-      nest = Transproc(:nest!, :baz, ['foo'])
+      nest = t(:nest!, :baz, ['foo'])
 
       input = { 'bar' => 'foo' }
       output = { 'bar' => 'foo', baz: {} }
@@ -64,7 +64,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'unwrap!' do
     it 'returns updated hash with nested keys lifted to the root' do
-      unwrap = Transproc(:unwrap!, 'wrapped', ['one', 'two'])
+      unwrap = t(:unwrap!, 'wrapped', ['one', 'two'])
 
       input = { 'foo' => 'bar', 'wrapped' => { 'one' => nil, 'two' => false } }
       output = { 'foo' => 'bar', 'one' => nil, 'two' => false }
@@ -75,7 +75,7 @@ describe 'Hash mapping with Transproc' do
     end
 
     it 'lifts all keys if none are passed' do
-      unwrap = Transproc(:unwrap!, 'wrapped')
+      unwrap = t(:unwrap!, 'wrapped')
 
       input = { 'wrapped' => { 'one' => nil, 'two' => false } }
       output = { 'one' => nil, 'two' => false }
@@ -88,7 +88,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'unwrap' do
     it 'returns new hash with nested keys lifted to the root' do
-      unwrap = Transproc(:unwrap, 'wrapped', ['one', 'two'])
+      unwrap = t(:unwrap, 'wrapped', ['one', 'two'])
 
       input = {
         'foo' => 'bar',
@@ -103,7 +103,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'map_hash' do
     it 'returns a new hash with applied functions' do
-      map = Transproc(:map_hash, 'foo' => :foo)
+      map = t(:map_hash, 'foo' => :foo)
 
       input = { 'foo' => 'bar', :bar => 'baz' }
       output = { foo: 'bar', bar: 'baz' }
@@ -115,7 +115,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'map_hash!' do
     it 'returns updated hash with applied functions' do
-      map = Transproc(:map_hash!, 'foo' => :foo)
+      map = t(:map_hash!, 'foo' => :foo)
 
       input = { 'foo' => 'bar', :bar => 'baz' }
       output = { foo: 'bar', bar: 'baz' }
@@ -128,7 +128,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'map_key' do
     it 'applies function to value under specified key' do
-      transformation = Transproc(:map_key, :user, Transproc(:symbolize_keys))
+      transformation = t(:map_key, :user, t(:symbolize_keys))
 
       input = { user: { 'name' => 'Jane' } }
       output = { user: { name: 'Jane' } }
@@ -140,7 +140,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'map_key!' do
     it 'applies function to value under specified key' do
-      transformation = Transproc(:map_key!, :user, Transproc(:symbolize_keys))
+      transformation = t(:map_key!, :user, t(:symbolize_keys))
 
       input = { user: { 'name' => 'Jane' } }
       output = { user: { name: 'Jane' } }
@@ -153,8 +153,8 @@ describe 'Hash mapping with Transproc' do
 
   describe 'nested transform' do
     it 'applies functions to nested hashes' do
-      symbolize_keys = Transproc(:symbolize_keys)
-      map_user_key = Transproc(:map_key, :user, symbolize_keys)
+      symbolize_keys = t(:symbolize_keys)
+      map_user_key = t(:map_key, :user, symbolize_keys)
 
       transformation = symbolize_keys >> map_user_key
 
@@ -167,8 +167,8 @@ describe 'Hash mapping with Transproc' do
 
   describe 'combining transformations' do
     it 'applies functions to the hash' do
-      symbolize_keys = Transproc(:symbolize_keys)
-      map = Transproc(:map_hash, user_name: :name, user_email: :email)
+      symbolize_keys = t(:symbolize_keys)
+      map = t(:map_hash, user_name: :name, user_email: :email)
 
       transformation = symbolize_keys >> map
 

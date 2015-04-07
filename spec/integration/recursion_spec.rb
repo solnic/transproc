@@ -38,7 +38,7 @@ describe 'Recursive transformations with Transproc' do
     end
 
     context 'when function is non-destructive' do
-      let(:map) { Transproc(:array_recursion, proc { |arr| arr.compact }) }
+      let(:map) { t(:array_recursion, proc { |arr| arr.compact }) }
 
       it 'applies funtions to all items recursively' do
         expect(map[input]).to eql(output)
@@ -47,7 +47,7 @@ describe 'Recursive transformations with Transproc' do
     end
 
     context 'when function is destructive' do
-      let(:map) { Transproc(:array_recursion, proc { |arr| arr.compact! }) }
+      let(:map) { t(:array_recursion, proc { |arr| arr.compact! }) }
 
       it 'applies funtions to all items recursively and destructively' do
         expect(map[input]).to eql(output)
@@ -86,7 +86,7 @@ describe 'Recursive transformations with Transproc' do
     end
 
     context 'when function is non-destructive' do
-      let(:map) { Transproc(:hash_recursion, Transproc(:symbolize_keys)) }
+      let(:map) { t(:hash_recursion, t(:symbolize_keys)) }
 
       it 'applies funtions to all values recursively' do
         expect(map[input]).to eql(output)
@@ -95,7 +95,7 @@ describe 'Recursive transformations with Transproc' do
     end
 
     context 'when function is destructive' do
-      let(:map) { Transproc(:hash_recursion, Transproc(:symbolize_keys!)) }
+      let(:map) { t(:hash_recursion, t(:symbolize_keys!)) }
 
       it 'applies funtions to all values recursively and destructively' do
         expect(map[input]).to eql(output)

@@ -6,8 +6,8 @@ describe Transproc do
       input = '1'
       output = 1.0
 
-      to_i = Transproc(-> value { value.to_i })
-      to_f = Transproc(-> value { value.to_f })
+      to_i = t(-> value { value.to_i })
+      to_f = t(-> value { value.to_f })
 
       result = to_i >> to_f
 
@@ -19,7 +19,7 @@ describe Transproc do
     it 'allows registering functions by name' do
       Transproc.register(:to_boolean, -> value { value == 'true' })
 
-      result = Transproc(-> value { value.to_s }) >> Transproc(:to_boolean)
+      result = t(-> value { value.to_s }) >> t(:to_boolean)
 
       expect(result[:true]).to be(true)
       expect(result[:false]).to be(false)
@@ -28,7 +28,7 @@ describe Transproc do
     it 'allows registering function by passing a block' do
       Transproc.register(:to_boolean) { |value| value == 'true' }
 
-      result = Transproc(-> value { value.to_s }) >> Transproc(:to_boolean)
+      result = t(-> value { value.to_s }) >> t(:to_boolean)
 
       expect(result[:true]).to be(true)
       expect(result[:false]).to be(false)

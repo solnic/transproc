@@ -9,3 +9,13 @@ begin
   require 'byebug'
 rescue LoadError
 end
+
+module TransprocHelper
+  def t(*args, &block)
+    Transproc(*args, &block)
+  end
+end
+
+RSpec.configure do |config|
+  config.include(TransprocHelper)
+end
