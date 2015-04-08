@@ -74,6 +74,30 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
+  describe 'transform_values' do
+    it 'returns a new hash with transformation proc applied to values' do
+      transform_values = t(:transform_values, ->(value) { value.strip })
+
+      input = { 'foo' => ' bar ' }
+      output = { 'foo' => 'bar' }
+
+      expect(transform_values[input]).to eql(output)
+      expect(input).to eql('foo' => ' bar ')
+    end
+  end
+
+  describe 'transform_values!' do
+    it 'returns updated hash with transformation proc applied to values' do
+      transform_values = t(:transform_values!, ->(value) { value.strip })
+
+      input = { 'foo' => ' bar ' }
+      output = { 'foo' => 'bar' }
+
+      expect(transform_values[input]).to eql(output)
+      expect(input).to eql('foo' => 'bar')
+    end
+  end
+
   describe 'map_hash' do
     it 'returns a new hash with applied functions' do
       map = t(:map_hash, 'foo' => :foo)

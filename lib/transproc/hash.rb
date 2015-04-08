@@ -24,6 +24,15 @@ module Transproc
     Transproc(:transform_keys!, Transproc(:to_string))[hash]
   end
 
+  register(:transform_values) do |hash, fn|
+    Transproc(:transform_values!, fn)[Hash[hash]]
+  end
+
+  register(:transform_values!) do |hash, fn|
+    hash.each { |key, value| hash[key] = fn[value] }
+    hash
+  end
+
   register(:map_hash) do |hash, mapping|
     Transproc(:map_hash!, mapping)[Hash[hash]]
   end
