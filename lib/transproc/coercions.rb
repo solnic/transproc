@@ -15,6 +15,10 @@ module Transproc
     value.to_s
   end
 
+  register(:to_symbol) do |value|
+    value.to_sym
+  end
+
   register(:to_integer) do |value|
     value.to_i
   end

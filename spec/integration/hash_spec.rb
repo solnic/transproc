@@ -1,6 +1,30 @@
 require 'spec_helper'
 
 describe 'Hash mapping with Transproc' do
+  describe 'transform_keys' do
+    it 'returns a new hash with transformation proc applied to keys' do
+      transform_keys = t(:transform_keys, ->(key) { key.strip })
+
+      input = { ' foo ' => 'bar' }
+      output = { 'foo' => 'bar' }
+
+      expect(transform_keys[input]).to eql(output)
+      expect(input).to eql(' foo ' => 'bar')
+    end
+  end
+
+  describe 'transform_keys!' do
+    it 'returns updated hash with transformation proc applied to keys' do
+      transform_keys = t(:transform_keys!, ->(key) { key.strip })
+
+      input = { ' foo ' => 'bar' }
+      output = { 'foo' => 'bar' }
+
+      expect(transform_keys[input]).to eql(output)
+      expect(input).to eql('foo' => 'bar')
+    end
+  end
+
   describe 'symbolize_keys' do
     it 'returns a new hash with symbolized keys' do
       symbolize_keys = t(:symbolize_keys)
@@ -21,6 +45,80 @@ describe 'Hash mapping with Transproc' do
       output = { foo: 'bar' }
 
       symbolize_keys[input]
+
+      expect(input).to eql(output)
+    end
+  end
+
+  describe 'stringify_keys' do
+    it 'returns a new hash with stringified keys' do
+      stringify_keys = t(:stringify_keys)
+
+      input = { foo: 'bar' }
+      output = { 'foo' => 'bar' }
+
+      expect(stringify_keys[input]).to eql(output)
+      expect(input).to eql(foo: 'bar')
+    end
+  end
+
+  describe 'stringify_keys!' do
+    it 'returns a new hash with stringified keys' do
+      stringify_keys = t(:stringify_keys!)
+
+      input = { foo: 'bar' }
+      output = { 'foo' => 'bar' }
+
+      expect(stringify_keys[input]).to eql(output)
+      expect(input).to eql('foo' => 'bar')
+    end
+  end
+
+  describe 'map_hash' do
+    it 'returns a new hash with applied functions' do
+      map = t(:map_hash, 'foo' => :foo)
+
+      input = { 'foo' => 'bar', :bar => 'baz' }
+      output = { foo: 'bar', bar: 'baz' }
+
+      expect(map[input]).to eql(output)
+      expect(input).to eql('foo' => 'bar', :bar => 'baz')
+    end
+  end
+
+  describe 'map_hash!' do
+    it 'returns updated hash with applied functions' do
+      map = t(:map_hash!, 'foo' => :foo)
+
+      input = { 'foo' => 'bar', :bar => 'baz' }
+      output = { foo: 'bar', bar: 'baz' }
+
+      map[input]
+
+      expect(input).to eql(output)
+    end
+  end
+
+  describe 'map_key' do
+    it 'applies function to value under specified key' do
+      transformation = t(:map_key, :user, t(:symbolize_keys))
+
+      input = { user: { 'name' => 'Jane' } }
+      output = { user: { name: 'Jane' } }
+
+      expect(transformation[input]).to eql(output)
+      expect(input).to eql(user: { 'name' => 'Jane' })
+    end
+  end
+
+  describe 'map_key!' do
+    it 'applies function to value under specified key' do
+      transformation = t(:map_key!, :user, t(:symbolize_keys))
+
+      input = { user: { 'name' => 'Jane' } }
+      output = { user: { name: 'Jane' } }
+
+      transformation[input]
 
       expect(input).to eql(output)
     end
@@ -98,56 +196,6 @@ describe 'Hash mapping with Transproc' do
       expect(unwrap[input]).to eql({'foo' => 'bar',
                                     'one' => nil,
                                     'two' => false})
-    end
-  end
-
-  describe 'map_hash' do
-    it 'returns a new hash with applied functions' do
-      map = t(:map_hash, 'foo' => :foo)
-
-      input = { 'foo' => 'bar', :bar => 'baz' }
-      output = { foo: 'bar', bar: 'baz' }
-
-      expect(map[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar', :bar => 'baz')
-    end
-  end
-
-  describe 'map_hash!' do
-    it 'returns updated hash with applied functions' do
-      map = t(:map_hash!, 'foo' => :foo)
-
-      input = { 'foo' => 'bar', :bar => 'baz' }
-      output = { foo: 'bar', bar: 'baz' }
-
-      map[input]
-
-      expect(input).to eql(output)
-    end
-  end
-
-  describe 'map_key' do
-    it 'applies function to value under specified key' do
-      transformation = t(:map_key, :user, t(:symbolize_keys))
-
-      input = { user: { 'name' => 'Jane' } }
-      output = { user: { name: 'Jane' } }
-
-      expect(transformation[input]).to eql(output)
-      expect(input).to eql(user: { 'name' => 'Jane' })
-    end
-  end
-
-  describe 'map_key!' do
-    it 'applies function to value under specified key' do
-      transformation = t(:map_key!, :user, t(:symbolize_keys))
-
-      input = { user: { 'name' => 'Jane' } }
-      output = { user: { name: 'Jane' } }
-
-      transformation[input]
-
-      expect(input).to eql(output)
     end
   end
 

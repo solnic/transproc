@@ -7,6 +7,12 @@ describe 'Transproc / Coercions' do
     end
   end
 
+  describe 'to_symbol' do
+    it 'turns string into a symbol' do
+      expect(t(:to_symbol)['test']).to eql(:test)
+    end
+  end
+
   describe 'to_integer' do
     it 'turns string into an integer' do
       expect(t(:to_integer)['1']).to eql(1)
