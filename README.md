@@ -39,7 +39,7 @@ Or install it yourself as:
 require 'transproc/all'
 
 # compose transformation functions
-transformation = Transproc(:symbolize_keys) >> Transproc(:map_hash, user_name: :name))
+transformation = Transproc(:symbolize_keys) >> Transproc(:map_hash, user_name: :name)
 
 # call the function
 transformation['user_name' => 'Jane']
