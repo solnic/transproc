@@ -1,9 +1,9 @@
 module Transproc
-  register(:transform_keys) do |hash, fn|
-    Transproc(:transform_keys!, fn)[Hash[hash]]
+  register(:map_keys) do |hash, fn|
+    Transproc(:map_keys!, fn)[Hash[hash]]
   end
 
-  register(:transform_keys!) do |hash, fn|
+  register(:map_keys!) do |hash, fn|
     hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
     hash
   end
@@ -13,7 +13,7 @@ module Transproc
   end
 
   register(:symbolize_keys!) do |hash|
-    Transproc(:transform_keys!, Transproc(:to_symbol))[hash]
+    Transproc(:map_keys!, Transproc(:to_symbol))[hash]
   end
 
   register(:stringify_keys) do |hash|
@@ -21,14 +21,14 @@ module Transproc
   end
 
   register(:stringify_keys!) do |hash|
-    Transproc(:transform_keys!, Transproc(:to_string))[hash]
+    Transproc(:map_keys!, Transproc(:to_string))[hash]
   end
 
-  register(:transform_values) do |hash, fn|
-    Transproc(:transform_values!, fn)[Hash[hash]]
+  register(:map_values) do |hash, fn|
+    Transproc(:map_values!, fn)[Hash[hash]]
   end
 
-  register(:transform_values!) do |hash, fn|
+  register(:map_values!) do |hash, fn|
     hash.each { |key, value| hash[key] = fn[value] }
     hash
   end

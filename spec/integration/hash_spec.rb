@@ -1,26 +1,26 @@
 require 'spec_helper'
 
 describe 'Hash mapping with Transproc' do
-  describe 'transform_keys' do
-    it 'returns a new hash with transformation proc applied to keys' do
-      transform_keys = t(:transform_keys, ->(key) { key.strip })
+  describe 'map_keys' do
+    it 'returns a new hash with given proc applied to keys' do
+      map_keys = t(:map_keys, ->(key) { key.strip })
 
       input = { ' foo ' => 'bar' }
       output = { 'foo' => 'bar' }
 
-      expect(transform_keys[input]).to eql(output)
+      expect(map_keys[input]).to eql(output)
       expect(input).to eql(' foo ' => 'bar')
     end
   end
 
-  describe 'transform_keys!' do
-    it 'returns updated hash with transformation proc applied to keys' do
-      transform_keys = t(:transform_keys!, ->(key) { key.strip })
+  describe 'map_keys!' do
+    it 'returns updated hash with given proc applied to keys' do
+      map_keys = t(:map_keys!, ->(key) { key.strip })
 
       input = { ' foo ' => 'bar' }
       output = { 'foo' => 'bar' }
 
-      expect(transform_keys[input]).to eql(output)
+      expect(map_keys[input]).to eql(output)
       expect(input).to eql('foo' => 'bar')
     end
   end
@@ -74,26 +74,26 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'transform_values' do
-    it 'returns a new hash with transformation proc applied to values' do
-      transform_values = t(:transform_values, ->(value) { value.strip })
+  describe 'map_values' do
+    it 'returns a new hash with given proc applied to values' do
+      map_values = t(:map_values, ->(value) { value.strip })
 
       input = { 'foo' => ' bar ' }
       output = { 'foo' => 'bar' }
 
-      expect(transform_values[input]).to eql(output)
+      expect(map_values[input]).to eql(output)
       expect(input).to eql('foo' => ' bar ')
     end
   end
 
-  describe 'transform_values!' do
-    it 'returns updated hash with transformation proc applied to values' do
-      transform_values = t(:transform_values!, ->(value) { value.strip })
+  describe 'map_values!' do
+    it 'returns updated hash with given proc applied to values' do
+      map_values = t(:map_values!, ->(value) { value.strip })
 
       input = { 'foo' => ' bar ' }
       output = { 'foo' => 'bar' }
 
-      expect(transform_values[input]).to eql(output)
+      expect(map_values[input]).to eql(output)
       expect(input).to eql('foo' => 'bar')
     end
   end
