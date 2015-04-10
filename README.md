@@ -7,6 +7,8 @@
 
 # Transproc
 
+[![Join the chat at https://gitter.im/solnic/transproc](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/solnic/transproc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Gem Version](https://badge.fury.io/rb/transproc.svg)][gem]
 [![Build Status](https://travis-ci.org/solnic/transproc.svg?branch=master)][travis]
 [![Dependency Status](https://gemnasium.com/solnic/transproc.png)][gemnasium]
