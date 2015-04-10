@@ -34,7 +34,7 @@ module Transproc
 
     # Same as `:map_keys` but mutates the hash
     #
-    # @see HashTransformations#map_keys
+    # @see HashTransformations.map_keys
     #
     # @api public
     def map_keys!(hash, fn)
@@ -105,7 +105,7 @@ module Transproc
       Transproc(:map_values!, fn)[Hash[hash]]
     end
 
-    # Same as `:map_values` but changes the hash
+    # Same as `:map_values` but mutates the hash
     #
     # @see HashTransformations.map_values
     #
