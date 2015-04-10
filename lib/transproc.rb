@@ -8,6 +8,12 @@ module Transproc
     functions[name] = fn || block
   end
 
+  def self.register_from(mod)
+    (mod.public_methods - Module.public_methods).each do |meth|
+      Transproc.register(meth, mod.method(meth))
+    end
+  end
+
   def self.functions
     @_functions ||= {}
   end

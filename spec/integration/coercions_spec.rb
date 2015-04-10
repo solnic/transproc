@@ -67,13 +67,13 @@ describe 'Transproc / Coercions' do
   describe 'to_boolean' do
     subject(:coercer) { t(:to_boolean) }
 
-    Transproc::TRUE_VALUES.each do |value|
+    Transproc::Coercions::TRUE_VALUES.each do |value|
       it "turns #{value.inspect} to true" do
         expect(coercer[value]).to be(true)
       end
     end
 
-    Transproc::FALSE_VALUES.each do |value|
+    Transproc::Coercions::FALSE_VALUES.each do |value|
       it "turns #{value.inspect} to false" do
         expect(coercer[value]).to be(false)
       end

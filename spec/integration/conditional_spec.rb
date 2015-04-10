@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'Conditional transformations with Transproc' do
-  describe 'if' do
-    let(:fn) { t(:if, ->(value) { value.is_a?(::String) }, t(:to_integer)) }
+  describe 'guard' do
+    let(:fn) { t(:guard, ->(value) { value.is_a?(::String) }, t(:to_integer)) }
 
     context 'when predicate returns truthy value' do
       it 'applies the transformation and returns the result' do
