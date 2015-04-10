@@ -4,46 +4,52 @@ require 'bigdecimal'
 require 'bigdecimal/util'
 
 module Transproc
-  TRUE_VALUES = [true, 1, '1', 'on', 't', 'true', 'y', 'yes'].freeze
-  FALSE_VALUES = [false, 0, '0', 'off', 'f', 'false', 'n', 'no'].freeze
+  module Coercions
+    module_function
 
-  BOOLEAN_MAP = Hash[
-    TRUE_VALUES.product([true]) + FALSE_VALUES.product([false])
-  ].freeze
+    TRUE_VALUES = [true, 1, '1', 'on', 't', 'true', 'y', 'yes'].freeze
+    FALSE_VALUES = [false, 0, '0', 'off', 'f', 'false', 'n', 'no'].freeze
 
-  register(:to_string) do |value|
-    value.to_s
-  end
+    BOOLEAN_MAP = Hash[
+      TRUE_VALUES.product([true]) + FALSE_VALUES.product([false])
+    ].freeze
 
-  register(:to_symbol) do |value|
-    value.to_sym
-  end
+    def to_string(value)
+      value.to_s
+    end
 
-  register(:to_integer) do |value|
-    value.to_i
-  end
+    def to_symbol(value)
+      value.to_sym
+    end
 
-  register(:to_float) do |value|
-    value.to_f
-  end
+    def to_integer(value)
+      value.to_i
+    end
 
-  register(:to_decimal) do |value|
-    value.to_d
-  end
+    def to_float(value)
+      value.to_f
+    end
 
-  register(:to_boolean) do |value|
-    BOOLEAN_MAP.fetch(value)
-  end
+    def to_decimal(value)
+      value.to_d
+    end
 
-  register(:to_date) do |value|
-    Date.parse(value)
-  end
+    def to_boolean(value)
+      Coercions::BOOLEAN_MAP.fetch(value)
+    end
 
-  register(:to_time) do |value|
-    Time.parse(value)
-  end
+    def to_date(value)
+      Date.parse(value)
+    end
 
-  register(:to_datetime) do |value|
-    DateTime.parse(value)
+    def to_time(value)
+      Time.parse(value)
+    end
+
+    def to_datetime(value)
+      DateTime.parse(value)
+    end
+
+    Transproc.register_from(self)
   end
 end
