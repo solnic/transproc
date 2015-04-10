@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Transproc::VERSION.dup
   spec.authors       = ["Piotr Solnica"]
   spec.email         = ["piotr.solnica@gmail.com"]
-  spec.summary       = %q{Experimental functional transformations for Ruby}
+  spec.summary       = %q{Functional object transformations for Ruby}
   spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"
