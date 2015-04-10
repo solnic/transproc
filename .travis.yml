@@ -13,3 +13,10 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ruby-head
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/177598ba2843dcdc1047
+    on_success: change
+    on_failure: always
+    on_start: false
