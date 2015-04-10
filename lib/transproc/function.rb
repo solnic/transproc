@@ -42,7 +42,7 @@ module Transproc
       alias_method :[], :call
 
       def compose(other)
-        Composed.new(self, args: args, right: other)
+        Composed.new(self, right: other)
       end
       alias_method :+, :compose
       alias_method :>>, :compose
