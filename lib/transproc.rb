@@ -10,18 +10,19 @@ module Transproc
     functions[name] = fn || block
   end
 
-  def register_from(mod)
-    (mod.public_methods - Module.public_methods).each do |meth|
-      Transproc.register(meth, mod.method(meth))
-    end
-  end
-
   def [](name)
     functions.fetch(name)
   end
 
   def functions
     @_functions ||= {}
+  end
+
+  module AutoRegister
+    def method_added(meth)
+      module_function meth
+      Transproc.register(meth, method(meth))
+    end
   end
 end
 
