@@ -2,12 +2,11 @@ module Transproc
   module ArrayTransformations
     module_function
 
-    def map_array(array, *fns)
-      Transproc(:map_array!, *fns)[Array[*array]]
+    def map_array(array, fn)
+      Transproc(:map_array!, fn)[Array[*array]]
     end
 
-    def map_array!(array, *fns)
-      fn = fns.size == 1 ? fns[0] : fns.reduce(:+)
+    def map_array!(array, fn)
       array.map! { |value| fn[value] }
     end
 
