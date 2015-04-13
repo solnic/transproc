@@ -1,3 +1,5 @@
+require 'transproc/conditional'
+
 module Transproc
   # Recursive transformation functions
   #
@@ -30,13 +32,10 @@ module Transproc
     # @api public
     def array_recursion(value, fn)
       result = fn[value]
+      guarded = Transproc(:guard, -> v { v.is_a?(::Array) }, -> v { Transproc(:array_recursion, fn)[v] })
 
       result.map! do |item|
-        if item.is_a?(::Array)
-          Transproc(:array_recursion, fn)[item]
-        else
-          item
-        end
+        guarded[item]
       end
     end
 
@@ -55,15 +54,10 @@ module Transproc
     # @api public
     def hash_recursion(value, fn)
       result = fn[value]
+      guarded = Transproc(:guard, -> v { v.is_a?(::Hash) }, -> v { Transproc(:hash_recursion, fn)[v] })
 
       result.keys.each do |key|
-        item = result.delete(key)
-
-        if item.is_a?(::Hash)
-          result[key] = Transproc(:hash_recursion, fn)[item]
-        else
-          result[key] = item
-        end
+        result[key] = guarded[result.delete(key)]
       end
 
       result
