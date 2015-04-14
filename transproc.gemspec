@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Transproc::VERSION.dup
   spec.authors       = ["Piotr Solnica"]
   spec.email         = ["piotr.solnica@gmail.com"]
-  spec.summary       = %q{Functional object transformations for Ruby}
+  spec.summary       = %q{Transform Ruby objects in functional style}
   spec.description   = spec.summary
-  spec.homepage      = ""
+  spec.homepage      = "http://solnic.github.io/transproc/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
