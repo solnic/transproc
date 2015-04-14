@@ -39,21 +39,21 @@ Or install it yourself as:
 require 'transproc/all'
 
 # compose transformation functions
-transformation = Transproc(:symbolize_keys) >> Transproc(:map_hash, user_name: :name)
+include Transproc::Helper
+
+transformation = t(:map_array, t(:symbolize_keys) >> t(:map_hash, user_name: :user))
+transformation >>= t(:wrap, :address, [:city, :street, :zipcode])
 
 # call the function
-transformation['user_name' => 'Jane']
-# => {:name=>"Jane"}
-
-# or using a helper (no, it's not a good idea to include it here :))
-include Transproc::Composer
-
-transformation = compose do |fns|
-  fns << t(:symbolize_keys) << t(:map_hash, user_name: :name)
-end
-
-transformation['user_name' => 'Jane']
-# => {:name=>"Jane"}
+transformation.call(
+  [
+    { 'user_name' => 'Jane',
+      'city' => 'NYC',
+      'street' => 'Street 1',
+      'zipcode' => '123' }
+  ]
+)
+# => [{:user=>"Jane", :address=>{:city=>"NYC", :street=>"Street 1", :zipcode=>"123"}}]
 ```
 
 ## Credits
