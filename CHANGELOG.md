@@ -4,7 +4,6 @@
 
 * `:map_values` hash transformation (AMHOL)
 * `:map_value` hash transformation (AMHOL)
-* `:map_value` hash transformation (AMHOL)
 * `:guard` function (AMHOL)
 * `:is` type-check function (solnic)
 * `Function#to_ast` for easy inspection (solnic)
