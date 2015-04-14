@@ -148,7 +148,7 @@ module Transproc
     # Map a key in a hash with the provided transformation function
     #
     # @example
-    #   Transproc(:map_value, -> s { s.upcase })['name' => 'jane']
+    #   Transproc(:map_value, 'name', -> s { s.upcase })['name' => 'jane']
     #   # => {"name" => "JANE"}
     #
     # @param [Hash]

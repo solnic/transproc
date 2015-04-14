@@ -16,7 +16,7 @@ module Transproc
   #       { 'city' => 'NYC', 'zipcode' => '312' }
   #     ]
   #   )
-  #   # => [{ city: 'Boston', zipcode: '123' }, { city: 'NYC', zipcode: '312' }]
+  #   # => [{:address=>{:city=>"Boston", :zipcode=>"123"}}, {:address=>{:city=>"NYC", :zipcode=>"312"}}]
   #
   # @api public
   module ArrayTransformations
