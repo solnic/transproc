@@ -148,24 +148,24 @@ module Transproc
     # Map a key in a hash with the provided transformation function
     #
     # @example
-    #   Transproc(:map_key, -> s { s.upcase })['name' => 'jane']
-    #   # => {"name" => "jane"}
+    #   Transproc(:map_value, -> s { s.upcase })['name' => 'jane']
+    #   # => {"name" => "JANE"}
     #
     # @param [Hash]
     #
     # @return [Hash]
     #
     # @api public
-    def map_key(hash, key, fn)
+    def map_value(hash, key, fn)
       hash.merge(key => fn[hash[key]])
     end
 
-    # Same as `:map_key` but mutates the hash
+    # Same as `:map_value` but mutates the hash
     #
-    # @see HashTransformations.map_key!
+    # @see HashTransformations.map_value!
     #
     # @api public
-    def map_key!(hash, key, fn)
+    def map_value!(hash, key, fn)
       hash.update(key => fn[hash[key]])
     end
 

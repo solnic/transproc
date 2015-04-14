@@ -57,7 +57,7 @@ describe 'Array transformations with Transproc' do
         t(
           :map_array,
           t(:nest, :user, [:name, :title]) +
-          t(:map_key, :user, t(:nest, :task, [:title]))
+          t(:map_value, :user, t(:nest, :task, [:title]))
       )
 
       input = [{ name: 'Jane', title: 'One' }]

@@ -123,9 +123,9 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_key' do
+  describe 'map_value' do
     it 'applies function to value under specified key' do
-      transformation = t(:map_key, :user, t(:symbolize_keys))
+      transformation = t(:map_value, :user, t(:symbolize_keys))
 
       input = { user: { 'name' => 'Jane' } }
       output = { user: { name: 'Jane' } }
@@ -135,9 +135,9 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_key!' do
+  describe 'map_value!' do
     it 'applies function to value under specified key' do
-      transformation = t(:map_key!, :user, t(:symbolize_keys))
+      transformation = t(:map_value!, :user, t(:symbolize_keys))
 
       input = { user: { 'name' => 'Jane' } }
       output = { user: { name: 'Jane' } }
@@ -226,7 +226,7 @@ describe 'Hash mapping with Transproc' do
   describe 'nested transform' do
     it 'applies functions to nested hashes' do
       symbolize_keys = t(:symbolize_keys)
-      map_user_key = t(:map_key, :user, symbolize_keys)
+      map_user_key = t(:map_value, :user, symbolize_keys)
 
       transformation = symbolize_keys >> map_user_key
 
