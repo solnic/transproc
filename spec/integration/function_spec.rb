@@ -37,8 +37,9 @@ describe "Transproc::Function" do
     end
 
     it "composes anonymous functions" do
-      f1 = Transproc -> (v, m) { v * m }, 2
-      f2 = Transproc -> (v) { v.to_s }
+      # TODO: Use Transproc -> (v) { v.to_s } after release of jruby-9k
+      f1 = Transproc proc { |v, m| v * m }, 2
+      f2 = Transproc proc { |v| v.to_s }
 
       f3 = f1 >> f2
 
