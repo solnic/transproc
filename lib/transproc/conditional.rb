@@ -32,5 +32,25 @@ module Transproc
     def guard(value, predicate, fn)
       predicate[value] ? fn[value] : value
     end
+
+    # Calls a function when type-check passes
+    #
+    # @example
+    #   fn = Transproc(:is, Array, -> arr { arr.map(&:upcase) })
+    #   fn.call(['a', 'b', 'c']) # => ['A', 'B', 'C']
+    #
+    #   fn = Transproc(:is, Array, -> arr { arr.map(&:upcase) })
+    #   fn.call('foo') # => "foo"
+    #
+    # @param [Object]
+    # @param [Class]
+    # @param [Proc]
+    #
+    # @return [Object]
+    #
+    # @api public
+    def is(value, type, fn)
+      guard(value, -> v { v.is_a?(type) }, fn)
+    end
   end
 end

@@ -17,6 +17,10 @@ module Transproc
   module Recursion
     extend Functions
 
+    IF_ARRAY = -> fn { Transproc(:is, Array, fn) }
+
+    IF_HASH = -> fn { Transproc(:is, Hash, fn) }
+
     # Recursively apply the provided transformation function to an array
     #
     # @example
@@ -32,7 +36,7 @@ module Transproc
     # @api public
     def array_recursion(value, fn)
       result = fn[value]
-      guarded = Transproc(:guard, -> v { v.is_a?(::Array) }, -> v { Transproc(:array_recursion, fn)[v] })
+      guarded = IF_ARRAY[-> v { Transproc(:array_recursion, fn)[v] }]
 
       result.map! do |item|
         guarded[item]
@@ -54,7 +58,7 @@ module Transproc
     # @api public
     def hash_recursion(value, fn)
       result = fn[value]
-      guarded = Transproc(:guard, -> v { v.is_a?(::Hash) }, -> v { Transproc(:hash_recursion, fn)[v] })
+      guarded = IF_HASH[-> v { Transproc(:hash_recursion, fn)[v] }]
 
       result.keys.each do |key|
         result[key] = guarded[result.delete(key)]
