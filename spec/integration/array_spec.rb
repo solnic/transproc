@@ -56,7 +56,7 @@ describe 'Array transformations with Transproc' do
       wrap =
         t(
           :map_array,
-          t(:nest, :user, [:name, :title]),
+          t(:nest, :user, [:name, :title]) +
           t(:map_key, :user, t(:nest, :task, [:title]))
       )
 
