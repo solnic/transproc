@@ -29,7 +29,7 @@ module Transproc
     #
     # @api public
     def map_keys(hash, fn)
-      Transproc(:map_keys!, fn)[Hash[hash]]
+      map_keys!(Hash[hash], fn)
     end
 
     # Same as `:map_keys` but mutates the hash
@@ -54,7 +54,7 @@ module Transproc
     #
     # @api public
     def symbolize_keys(hash)
-      Transproc(:symbolize_keys!)[Hash[hash]]
+      symbolize_keys!(Hash[hash])
     end
 
     # Same as `:symbolize_keys` but mutates the hash
@@ -63,7 +63,7 @@ module Transproc
     #
     # @api public
     def symbolize_keys!(hash)
-      Transproc(:map_keys!, Transproc(:to_symbol))[hash]
+      map_keys!(hash, Transproc(:to_symbol).fn)
     end
 
     # Stringify all keys in a hash
@@ -78,7 +78,7 @@ module Transproc
     #
     # @api public
     def stringify_keys(hash)
-      Transproc(:stringify_keys!)[Hash[hash]]
+      stringify_keys!(Hash[hash])
     end
 
     # Same as `:stringify_keys` but mutates the hash
@@ -87,7 +87,7 @@ module Transproc
     #
     # @api public
     def stringify_keys!(hash)
-      Transproc(:map_keys!, Transproc(:to_string))[hash]
+      map_keys!(hash, Transproc(:to_string).fn)
     end
 
     # Map all values in a hash using transformation function
@@ -102,7 +102,7 @@ module Transproc
     #
     # @api public
     def map_values(hash, fn)
-      Transproc(:map_values!, fn)[Hash[hash]]
+      map_values!(Hash[hash], fn)
     end
 
     # Same as `:map_values` but mutates the hash
@@ -132,7 +132,7 @@ module Transproc
     #
     # @api public
     def map_hash(hash, mapping)
-      Transproc(:map_hash!, mapping)[Hash[hash]]
+      map_hash!(Hash[hash], mapping)
     end
 
     # Same as `:map_hash` but mutates the hash
@@ -181,7 +181,7 @@ module Transproc
     #
     # @api public
     def nest(hash, key, keys)
-      Transproc(:nest!, key, keys)[Hash[hash]]
+      nest!(Hash[hash], key, keys)
     end
 
     # Same as `:nest` but mutates the hash
@@ -213,7 +213,7 @@ module Transproc
     # @api public
     def unwrap(hash, root, keys)
       copy = Hash[hash].merge(root => Hash[hash[root]])
-      Transproc(:unwrap!, root, keys)[copy]
+      unwrap!(copy, root, keys)
     end
 
     # Same as `:unwrap` but mutates the hash
