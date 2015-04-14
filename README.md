@@ -56,7 +56,7 @@ transformation.call(
 # => [{:user=>"Jane", :address=>{:city=>"NYC", :street=>"Street 1", :zipcode=>"123"}}]
 
 # Define your own transformations easily
-Transproc(:to_json, -> v { JSON.dump(v) })
+Transproc.register(:to_json, -> v { JSON.dump(v) })
 
 Transproc(:to_json).call([{ name: 'Jane' }])
 # => "[{\"name\":\"Jane\"}]"
