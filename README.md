@@ -41,7 +41,7 @@ require 'transproc/all'
 # compose transformation functions
 include Transproc::Helper
 
-transformation = t(:map_array, t(:symbolize_keys) >> t(:map_hash, user_name: :user))
+transformation = t(:map_array, t(:symbolize_keys) >> t(:rename_keys, user_name: :user))
 transformation >>= t(:wrap, :address, [:city, :street, :zipcode])
 
 # call the function

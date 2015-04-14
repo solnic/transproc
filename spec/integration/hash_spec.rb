@@ -98,9 +98,9 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_hash' do
+  describe 'rename_keys' do
     it 'returns a new hash with applied functions' do
-      map = t(:map_hash, 'foo' => :foo)
+      map = t(:rename_keys, 'foo' => :foo)
 
       input = { 'foo' => 'bar', :bar => 'baz' }
       output = { foo: 'bar', bar: 'baz' }
@@ -110,9 +110,9 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_hash!' do
+  describe 'rename_keys!' do
     it 'returns updated hash with applied functions' do
-      map = t(:map_hash!, 'foo' => :foo)
+      map = t(:rename_keys!, 'foo' => :foo)
 
       input = { 'foo' => 'bar', :bar => 'baz' }
       output = { foo: 'bar', bar: 'baz' }
@@ -240,7 +240,7 @@ describe 'Hash mapping with Transproc' do
   describe 'combining transformations' do
     it 'applies functions to the hash' do
       symbolize_keys = t(:symbolize_keys)
-      map = t(:map_hash, user_name: :name, user_email: :email)
+      map = t(:rename_keys, user_name: :name, user_email: :email)
 
       transformation = symbolize_keys >> map
 

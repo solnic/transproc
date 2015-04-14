@@ -122,7 +122,7 @@ module Transproc
     # Rename all keys in a hash using provided mapping hash
     #
     # @example
-    #   Transproc(:map_hash, user_name: :name)[user_name: 'Jane']
+    #   Transproc(:rename_keys, user_name: :name)[user_name: 'Jane']
     #   # => {:name => "Jane"}
     #
     # @param [Hash] hash The input hash
@@ -131,16 +131,16 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def map_hash(hash, mapping)
-      map_hash!(Hash[hash], mapping)
+    def rename_keys(hash, mapping)
+      rename_keys!(Hash[hash], mapping)
     end
 
-    # Same as `:map_hash` but mutates the hash
+    # Same as `:rename_keys` but mutates the hash
     #
-    # @see HashTransformations.map_hash
+    # @see HashTransformations.rename_keys
     #
     # @api public
-    def map_hash!(hash, mapping)
+    def rename_keys!(hash, mapping)
       mapping.each { |k, v| hash[v] = hash.delete(k) }
       hash
     end

@@ -4,7 +4,7 @@ describe "Transproc::Function" do
   describe "#>>" do
     it "composes named functions" do
       f1 = t(:symbolize_keys)
-      f2 = t(:map_hash, user_name: :name)
+      f2 = t(:rename_keys, user_name: :name)
 
       f3 = f1 >> f2
 
@@ -12,7 +12,7 @@ describe "Transproc::Function" do
         [
           :symbolize_keys, [],
           [
-            :map_hash, [ user_name: :name ]
+            :rename_keys, [ user_name: :name ]
           ]
         ]
       )
@@ -25,7 +25,7 @@ describe "Transproc::Function" do
         [
           :symbolize_keys, [],
           [
-            :map_hash, [ user_name: :name ]
+            :rename_keys, [ user_name: :name ]
           ],
           [
             :nest, [:details, [:name]]
