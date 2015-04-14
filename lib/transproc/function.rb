@@ -59,7 +59,7 @@ module Transproc
     #
     # @api public
     def to_ast
-      [fn.name, [fn, args]]
+      [fn.name, args]
     end
 
     # Composition of two functions

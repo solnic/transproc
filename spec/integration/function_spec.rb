@@ -10,9 +10,9 @@ describe "Transproc::Function" do
 
       expect(f3.to_ast).to eql(
         [
-          :symbolize_keys, [t(:symbolize_keys).fn, []],
+          :symbolize_keys, [],
           [
-            :map_hash, [t(:map_hash).fn, [{ user_name: :name }]]
+            :map_hash, [ user_name: :name ]
           ]
         ]
       )
@@ -23,12 +23,12 @@ describe "Transproc::Function" do
 
       expect(f4.to_ast).to eql(
         [
-          :symbolize_keys, [t(:symbolize_keys).fn, []],
+          :symbolize_keys, [],
           [
-            :map_hash, [t(:map_hash).fn, [{ user_name: :name }]]
+            :map_hash, [ user_name: :name ]
           ],
           [
-            :nest, [t(:nest).fn, [:details, [:name]]]
+            :nest, [:details, [:name]]
           ]
         ]
       )
