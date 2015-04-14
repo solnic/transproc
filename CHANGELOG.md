@@ -1,3 +1,25 @@
+## v0.2.0 2015-04-14
+
+### Added
+
+* `:map_values` hash transformation (AMHOL)
+* `:map_value` hash transformation (AMHOL)
+* `:map_value` hash transformation (AMHOL)
+* `:guard` function (AMHOL)
+* `:is` type-check function (solnic)
+* `Function#to_ast` for easy inspection (solnic)
+* Ability to define module with custom functions that will be auto-registered (solnic + splattael)
+
+### Changed
+
+* [BREAKING] `map_hash` renamed to `rename_keys`
+* [BREAKING] `map_key` renamed to `map_value`
+* [BREAKING] `map_array` no longer accepts multiple functions (AMHOL)
+* All functions are now defined as module functions (solnic + splattael)
+* Functions no longer create anonymous procs (solnic)
+
+[Compare v0.1.3...master](https://github.com/solnic/transproc/compare/v0.1.3...master)
+
 ## v0.1.3 2015-04-07
 
 ### Added
