@@ -18,7 +18,7 @@ module Transproc
   #   )
   #   # => [{ city: 'Boston', zipcode: '123' }, { city: 'NYC', zipcode: '312' }]
   #
-  #
+  # @api public
   module ArrayTransformations
     extend Functions
 
