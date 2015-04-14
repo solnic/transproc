@@ -11,4 +11,5 @@ end
 group :tools do
   gem 'byebug', platform: :mri
   gem 'benchmark-ips'
+  gem 'guard-rspec'
 end
