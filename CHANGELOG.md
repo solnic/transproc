@@ -18,7 +18,7 @@
 * All functions are now defined as module functions (solnic + splattael)
 * Functions no longer create anonymous procs (solnic)
 
-[Compare v0.1.3...master](https://github.com/solnic/transproc/compare/v0.1.3...master)
+[Compare v0.1.3...v0.2.0](https://github.com/solnic/transproc/compare/v0.1.3...v0.2.0)
 
 ## v0.1.3 2015-04-07
 
