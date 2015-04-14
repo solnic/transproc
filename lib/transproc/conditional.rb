@@ -14,7 +14,7 @@ module Transproc
   #
   # @api public
   module Conditional
-    module_function
+    extend Functions
 
     # Apply the transformation function to subject if the predicate returns true, or return un-modified
     #
@@ -32,7 +32,5 @@ module Transproc
     def guard(value, predicate, fn)
       predicate[value] ? fn[value] : value
     end
-
-    Transproc.register_from(self)
   end
 end

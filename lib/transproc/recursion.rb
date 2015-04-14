@@ -13,7 +13,7 @@ module Transproc
   #
   # @api public
   module Recursion
-    module_function
+    extend Functions
 
     # Recursively apply the provided transformation function to an array
     #
@@ -68,7 +68,5 @@ module Transproc
 
       result
     end
-
-    Transproc.register_from(self)
   end
 end

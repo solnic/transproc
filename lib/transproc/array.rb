@@ -1,6 +1,6 @@
 module Transproc
   module ArrayTransformations
-    module_function
+    extend Functions
 
     def map_array(array, *fns)
       Transproc(:map_array!, *fns)[Array[*array]]
@@ -27,7 +27,5 @@ module Transproc
         root.merge(key => children)
       end
     end
-
-    Transproc.register_from(self)
   end
 end

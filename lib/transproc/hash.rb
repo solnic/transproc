@@ -15,7 +15,7 @@ module Transproc
   #
   # @api public
   module HashTransformations
-    module_function
+    extend Functions
 
     # Map all keys in a hash with the provided transformation function
     #
@@ -230,7 +230,5 @@ module Transproc
 
       hash
     end
-
-    Transproc.register_from(self)
   end
 end
