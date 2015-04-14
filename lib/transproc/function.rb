@@ -48,14 +48,18 @@ module Transproc
     #
     # @api public
     def compose(other)
-      Composite.new(fn, args: args, right: other)
+      Composite.new(self, right: other)
     end
     alias_method :+, :compose
     alias_method :>>, :compose
 
+    # Return a simple AST representation of this function
+    #
+    # @return [Array]
+    #
     # @api public
-    def name
-      fn.name
+    def to_ast
+      [fn.name, [fn, args]]
     end
 
     # Composition of two functions
@@ -83,7 +87,7 @@ module Transproc
       #
       # @api public
       def call(value)
-        right[left[value, *args]]
+        right[left[value]]
       end
       alias_method :[], :call
 
@@ -96,8 +100,11 @@ module Transproc
       alias_method :+, :compose
       alias_method :>>, :compose
 
-      def name
-        [super, right.name]
+      # @see Function#to_ast
+      #
+      # @api public
+      def to_ast
+        left.to_ast << right.to_ast
       end
     end
   end
