@@ -59,7 +59,8 @@ module Transproc
     #
     # @api public
     def to_ast
-      [fn.name, args]
+      identifier = Proc === fn ? fn : fn.name
+      [identifier, args]
     end
 
     # Composition of two functions

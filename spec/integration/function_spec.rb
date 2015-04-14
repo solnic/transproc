@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Transproc::Function" do
   describe "#>>" do
-    it "composes two functions" do
+    it "composes named functions" do
       f1 = t(:symbolize_keys)
       f2 = t(:map_hash, user_name: :name)
 
@@ -34,6 +34,22 @@ describe "Transproc::Function" do
       )
 
       expect(f4['user_name' => 'Jane']).to eql(details: { name: 'Jane' })
+    end
+
+    it "composes anonymous functions" do
+      f1 = Transproc -> (v, m) { v * m }, 2
+      f2 = Transproc -> (v) { v.to_s }
+
+      f3 = f1 >> f2
+
+      expect(f3.to_ast).to eql(
+        [
+          f1.fn, [2],
+          [
+            f2.fn, []
+          ]
+        ]
+      )
     end
   end
 end
