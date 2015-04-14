@@ -18,7 +18,7 @@ module Transproc
     @_functions ||= {}
   end
 
-  module AutoRegister
+  module Functions
     def method_added(meth)
       module_function meth
       Transproc.register(meth, method(meth))

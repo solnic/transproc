@@ -1,6 +1,6 @@
 module Transproc
   module ArrayTransformations
-    extend AutoRegister
+    extend Functions
 
     def map_array(array, *fns)
       Transproc(:map_array!, *fns)[Array[*array]]

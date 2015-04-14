@@ -5,7 +5,7 @@ require 'bigdecimal/util'
 
 module Transproc
   module Coercions
-    extend AutoRegister
+    extend Functions
 
     TRUE_VALUES = [true, 1, '1', 'on', 't', 'true', 'y', 'yes'].freeze
     FALSE_VALUES = [false, 0, '0', 'off', 'f', 'false', 'n', 'no'].freeze

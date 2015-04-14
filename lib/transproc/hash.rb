@@ -15,7 +15,7 @@ module Transproc
   #
   # @api public
   module HashTransformations
-    extend AutoRegister
+    extend Functions
 
     # Map all keys in a hash with the provided transformation function
     #

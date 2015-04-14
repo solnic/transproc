@@ -14,7 +14,7 @@ module Transproc
   #
   # @api public
   module Conditional
-    extend AutoRegister
+    extend Functions
 
     # Apply the transformation function to subject if the predicate returns true, or return un-modified
     #

@@ -13,7 +13,7 @@ module Transproc
   #
   # @api public
   module Recursion
-    extend AutoRegister
+    extend Functions
 
     # Recursively apply the provided transformation function to an array
     #
