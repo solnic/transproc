@@ -5,19 +5,52 @@ require 'transproc/composer'
 module Transproc
   module_function
 
+  # Register a new function
+  #
+  # @example
+  #   Transproc.register(:to_json, -> v { v.to_json })
+  #
+  #   Transproc(:map_array, Transproc(:to_json))
+  #
+  #
+  # @return [Function]
+  #
+  # @api public
   def register(*args, &block)
     name, fn = *args
     functions[name] = fn || block
   end
 
+  # Get registered function with provided name
+  #
+  # @param [Symbol] name The name of the registered function
+  #
+  # @api private
   def [](name)
     functions.fetch(name)
   end
 
+  # Function registry
+  #
+  # @api private
   def functions
     @_functions ||= {}
   end
 
+  # Function container extension
+  #
+  # @example
+  #   module MyTransformations
+  #     extend Transproc::Functions
+  #
+  #     def boom!(value)
+  #       "#{value} BOOM!"
+  #     end
+  #   end
+  #
+  #   Transproc(:boom!)['w00t!'] # => "w00t! BOOM!"
+  #
+  # @api public
   module Functions
     def method_added(meth)
       module_function meth
@@ -26,6 +59,19 @@ module Transproc
   end
 end
 
+# Access registered functions
+#
+# @example
+#   Transproc(:map_array, Transproc(:to_string))
+#
+#   Transproc(:to_string) >> Transproc(-> v { v.upcase })
+#
+# @param [Symbol,Proc] fn The name of the registered function or an anonymous proc
+# @param [Array] args Optional addition args that a given function may need
+#
+# @return [Function]
+#
+# @api public
 def Transproc(fn, *args)
   case fn
   when Proc then Transproc::Function.new(fn, args: args)
