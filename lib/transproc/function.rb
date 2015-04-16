@@ -48,7 +48,7 @@ module Transproc
     #
     # @api public
     def compose(other)
-      Composite.new(self, right: other)
+      Composite.new(self, other)
     end
     alias_method :+, :compose
     alias_method :>>, :compose
@@ -66,8 +66,11 @@ module Transproc
     # Composition of two functions
     #
     # @api private
-    class Composite < Function
-      alias_method :left, :fn
+    class Composite
+      # @return [Proc]
+      #
+      # @api private
+      attr_reader :left
 
       # @return [Proc]
       #
@@ -75,9 +78,9 @@ module Transproc
       attr_reader :right
 
       # @api private
-      def initialize(fn, options = {})
-        super
-        @right = options.fetch(:right)
+      def initialize(left, right)
+        @left = left
+        @right = right
       end
 
       # Call right side with the result from the left side
@@ -96,7 +99,7 @@ module Transproc
       #
       # @api public
       def compose(other)
-        Composite.new(self, right: other)
+        self.class.new(self, other)
       end
       alias_method :+, :compose
       alias_method :>>, :compose
