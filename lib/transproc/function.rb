@@ -59,7 +59,7 @@ module Transproc
     #
     # @api public
     def to_ast
-      identifier = Proc === fn ? fn : fn.name
+      identifier = fn.is_a?(::Proc) ? fn : fn.name
       [identifier, args]
     end
 

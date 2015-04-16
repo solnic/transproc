@@ -1,5 +1,4 @@
 module Transproc
-
   # Conditional transformation functions
   #
   # @example
