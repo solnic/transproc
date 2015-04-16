@@ -36,6 +36,7 @@ Or install it yourself as:
 ## Usage
 
 ``` ruby
+require 'json'
 require 'transproc/all'
 
 # compose transformation functions
@@ -70,7 +71,7 @@ module MyTransformations
   end
 end
 
-(Transproc(:load_json) >> Transproc(:symbolize_keys)).call('[{"name":"Jane"}]')
+(Transproc(:load_json) >> Transproc(:map_array, Transproc(:symbolize_keys))).call('[{"name":"Jane"}]')
 # => [{ :name => "Jane" }]
 ```
 
