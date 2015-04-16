@@ -186,7 +186,7 @@ describe 'Hash mapping with Transproc' do
 
   describe 'unwrap!' do
     it 'returns updated hash with nested keys lifted to the root' do
-      unwrap = t(:unwrap!, 'wrapped', ['one', 'two'])
+      unwrap = t(:unwrap!, 'wrapped', %w(one two))
 
       input = { 'foo' => 'bar', 'wrapped' => { 'one' => nil, 'two' => false } }
       output = { 'foo' => 'bar', 'one' => nil, 'two' => false }
@@ -210,16 +210,18 @@ describe 'Hash mapping with Transproc' do
 
   describe 'unwrap' do
     it 'returns new hash with nested keys lifted to the root' do
-      unwrap = t(:unwrap, 'wrapped', ['one', 'two'])
+      unwrap = t(:unwrap, 'wrapped', %w(one two))
 
       input = {
         'foo' => 'bar',
         'wrapped' => { 'one' => nil, 'two' => false }
       }.freeze
 
-      expect(unwrap[input]).to eql({'foo' => 'bar',
-                                    'one' => nil,
-                                    'two' => false})
+      expect(unwrap[input]).to eql(
+        'foo' => 'bar',
+        'one' => nil,
+        'two' => false
+      )
     end
   end
 

@@ -3,7 +3,8 @@ sudo: false
 cache: bundler
 env:
   - CODECLIMATE_REPO_TOKEN=aead71de2239048f830499462c54b57dfc646f1d56ad5dcbbc3469a6ebaf97ca
-script: "bundle exec rake spec"
+bundler_args: --without tools
+script: 'bundle exec rake spec'
 rvm:
   - 2.0
   - 2.1

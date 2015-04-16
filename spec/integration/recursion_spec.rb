@@ -29,16 +29,13 @@ describe 'Recursive transformations with Transproc' do
         [
           'foo',
           'bar',
-          [
-            'foo',
-            'bar'
-          ]
+          %w(foo bar)
         ]
       ]
     end
 
     context 'when function is non-destructive' do
-      let(:map) { t(:array_recursion, proc { |arr| arr.compact }) }
+      let(:map) { t(:array_recursion, proc(&:compact)) }
 
       it 'applies funtions to all items recursively' do
         expect(map[input]).to eql(output)
@@ -47,7 +44,7 @@ describe 'Recursive transformations with Transproc' do
     end
 
     context 'when function is destructive' do
-      let(:map) { t(:array_recursion, proc { |arr| arr.compact! }) }
+      let(:map) { t(:array_recursion, proc(&:compact!)) }
 
       it 'applies funtions to all items recursively and destructively' do
         expect(map[input]).to eql(output)

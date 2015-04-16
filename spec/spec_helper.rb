@@ -1,5 +1,5 @@
-if RUBY_ENGINE == "rbx"
-  require "codeclimate-test-reporter"
+if RUBY_ENGINE == 'rbx'
+  require 'codeclimate-test-reporter'
   CodeClimate::TestReporter.start
 end
 
