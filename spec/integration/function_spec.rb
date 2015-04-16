@@ -52,5 +52,28 @@ describe 'Transproc::Function' do
         ]
       )
     end
+
+    it 'plays well with registered compositions' do
+      Transproc.register(:user_names, t(:symbolize_keys) + t(:rename_keys, user_name: :name))
+      f = t(:user_names)
+
+      expect(f['user_name' => 'Jane']).to eql(name: 'Jane')
+      expect(f.to_ast).to eql(
+        [
+          :symbolize_keys, [],
+          [
+            :rename_keys, [user_name: :name]
+          ]
+        ]
+      )
+    end
+
+    it 'plays well with registered functions' do
+      Transproc.register(:to_s, t(:to_string))
+      f = t(:to_s)
+
+      expect(f[:ok]).to eql('ok')
+      expect(f.to_ast).to eql([:to_string, []])
+    end
   end
 end

@@ -75,6 +75,11 @@ end
 def Transproc(fn, *args)
   case fn
   when Proc then Transproc::Function.new(fn, args: args)
-  when Symbol then Transproc::Function.new(Transproc[fn], args: args)
+  when Symbol
+    fun = Transproc[fn]
+    case fun
+    when Transproc::Function, Transproc::Composite then fun
+    else Transproc::Function.new(fun, args: args)
+    end
   end
 end
