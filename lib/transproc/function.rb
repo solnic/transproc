@@ -1,3 +1,5 @@
+require 'transproc/composite'
+
 module Transproc
   # Transformation proc wrapper allowing composition of multiple procs into
   # a data-transformation pipeline.
@@ -48,7 +50,7 @@ module Transproc
     #
     # @api public
     def compose(other)
-      Composite.new(self, right: other)
+      Composite.new(self, other)
     end
     alias_method :+, :compose
     alias_method :>>, :compose
@@ -61,52 +63,6 @@ module Transproc
     def to_ast
       identifier = fn.is_a?(::Proc) ? fn : fn.name
       [identifier, args]
-    end
-
-    # Composition of two functions
-    #
-    # @api private
-    class Composite < Function
-      alias_method :left, :fn
-
-      # @return [Proc]
-      #
-      # @api private
-      attr_reader :right
-
-      # @api private
-      def initialize(fn, options = {})
-        super
-        @right = options.fetch(:right)
-      end
-
-      # Call right side with the result from the left side
-      #
-      # @param [Object] value The input value
-      #
-      # @return [Object]
-      #
-      # @api public
-      def call(value)
-        right[left[value]]
-      end
-      alias_method :[], :call
-
-      # @see Function#compose
-      #
-      # @api public
-      def compose(other)
-        Composite.new(self, right: other)
-      end
-      alias_method :+, :compose
-      alias_method :>>, :compose
-
-      # @see Function#to_ast
-      #
-      # @api public
-      def to_ast
-        left.to_ast << right.to_ast
-      end
     end
   end
 end
