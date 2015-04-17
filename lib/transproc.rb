@@ -1,6 +1,7 @@
 require 'transproc/version'
 require 'transproc/function'
 require 'transproc/composer'
+require 'transproc/error'
 
 module Transproc
   module_function
@@ -18,6 +19,7 @@ module Transproc
   # @api public
   def register(*args, &block)
     name, fn = *args
+    raise Error.new("function #{name} is already defined") if functions.include?(name)
     functions[name] = fn || block
   end
 
@@ -27,7 +29,7 @@ module Transproc
   #
   # @api private
   def [](name)
-    functions.fetch(name)
+    functions[name] or raise Error.new("no registered function for #{name}")
   end
 
   # Function registry
