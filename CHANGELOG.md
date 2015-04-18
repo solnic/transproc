@@ -1,3 +1,23 @@
+## v0.2.1 to-be-released
+
+### Changed
+
+* `Transproc.register` raises a meaningful error when a given function is already registered (kwando)
+* `Transproc[]` raises a meaningful error when a given function doesn't exist (kwando)
+
+### Fixed
+
+* `Transproc()` no longer creates a function if it's already a function (splattael)
+* A couple of mistakes in the API docs (AMHOL)
+
+### Internal
+
+* Rubocop integration \o/ (AMHOL)
+
+### Changed
+
+[Compare v0.2.0...master](https://github.com/solnic/transproc/compare/v0.2.0...master)
+
 ## v0.2.0 2015-04-14
 
 ### Added
