@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'Array transformations with Transproc' do
-  describe 'map_array' do
+describe Transproc::ArrayTransformations do
+  describe '.map_array' do
     it 'applies funtions to all values' do
       map = t(:map_array, t(:symbolize_keys))
 
@@ -22,7 +22,7 @@ describe 'Array transformations with Transproc' do
     end
   end
 
-  describe 'map_array!' do
+  describe '.map_array!' do
     it 'updates array with the result of the function applied to each value' do
       map = t(:map_array!, t(:symbolize_keys))
 
@@ -42,7 +42,7 @@ describe 'Array transformations with Transproc' do
     end
   end
 
-  describe 'wrap' do
+  describe '.wrap' do
     it 'returns a new array with wrapped hashes' do
       wrap = t(:wrap, :task, [:title])
 
@@ -67,7 +67,7 @@ describe 'Array transformations with Transproc' do
     end
   end
 
-  describe 'group' do
+  describe '.group' do
     it 'returns a new array with grouped hashes' do
       group = t(:group, :tasks, [:title])
 
@@ -75,24 +75,6 @@ describe 'Array transformations with Transproc' do
       output = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
 
       expect(group[input]).to eql(output)
-    end
-  end
-
-  describe 'composition' do
-    it 'allows composing transformations' do
-      map = t(:map_array, t(:symbolize_keys))
-      group = t(:group, :tasks, [:title])
-
-      input = [
-        { 'name' => 'Jane', 'title' => 'One' },
-        { 'name' => 'Jane', 'title' => 'Two' }
-      ]
-
-      output = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
-
-      transformation = map >> group
-
-      expect(transformation[input]).to eql(output)
     end
   end
 end

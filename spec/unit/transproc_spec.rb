@@ -15,7 +15,7 @@ describe Transproc do
     end
   end
 
-  describe 'function registration' do
+  describe '.register' do
     it 'allows registering functions by name' do
       Transproc.register(:identity, -> value { value })
 
