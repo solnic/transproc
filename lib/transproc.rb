@@ -19,7 +19,9 @@ module Transproc
   # @api public
   def register(*args, &block)
     name, fn = *args
-    raise FunctionAlreadyRegisteredError.new("function #{name} is already defined") if functions.include?(name)
+    if functions.include?(name)
+      raise FunctionAlreadyRegisteredError, "function #{name} is already defined"
+    end
     functions[name] = fn || block
   end
 
@@ -29,7 +31,9 @@ module Transproc
   #
   # @api private
   def [](name)
-    functions[name] or raise FunctionNotFoundError.new("no registered function for #{name}")
+    functions.fetch(name) {
+      raise FunctionNotFoundError, "no registered function for #{name}"
+    }
   end
 
   # Function registry
