@@ -17,21 +17,37 @@ describe Transproc do
 
   describe 'function registration' do
     it 'allows registering functions by name' do
-      Transproc.register(:to_boolean, -> value { value == 'true' })
+      Transproc.register(:identity, -> value { value })
 
-      result = t(-> value { value.to_s }) >> t(:to_boolean)
+      value = 'hello world'
+
+      result = t(:identity)[value]
+
+      expect(result).to be(value)
+    end
+
+    it 'allows registering function by passing a block' do
+      Transproc.register(:to_boolean1) { |value| value == 'true' }
+
+      result = t(-> value { value.to_s }) >> t(:to_boolean1)
 
       expect(result[:true]).to be(true)
       expect(result[:false]).to be(false)
     end
 
-    it 'allows registering function by passing a block' do
-      Transproc.register(:to_boolean) { |value| value == 'true' }
+    it 'raises a Transproc::FunctionAlreadyRegisteredError if a function is already registered' do
+      Transproc.register(:bogus){}
+      expect{ Transproc.register(:bogus){} }.to raise_error(Transproc::FunctionAlreadyRegisteredError)
+    end
+  end
 
-      result = t(-> value { value.to_s }) >> t(:to_boolean)
+  describe 'nonextistent functions' do
 
-      expect(result[:true]).to be(true)
-      expect(result[:false]).to be(false)
+    it 'raises a Transproc::FunctionNotFoundError if asking for function that is non exsistent' do
+      expect{
+        Transproc(:i_do_not_exist)
+        fail('expected the :i_do_not_exist function to not exist')
+      }.to raise_error(Transproc::FunctionNotFoundError)
     end
   end
 end
