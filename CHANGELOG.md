@@ -14,8 +14,6 @@
 
 * Rubocop integration \o/ (AMHOL)
 
-### Changed
-
 [Compare v0.2.0...master](https://github.com/solnic/transproc/compare/v0.2.0...master)
 
 ## v0.2.0 2015-04-14
