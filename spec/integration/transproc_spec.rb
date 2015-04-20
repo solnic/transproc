@@ -36,17 +36,16 @@ describe Transproc do
     end
 
     it 'raises a Transproc::FunctionAlreadyRegisteredError if a function is already registered' do
-      Transproc.register(:bogus){}
-      expect{ Transproc.register(:bogus){} }.to raise_error(Transproc::FunctionAlreadyRegisteredError)
+      Transproc.register(:bogus) {}
+      expect { Transproc.register(:bogus) {} }.to raise_error(Transproc::FunctionAlreadyRegisteredError)
     end
   end
 
   describe 'nonextistent functions' do
-
     it 'raises a Transproc::FunctionNotFoundError if asking for function that is non exsistent' do
-      expect{
+      expect {
         Transproc(:i_do_not_exist)
-        fail('expected the :i_do_not_exist function to not exist')
+        raise('expected the :i_do_not_exist function to not exist')
       }.to raise_error(Transproc::FunctionNotFoundError)
     end
   end

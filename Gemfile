@@ -9,7 +9,7 @@ group :test do
 end
 
 group :tools do
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.30.0'
   gem 'byebug', platform: :mri
   gem 'benchmark-ips'
   gem 'guard'

@@ -29,7 +29,7 @@ Style/AsciiComments:
   Enabled: false
 
 # Allow using braces for value-returning blocks
-Style/Blocks:
+Style/BlockDelimiters:
   Enabled: false
 
 # Documentation checked by Inch CI
