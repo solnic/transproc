@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'Recursive transformations with Transproc' do
-  describe 'array_recursion' do
+describe Transproc::Recursion do
+  describe '.array_recursion' do
     let(:original) do
       [
         'foo',
@@ -53,7 +53,7 @@ describe 'Recursive transformations with Transproc' do
     end
   end
 
-  describe 'hash_recursion' do
+  describe '.hash_recursion' do
     let(:original) do
       {
         'foo' => 'bar',

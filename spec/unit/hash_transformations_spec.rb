@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'Hash mapping with Transproc' do
-  describe 'map_keys' do
+describe Transproc::HashTransformations do
+  describe '.map_keys' do
     it 'returns a new hash with given proc applied to keys' do
       map_keys = t(:map_keys, ->(key) { key.strip })
 
@@ -13,7 +13,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_keys!' do
+  describe '.map_keys!' do
     it 'returns updated hash with given proc applied to keys' do
       map_keys = t(:map_keys!, ->(key) { key.strip })
 
@@ -25,7 +25,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'symbolize_keys' do
+  describe '.symbolize_keys' do
     it 'returns a new hash with symbolized keys' do
       symbolize_keys = t(:symbolize_keys)
 
@@ -37,7 +37,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'symbolize_keys!' do
+  describe '.symbolize_keys!' do
     it 'returns updated hash with symbolized keys' do
       symbolize_keys = t(:symbolize_keys!)
 
@@ -50,7 +50,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'stringify_keys' do
+  describe '.stringify_keys' do
     it 'returns a new hash with stringified keys' do
       stringify_keys = t(:stringify_keys)
 
@@ -62,7 +62,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'stringify_keys!' do
+  describe '.stringify_keys!' do
     it 'returns a new hash with stringified keys' do
       stringify_keys = t(:stringify_keys!)
 
@@ -74,7 +74,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_values' do
+  describe '.map_values' do
     it 'returns a new hash with given proc applied to values' do
       map_values = t(:map_values, ->(value) { value.strip })
 
@@ -86,7 +86,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_values!' do
+  describe '.map_values!' do
     it 'returns updated hash with given proc applied to values' do
       map_values = t(:map_values!, ->(value) { value.strip })
 
@@ -98,7 +98,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'rename_keys' do
+  describe '.rename_keys' do
     it 'returns a new hash with applied functions' do
       map = t(:rename_keys, 'foo' => :foo)
 
@@ -110,7 +110,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'rename_keys!' do
+  describe '.rename_keys!' do
     it 'returns updated hash with applied functions' do
       map = t(:rename_keys!, 'foo' => :foo)
 
@@ -123,7 +123,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_value' do
+  describe '.map_value' do
     it 'applies function to value under specified key' do
       transformation = t(:map_value, :user, t(:symbolize_keys))
 
@@ -135,7 +135,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'map_value!' do
+  describe '.map_value!' do
     it 'applies function to value under specified key' do
       transformation = t(:map_value!, :user, t(:symbolize_keys))
 
@@ -148,7 +148,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'nest' do
+  describe '.nest' do
     it 'returns new hash with keys nested under a new key' do
       nest = t(:nest, :baz, ['foo'])
 
@@ -160,7 +160,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'nest!' do
+  describe '.nest!' do
     it 'returns new hash with keys nested under a new key' do
       nest = t(:nest!, :baz, ['one', 'two', 'not-here'])
 
@@ -184,7 +184,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'unwrap!' do
+  describe '.unwrap!' do
     it 'returns updated hash with nested keys lifted to the root' do
       unwrap = t(:unwrap!, 'wrapped', %w(one two))
 
@@ -208,7 +208,7 @@ describe 'Hash mapping with Transproc' do
     end
   end
 
-  describe 'unwrap' do
+  describe '.unwrap' do
     it 'returns new hash with nested keys lifted to the root' do
       unwrap = t(:unwrap, 'wrapped', %w(one two))
 
