@@ -77,4 +77,53 @@ describe Transproc::ArrayTransformations do
       expect(group[input]).to eql(output)
     end
   end
+
+  describe '.combine!' do
+    let(:input) do
+      [
+        # parent users
+        [
+          { name: 'Jane', email: 'jane@doe.org' },
+          { name: 'Joe', email: 'joe@doe.org' }
+        ],
+        [
+          [
+            # user tasks
+            [
+              { user: 'Jane', title: 'One' },
+              { user: 'Jane', title: 'Two' },
+              { user: 'Joe', title: 'Three' }
+            ],
+            [
+              # task tags
+              [
+                { task: 'One', tag: 'red' },
+                { task: 'Three', tag: 'blue' }
+              ]
+            ]
+          ]
+        ]
+      ]
+    end
+
+    let(:output) do
+      [
+        { name: 'Jane', email: 'jane@doe.org', tasks: [
+          { user: 'Jane', title: 'One', tags: [{ task: 'One', tag: 'red' }] },
+          { user: 'Jane', title: 'Two', tags: [] } ]
+        },
+        { name: 'Joe', email: 'joe@doe.org', tasks: [
+          { user: 'Joe', title: 'Three', tags: [{ task: 'Three', tag: 'blue' }] } ]
+        }
+      ]
+    end
+
+    it 'merges hashes from arrays using provided join keys' do
+      combine = t(:combine, [
+        [:tasks, { name: :user }, [[:tags, title: :task]]]
+      ])
+
+      expect(combine[input]).to eql(output)
+    end
+  end
 end

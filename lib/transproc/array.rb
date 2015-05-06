@@ -98,5 +98,44 @@ module Transproc
         root.merge(key => children)
       end
     end
+
+    # Combines two arrays by merging child items from right array using join keys
+    #
+    # @example
+    #   fn = t(:combine, [[:tasks, name: :user]])
+    #
+    #   fn.call([[{ name: 'Jane' }], [{ user: 'Jane', title: 'One' }]])
+    #   # => [{:name=>"Jane", :tasks=>[{:user=>"Jane", :title=>"One"}]}]
+    #
+    # @param [Array<Array>] array The input array
+    # @param [Array<Hash>] mappings The mapping definitions array
+    #
+    # @return [Array<Hash>]
+    #
+    # @api public
+    def combine(array, mappings)
+      parent, groups = array
+
+      parent.map { |item|
+        child_hash = {}
+
+        groups.each_with_index do |group, index|
+          key, keys, group_mappings = mappings[index]
+
+          children =
+            if group_mappings
+              combine(group, group_mappings)
+            else
+              group
+            end
+
+          child_hash[key] = children.select { |child|
+            keys.all? { |l,r| item[l] == child[r] }
+          }
+        end
+
+        item.merge(child_hash)
+      }
+    end
   end
 end
