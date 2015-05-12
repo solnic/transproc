@@ -145,6 +145,31 @@ module Transproc
       hash
     end
 
+    # Same as `:reject_keys` but mutates the hash
+    #
+    # @see HashTransformations.reject_keys
+    #
+    # @api public
+    def reject_keys!(hash, keys)
+      hash.reject { |k,_| keys.include?(k) }
+    end
+
+    # Rejects specified keys from a hash
+    #
+    # @example
+    #   Transproc(:reject_keys, [:name])[name: 'Jane', email: 'jane@doe.org']
+    #   # => {:email => "jane@doe.org"}
+    #
+    # @param [Hash] hash The input hash
+    # @param [Array] keys The keys to be rejected
+    #
+    # @return [Hash]
+    #
+    # @api public
+    def reject_keys(hash, keys)
+      reject_keys!(Hash[hash], keys)
+    end
+
     # Map a key in a hash with the provided transformation function
     #
     # @example
