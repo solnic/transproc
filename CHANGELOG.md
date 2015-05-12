@@ -1,5 +1,10 @@
 ## v0.2.1 to-be-released
 
+### Added
+
+* `:combine` which merges multiple arrays into one using "join keys" (solnic)
+* `:reject_key` which rejects specified keys in a hash (solnic)
+
 ### Changed
 
 * `Transproc.register` raises a meaningful error when a given function is already registered (kwando)
