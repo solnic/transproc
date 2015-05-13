@@ -277,4 +277,27 @@ describe Transproc::HashTransformations do
       expect(input).to eql(name: 'Jane', email: 'jane@doe.org', age: 21)
     end
   end
+
+  describe '.accept_keys!' do
+    it 'returns an updated hash with accepted keys' do
+      accept_keys = t(:accept_keys, [:age])
+
+      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
+      output = { age: 21 }
+
+      expect(accept_keys[input]).to eql(output)
+    end
+  end
+
+  describe '.reject_keys' do
+    it 'returns a new hash with rejected keys' do
+      accept_keys = t(:accept_keys, [:age])
+
+      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
+      output = { age: 21 }
+
+      expect(accept_keys[input]).to eql(output)
+      expect(input).to eql(name: 'Jane', email: 'jane@doe.org', age: 21)
+    end
+  end
 end
