@@ -3,7 +3,8 @@
 ### Added
 
 * `:combine` which merges multiple arrays into one using "join keys" (solnic)
-* `:reject_key` which rejects specified keys in a hash (solnic)
+* `:reject_keys` which rejects specified keys in a hash (solnic)
+* `:accept_keys` which accepts specified keys in a hash (solnic)
 * `:extract_key` converts the array of hashes to array of values (nepalez)
 
 ### Changed
