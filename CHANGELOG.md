@@ -4,6 +4,7 @@
 
 * `:combine` which merges multiple arrays into one using "join keys" (solnic)
 * `:reject_key` which rejects specified keys in a hash (solnic)
+* `:extract_key` converts the array of hashes to array of values (nepalez)
 
 ### Changed
 
