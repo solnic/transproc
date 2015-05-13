@@ -137,5 +137,35 @@ module Transproc
         item.merge(child_hash)
       }
     end
+
+    # Converts the array of hashes to array of values, extracted by given key
+    #
+    # @example
+    #   fn = t(:extract_key, :name)
+    #   fn.call [
+    #     { name: 'Alice', role: 'sender' },
+    #     { name: 'Bob', role: 'receiver' },
+    #     { role: 'listener' }
+    #   ]
+    #   # => ['Alice', 'Bob', nil]
+    #
+    # @param [Array<Hash>] array The input array of hashes
+    # @param [Object] key The key to extract values by
+    #
+    # @return [Array]
+    #
+    # @api public
+    def extract_key(array, key)
+      extract_key!(Array[*array], key)
+    end
+
+    # Same as `extract_key` but mutates the array
+    #
+    # @see ArrayTransformations.extract_key
+    #
+    # @api public
+    def extract_key!(array, key)
+      map_array!(array, -> v { v[key] })
+    end
   end
 end

@@ -1,6 +1,43 @@
 require 'spec_helper'
 
 describe Transproc::ArrayTransformations do
+  describe '.extract_key' do
+    it 'extracts values by key from all hashes' do
+      extract_key = t(:extract_key, 'name')
+
+      original = [
+        { 'name' => 'Alice', 'role' => 'sender' },
+        { 'name' => 'Bob', 'role' => 'receiver' },
+        { 'role' => 'listener' }
+      ]
+
+      input = original
+
+      output = ['Alice', 'Bob', nil]
+
+      expect(extract_key[input]).to eql(output)
+      expect(input).to eql(original)
+    end
+  end
+
+  describe '.extract_key!' do
+    it 'extracts values by key from all hashes' do
+      extract_key = t(:extract_key!, 'name')
+
+      input = [
+        { 'name' => 'Alice', 'role' => 'sender' },
+        { 'name' => 'Bob', 'role' => 'receiver' },
+        { 'role' => 'listener' }
+      ]
+
+      output = ['Alice', 'Bob', nil]
+
+      extract_key[input]
+
+      expect(input).to eql(output)
+    end
+  end
+
   describe '.map_array' do
     it 'applies funtions to all values' do
       map = t(:map_array, t(:symbolize_keys))
