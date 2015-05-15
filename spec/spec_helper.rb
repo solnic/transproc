@@ -3,6 +3,7 @@ if RUBY_ENGINE == 'rbx'
   CodeClimate::TestReporter.start
 end
 
+require 'anima'
 require 'transproc/all'
 
 begin

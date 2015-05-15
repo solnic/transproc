@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
+  gem 'anima'
   gem 'mutant'
   gem 'mutant-rspec'
   gem 'codeclimate-test-reporter', require: nil
