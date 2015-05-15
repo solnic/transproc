@@ -2,6 +2,7 @@
 
 ### Added
 
+* `:set_ivars` which sets instance variables from a hash (key/value pairs) on an object (AMHOL)
 * `:combine` which merges multiple arrays into one using "join keys" (solnic)
 * `:reject_keys` which rejects specified keys in a hash (solnic)
 * `:accept_keys` which accepts specified keys in a hash (solnic)
