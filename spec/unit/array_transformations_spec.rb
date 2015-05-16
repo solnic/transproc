@@ -115,7 +115,7 @@ describe Transproc::ArrayTransformations do
     end
   end
 
-  describe '.combine!' do
+  describe '.combine' do
     let(:input) do
       [
         # parent users

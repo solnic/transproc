@@ -114,27 +114,35 @@ module Transproc
     #
     # @api public
     def combine(array, mappings)
-      parent, groups = array
+      root, groups = array
 
-      parent.map { |item|
+      cache = Hash.new { |h, k| h[k] = Hash.new }
+
+      root.map { |parent|
         child_hash = {}
 
-        groups.each_with_index do |group, index|
+        groups.each_with_index do |candidates, index|
           key, keys, group_mappings = mappings[index]
 
           children =
             if group_mappings
-              combine(group, group_mappings)
+              combine(candidates, group_mappings)
             else
-              group
+              candidates
             end
 
-          child_hash[key] = children.select { |child|
-            keys.all? { |l,r| item[l] == child[r] }
+          child_keys = keys.values
+          pkey_value = parent.values_at(*keys.keys) # ugh
+
+          cache[key][child_keys] ||= children.group_by { |child|
+            child.values_at(*child_keys)
           }
+          child_arr = cache[key][child_keys][pkey_value] || []
+
+          child_hash.update(key => child_arr)
         end
 
-        item.merge(child_hash)
+        parent.merge(child_hash)
       }
     end
 
