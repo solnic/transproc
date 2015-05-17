@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe Transproc::ClassTransformations do
-  let(:klass) do
-    Struct.new(:name, :age) { include Equalizer.new(:name, :age) }
-  end
-
   describe '.constructor_inject' do
+    let(:klass) do
+      Struct.new(:name, :age) { include Equalizer.new(:name, :age) }
+    end
+
     it 'returns a new object initialized with the given arguments' do
       constructor_inject = t(:constructor_inject, klass)
 
@@ -14,6 +14,33 @@ describe Transproc::ClassTransformations do
       result = constructor_inject[*input]
 
       expect(result).to eql(output)
+      expect(result).to be_instance_of(klass)
+    end
+  end
+
+  describe '.set_ivars' do
+    let(:klass) do
+      Class.new do
+        include Anima.new(:name, :age)
+
+        attr_reader :test
+
+        def initialize(*args)
+          super
+          @test = true
+        end
+      end
+    end
+
+    it 'allocates a new object and sets instance variables from hash key/value pairs' do
+      set_ivars = t(:set_ivars, klass)
+
+      input = { name: 'Jane', age: 25 }
+      output = klass.new(input)
+      result = set_ivars[input]
+
+      expect(result).to eql(output)
+      expect(result.test).to be(nil)
       expect(result).to be_instance_of(klass)
     end
   end
