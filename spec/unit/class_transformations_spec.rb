@@ -7,13 +7,14 @@ describe Transproc::ClassTransformations do
 
   describe '.constructor_inject' do
     it 'returns a new object initialized with the given arguments' do
-      set_ivars = t(:constructor_inject, 'Jane', 25)
+      constructor_inject = t(:constructor_inject, klass)
 
-      input = klass
-      output = klass.new('Jane', 25)
+      input = ['Jane', 25]
+      output = klass.new(*input)
+      result = constructor_inject[*input]
 
-      expect(set_ivars[input]).to eql(output)
-      expect(input).to eql(klass)
+      expect(result).to eql(output)
+      expect(result).to be_instance_of(klass)
     end
   end
 end

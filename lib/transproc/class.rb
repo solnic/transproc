@@ -26,7 +26,7 @@ module Transproc
     # @return [Mixed]
     #
     # @api public
-    def constructor_inject(klass, *args)
+    def constructor_inject(*args, klass)
       klass.new(*args)
     end
   end
