@@ -261,7 +261,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def unwrap(hash, root, keys)
+    def unwrap(hash, root, keys = nil)
       copy = Hash[hash].merge(root => Hash[hash[root]])
       unwrap!(copy, root, keys)
     end
