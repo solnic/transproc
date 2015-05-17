@@ -11,6 +11,7 @@
 
 ### Changed
 
+* `:unwrap` can be called without keys (solnic)
 * `Transproc.register` raises a meaningful error when a given function is already registered (kwando)
 * `Transproc[]` raises a meaningful error when a given function doesn't exist (kwando)
 * `Transproc[]` raises a meaningful error when a transformation crashes (kwando)
