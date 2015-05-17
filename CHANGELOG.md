@@ -1,9 +1,9 @@
-## v0.2.1 to-be-released
+## v0.2.1 2015-05-17
 
 ### Added
 
 * `:constructor_inject` injects arguments into the constructor of a class (AMHOL)
-* `:set_ivars` which sets instance variables from a hash (key/value pairs) on an object (AMHOL)
+* `:set_ivars` which allocates an object and sets instance variables from a hash (key/value pairs) on an object (AMHOL)
 * `:combine` which merges multiple arrays into one using "join keys" (solnic)
 * `:reject_keys` which rejects specified keys in a hash (solnic)
 * `:accept_keys` which accepts specified keys in a hash (solnic)
