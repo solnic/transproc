@@ -6,9 +6,9 @@ module Transproc
   #
   #   include Transproc::Helper
   #
-  #   fn = t(:constructor_inject, 'User', :name, :age)
+  #   fn = t(:constructor_inject, Struct)
   #
-  #   fn[Struct]
+  #   fn['User', :name, :age]
   #   # => Struct::User
   #
   # @api public
@@ -18,12 +18,12 @@ module Transproc
     # Inject given arguments into the constructor of the class
     #
     # @example
-    #   Transproct(:constructor_inject, 'User', :name, :age)[Struct]
+    #   Transproct(:constructor_inject, Struct)['User', :name, :age]
     #   # => Struct::User
     #
-    # @param [Class]
+    # @param [*Mixed] A list of arguments to inject
     #
-    # @return [Mixed]
+    # @return [Object] An instance of the given klass
     #
     # @api public
     def constructor_inject(*args, klass)
