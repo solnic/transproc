@@ -300,4 +300,58 @@ describe Transproc::HashTransformations do
       expect(input).to eql(name: 'Jane', email: 'jane@doe.org', age: 21)
     end
   end
+
+  describe '.fold' do
+    let(:input) do
+      {
+        name: 'Jane',
+        tasks: [{ title: 'be nice', priority: 1 }, { title: 'sleep well' }]
+      }
+    end
+
+    it 'returns an updated hash with folded key' do
+      fold = t(:fold, :tasks, :title)
+
+      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
+
+      expect { fold[input] }.not_to change { input }
+      expect(fold[input]).to eq output
+    end
+
+    it 'does not compact results' do
+      fold = t(:fold, :tasks, :priority)
+
+      output = { name: 'Jane', tasks: [1, nil] }
+
+      expect { fold[input] }.not_to change { input }
+      expect(fold[input]).to eql output
+    end
+  end
+
+  describe '.fold!' do
+    let(:input) do
+      {
+        name: 'Jane',
+        tasks: [{ title: 'be nice', priority: 1 }, { title: 'sleep well' }]
+      }
+    end
+
+    it 'returns an updated hash with folded key' do
+      fold = t(:fold!, :tasks, :title)
+
+      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
+
+      expect(fold[input]).to eql output
+      expect(input).to eql output
+    end
+
+    it 'does not compact results' do
+      fold = t(:fold!, :tasks, :priority)
+
+      output = { name: 'Jane', tasks: [1, nil] }
+
+      expect(fold[input]).to eql output
+      expect(input).to eql output
+    end
+  end
 end

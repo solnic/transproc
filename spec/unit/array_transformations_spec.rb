@@ -32,8 +32,7 @@ describe Transproc::ArrayTransformations do
 
       output = ['Alice', 'Bob', nil]
 
-      extract_key[input]
-
+      expect(extract_key[input]).to eql(output)
       expect(input).to eql(output)
     end
   end
