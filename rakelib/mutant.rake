@@ -1,4 +1,4 @@
-desc "Run mutant against a specific subject"
+desc 'Run mutant against a specific subject'
 task :mutant do
   subject = ARGV.last
   if subject == 'mutant'

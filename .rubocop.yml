@@ -50,7 +50,7 @@ Style/MultilineBlockChain:
 
 # Even a single escaped slash can be confusing
 Style/RegexpLiteral:
-  MaxSlashes: 0
+  EnforcedStyle: percent_r
 
 # Don’t introduce semantic fail/raise distinction
 Style/SignalException:
