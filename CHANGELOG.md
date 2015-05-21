@@ -1,3 +1,12 @@
+### Added
+
+* `:fold` folds array of tuples into array of values from a specified key of the hash (nepalez)
+
+### Internal
+
+* Fixed some Rubocop warnings (nepalez)
+* Changed Rubocop `RegexpLiteral` from `MaxSlashes: 0` (not supported) to `EnforcedStyle: percent_r` (nepalez)
+
 ## v0.2.1 2015-05-17
 
 ### Added
