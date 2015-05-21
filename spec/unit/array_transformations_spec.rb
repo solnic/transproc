@@ -147,10 +147,10 @@ describe Transproc::ArrayTransformations do
       [
         { name: 'Jane', email: 'jane@doe.org', tasks: [
           { user: 'Jane', title: 'One', tags: [{ task: 'One', tag: 'red' }] },
-          { user: 'Jane', title: 'Two', tags: [] } ]
+          { user: 'Jane', title: 'Two', tags: [] }]
         },
         { name: 'Joe', email: 'joe@doe.org', tasks: [
-          { user: 'Joe', title: 'Three', tags: [{ task: 'Three', tag: 'blue' }] } ]
+          { user: 'Joe', title: 'Three', tags: [{ task: 'Three', tag: 'blue' }] }]
         }
       ]
     end

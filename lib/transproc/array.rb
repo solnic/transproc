@@ -116,7 +116,7 @@ module Transproc
     def combine(array, mappings)
       root, groups = array
 
-      cache = Hash.new { |h, k| h[k] = Hash.new }
+      cache = Hash.new { |h, k| h[k] = {} }
 
       root.map { |parent|
         child_hash = {}

@@ -151,7 +151,7 @@ module Transproc
     #
     # @api public
     def reject_keys!(hash, keys)
-      hash.reject { |k,_| keys.include?(k) }
+      hash.reject { |k, _| keys.include?(k) }
     end
 
     # Rejects specified keys from a hash

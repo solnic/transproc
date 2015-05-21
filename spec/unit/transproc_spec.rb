@@ -52,11 +52,11 @@ describe Transproc do
 
   describe 'handling malformed input' do
     it 'raises a Transproc::MalformedInputError' do
-      Transproc.register(:im_dangerous, ->(){
-        raise ArgumentError.new('sorry, you got some bad apples in your input')
+      Transproc.register(:im_dangerous, ->() {
+        raise ArgumentError, 'sorry, you got some bad apples in your input'
       })
 
-      expect{
+      expect {
         Transproc(:im_dangerous)[hello: 'world']
       }.to raise_error(Transproc::MalformedInputError)
     end
