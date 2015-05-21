@@ -1,3 +1,4 @@
+require 'transproc/array'
 require 'transproc/coercions'
 
 module Transproc
@@ -279,6 +280,38 @@ module Transproc
       end
 
       hash
+    end
+
+    # Folds array of tuples to array of values from a specified key
+    #
+    # The second argument defines the key to fold tuples by
+    #
+    # @example
+    #   source = {
+    #     name: "Jane",
+    #     tasks: [{ title: "be nice", priority: 1 }, { title: "sleep well" }]
+    #   }
+    #   Transproc(:fold, :tasks, :title)[source]
+    #   # => { name: "Jane", tasks: ["be nice", "sleep well"] }
+    #   Transproc(:fold, :tasks, :priority)[source]
+    #   # => { name: "Jane", tasks: [1, nil] }
+    #
+    # @param [Hash]
+    #
+    # @return [Hash]
+    #
+    # @api public
+    def fold(hash, key, tuple_key)
+      fold!(hash.dup, key, tuple_key)
+    end
+
+    # Same as `:fold` but mutates the hash
+    #
+    # @see HashTransformations.fold
+    #
+    # @api public
+    def fold!(hash, key, tuple_key)
+      hash.merge!(key => ArrayTransformations.extract_key(hash[key], tuple_key))
     end
   end
 end
