@@ -1,3 +1,5 @@
+## v0.2.2 2015-05-22
+
 ### Added
 
 * `:fold` folds array of tuples into array of values from a specified key of the hash (nepalez)
@@ -5,7 +7,10 @@
 ### Internal
 
 * Fixed some Rubocop warnings (nepalez)
-* Changed Rubocop `RegexpLiteral` from `MaxSlashes: 0` (not supported) to `EnforcedStyle: percent_r` (nepalez)
+* Changed Rubocop `RegexpLiteral` from `MaxSlashes: 0` (not supported) to
+  `EnforcedStyle: percent_r` (nepalez)
+
+[Compare v0.2.1...v0.2.2](https://github.com/solnic/transproc/compare/v0.2.1...v0.2.2)
 
 ## v0.2.1 2015-05-17
 
