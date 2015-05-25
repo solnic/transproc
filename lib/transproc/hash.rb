@@ -284,8 +284,6 @@ module Transproc
 
     # Folds array of tuples to array of values from a specified key
     #
-    # The second argument defines the key to fold tuples by
-    #
     # @example
     #   source = {
     #     name: "Jane",
@@ -296,7 +294,9 @@ module Transproc
     #   Transproc(:fold, :tasks, :priority)[source]
     #   # => { name: "Jane", tasks: [1, nil] }
     #
-    # @param [Hash]
+    # @param [Hash] hash
+    # @param [Object] key The key to fold values to
+    # @param [Object] tuple_key The key to take folded values from
     #
     # @return [Hash]
     #
@@ -312,6 +312,40 @@ module Transproc
     # @api public
     def fold!(hash, key, tuple_key)
       hash.merge!(key => ArrayTransformations.extract_key(hash[key], tuple_key))
+    end
+
+    # Splits hash to array by all values from a specified key
+    #
+    # @example
+    #   input = {
+    #     name: 'Joe',
+    #     tasks: [
+    #       { title: 'sleep well', priority: 1 },
+    #       { title: 'be nice',    priority: 2 },
+    #       {                      priority: 2 },
+    #       { title: 'be cool'                 }
+    #     ]
+    #   }
+    #   Transproc(:split, :tasks, [:priority])
+    #   => [
+    #       { name: 'Joe', priority: 1, tasks: [{ title: 'sleep well' }]              },
+    #       { name: 'Joe', priority: 2, tasks: [{ title: 'be nice' }, { title: nil }] },
+    #       { name: 'Joe',              tasks: [{ title: 'be cool' }]                 }
+    #     ]
+    #
+    # @param [Hash] hash
+    # @param [Object] key The key to split a hash by
+    # @param [Array] subkeys The list of subkeys to be extracted from key
+    #
+    # @return [Array<Hash>]
+    #
+    # @api public
+    def split(hash, key, keys)
+      list = hash.fetch(key, [{}])
+      group_by = list.flat_map(&:keys).uniq - keys
+      list = ArrayTransformations.group(list, key, group_by) if group_by.any?
+      clone = -> item { item.merge(reject_keys(hash, [key])) }
+      list.map(&clone)
     end
   end
 end
