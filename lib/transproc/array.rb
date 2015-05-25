@@ -99,6 +99,30 @@ module Transproc
       end
     end
 
+    # Ungroup array values using provided root key and value keys
+    #
+    # @example
+    #   fn = Transproc(:group, :tags, [:tag_name])
+    #
+    #   fn.call [
+    #     { task: 'Group it', tags: [{ tag: 'task' }, { tag: 'important' }]
+    #   ]
+    #   # => [
+    #     { task: 'Group it', tag: 'task' },
+    #     { task: 'Group it', tag: 'important' }
+    #   ]
+    #
+    # @param [Array] array The input array
+    # @param [Object] key The nesting root key
+    # @param [Object] keys The nesting value keys
+    #
+    # @return [Array]
+    #
+    # @api public
+    def ungroup(array, key, keys)
+      array.flat_map { |item| HashTransformations.split(item, key, keys) }
+    end
+
     # Combines two arrays by merging child items from right array using join keys
     #
     # @example
