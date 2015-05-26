@@ -146,15 +146,6 @@ module Transproc
       hash
     end
 
-    # Same as `:reject_keys` but mutates the hash
-    #
-    # @see HashTransformations.reject_keys
-    #
-    # @api public
-    def reject_keys!(hash, keys)
-      hash.reject { |k, _| keys.include?(k) }
-    end
-
     # Rejects specified keys from a hash
     #
     # @example
@@ -171,13 +162,13 @@ module Transproc
       reject_keys!(Hash[hash], keys)
     end
 
-    # Same as `:accept_keys` but mutates the hash
+    # Same as `:reject_keys` but mutates the hash
     #
     # @see HashTransformations.reject_keys
     #
     # @api public
-    def accept_keys!(hash, keys)
-      reject_keys!(hash, hash.keys - keys)
+    def reject_keys!(hash, keys)
+      hash.reject { |k, _| keys.include?(k) }
     end
 
     # Accepts specified keys from a hash
@@ -194,6 +185,15 @@ module Transproc
     # @api public
     def accept_keys(hash, keys)
       accept_keys!(Hash[hash], keys)
+    end
+
+    # Same as `:accept_keys` but mutates the hash
+    #
+    # @see HashTransformations.accept
+    #
+    # @api public
+    def accept_keys!(hash, keys)
+      reject_keys!(hash, hash.keys - keys)
     end
 
     # Map a key in a hash with the provided transformation function
@@ -213,7 +213,7 @@ module Transproc
 
     # Same as `:map_value` but mutates the hash
     #
-    # @see HashTransformations.map_value!
+    # @see HashTransformations.map_value
     #
     # @api public
     def map_value!(hash, key, fn)
