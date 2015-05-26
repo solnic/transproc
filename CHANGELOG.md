@@ -1,3 +1,10 @@
+## Prepared for the next version
+
+### Added
+
+* `:split` splits a hash to array by a list of values from a specified key of the hash (nepalez)
+* `:ungroup` is an inverse array transormation with respect to the `:group` (nepalez)
+
 ## v0.2.2 2015-05-22
 
 ### Added
