@@ -199,5 +199,33 @@ module Transproc
     def extract_key!(array, key)
       map_array!(array, -> v { v[key] })
     end
+
+    # Wraps every value of the array to tuple with given key
+    #
+    # The transformation partially inverses the `extract_key`.
+    #
+    # @example
+    #   fn = t(:insert_key, 'name')
+    #   fn.call ['Alice', 'Bob', nil]
+    #   # => [{ 'name' => 'Alice' }, { 'name' => 'Bob' }, { 'name' => nil }]
+    #
+    # @param [Array<Hash>] array The input array of hashes
+    # @param [Object] key The key to extract values by
+    #
+    # @return [Array]
+    #
+    # @api public
+    def insert_key(array, key)
+      insert_key!(Array[*array], key)
+    end
+
+    # Same as `insert_key` but mutates the array
+    #
+    # @see ArrayTransformations.insert_key
+    #
+    # @api public
+    def insert_key!(array, key)
+      map_array!(array, -> v { { key => v } })
+    end
   end
 end

@@ -4,6 +4,8 @@
 
 * `:split` splits a hash to array by a list of values from a specified key of the hash (nepalez)
 * `:ungroup` is an inverse array transormation with respect to the `:group` (nepalez)
+* `:insert_key` (and `:insert_key!`) is the partial inversion of `:extract_key`.
+  The method converts array of values into array of tuples with given key (nepalez)
 
 ## v0.2.2 2015-05-22
 
