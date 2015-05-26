@@ -37,6 +37,44 @@ describe Transproc::ArrayTransformations do
     end
   end
 
+  describe '.insert_key' do
+    it 'wraps values to tuples with given key' do
+      insert_key = t(:insert_key, 'name')
+
+      original = ['Alice', 'Bob', nil]
+
+      input = original
+
+      output = [
+        { 'name' => 'Alice' },
+        { 'name' => 'Bob' },
+        { 'name' => nil }
+      ]
+
+      expect(insert_key[input]).to eql(output)
+      expect(input).to eql(original)
+    end
+  end
+
+  describe '.insert_key!' do
+    it 'wraps values to tuples with given key' do
+      insert_key = t(:insert_key!, 'name')
+
+      original = ['Alice', 'Bob', nil]
+
+      input = original
+
+      output = [
+        { 'name' => 'Alice' },
+        { 'name' => 'Bob' },
+        { 'name' => nil }
+      ]
+
+      expect(insert_key[input]).to eql(output)
+      expect(input).to eql(output)
+    end
+  end
+
   describe '.map_array' do
     it 'applies funtions to all values' do
       map = t(:map_array, t(:symbolize_keys))
