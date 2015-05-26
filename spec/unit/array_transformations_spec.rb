@@ -114,6 +114,17 @@ describe Transproc::ArrayTransformations do
     end
   end
 
+  describe '.ungroup' do
+    it 'returns a new array with ungrouped hashes' do
+      ungroup = t(:ungroup, :tasks, [:title])
+
+      input = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
+      output = [{ name: 'Jane', title: 'One' }, { name: 'Jane', title: 'Two' }]
+
+      expect(ungroup[input]).to eql(output)
+    end
+  end
+
   describe '.combine' do
     let(:input) do
       [

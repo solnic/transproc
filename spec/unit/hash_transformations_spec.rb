@@ -354,4 +354,63 @@ describe Transproc::HashTransformations do
       expect(input).to eql output
     end
   end
+
+  describe '.split' do
+    let(:input) do
+      {
+        name: 'Joe',
+        tasks: [
+          { title: 'sleep well', priority: 1   },
+          { title: 'be nice',    priority: 2   },
+          { title: nil,          priority: 2   },
+          { title: 'be cool',    priority: nil }
+        ]
+      }
+    end
+
+    it 'splits a tuple into array partially by given keys' do
+      split = t(:split, :tasks, [:priority])
+
+      output = [
+        {
+          name: 'Joe', priority: 1,
+          tasks: [{ title: 'sleep well' }]
+        },
+        {
+          name: 'Joe', priority: 2,
+          tasks: [{ title: 'be nice' }, { title: nil }]
+        },
+        {
+          name: 'Joe', priority: nil,
+          tasks: [{ title: 'be cool' }]
+        }
+      ]
+
+      expect(split[input]).to eql output
+    end
+
+    it 'splits a tuple into array fully by all subkeys' do
+      split = t(:split, :tasks, [:priority, :title])
+
+      output = [
+        { name: 'Joe', title: 'sleep well', priority: 1   },
+        { name: 'Joe', title: 'be nice',    priority: 2   },
+        { name: 'Joe', title: nil,          priority: 2   },
+        { name: 'Joe', title: 'be cool',    priority: nil }
+      ]
+
+      expect(split[input]).to eql output
+    end
+
+    it 'return an array of one tuple when there is nothing to split by' do
+      split = t(:split, :absent, [:priority, :title])
+      expect(split[input]).to eql [input]
+
+      split = t(:split, :tasks, [])
+      expect(split[input]).to eql [input]
+
+      split = t(:split, :tasks, [:absent])
+      expect(split[input]).to eql [input]
+    end
+  end
 end
