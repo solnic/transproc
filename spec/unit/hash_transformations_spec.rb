@@ -362,8 +362,9 @@ describe Transproc::HashTransformations do
         tasks: [
           { title: 'sleep well', priority: 1   },
           { title: 'be nice',    priority: 2   },
-          { title: nil,          priority: 2   },
-          { title: 'be cool',    priority: nil }
+          {                      priority: 2   },
+          { title: 'be cool'                   },
+          {}
         ]
       }
     end
@@ -382,7 +383,7 @@ describe Transproc::HashTransformations do
         },
         {
           name: 'Joe', priority: nil,
-          tasks: [{ title: 'be cool' }]
+          tasks: [{ title: 'be cool' }, { title: nil }]
         }
       ]
 
@@ -396,21 +397,45 @@ describe Transproc::HashTransformations do
         { name: 'Joe', title: 'sleep well', priority: 1   },
         { name: 'Joe', title: 'be nice',    priority: 2   },
         { name: 'Joe', title: nil,          priority: 2   },
-        { name: 'Joe', title: 'be cool',    priority: nil }
+        { name: 'Joe', title: 'be cool',    priority: nil },
+        { name: 'Joe', title: nil,          priority: nil }
       ]
 
       expect(split[input]).to eql output
     end
 
-    it 'return an array of one tuple when there is nothing to split by' do
-      split = t(:split, :absent, [:priority, :title])
-      expect(split[input]).to eql [input]
+    it 'returns an array of one tuple with updated keys when there is nothing to split by' do
+      output = [
+        {
+          name: 'Joe',
+          tasks: [
+            { title: 'sleep well', priority: 1   },
+            { title: 'be nice',    priority: 2   },
+            { title: nil,          priority: 2   },
+            { title: 'be cool',    priority: nil },
+            { title: nil,          priority: nil }
+          ]
+        }
+      ]
 
       split = t(:split, :tasks, [])
-      expect(split[input]).to eql [input]
+      expect(split[input]).to eql output
 
       split = t(:split, :tasks, [:absent])
+      expect(split[input]).to eql output
+    end
+
+    it 'returns an array of initial tuple when attribute is absent' do
+      split = t(:split, :absent, [:priority, :title])
       expect(split[input]).to eql [input]
+    end
+
+    it 'ignores empty array' do
+      input = { name: 'Joe', tasks: [] }
+
+      split = t(:split, :tasks, [:title])
+
+      expect(split[input]).to eql [{ name: 'Joe' }]
     end
   end
 end

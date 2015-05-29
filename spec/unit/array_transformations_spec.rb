@@ -189,11 +189,25 @@ describe Transproc::ArrayTransformations do
   end
 
   describe '.ungroup' do
-    it 'returns a new array with ungrouped hashes' do
-      ungroup = t(:ungroup, :tasks, [:title])
+    subject(:ungroup) { t(:ungroup, :tasks, [:title]) }
 
+    it 'returns a new array with ungrouped hashes' do
       input = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
       output = [{ name: 'Jane', title: 'One' }, { name: 'Jane', title: 'Two' }]
+
+      expect(ungroup[input]).to eql(output)
+    end
+
+    it 'returns an input with empty array removed' do
+      input = [{ name: 'Jane', tasks: [] }]
+      output = [{ name: 'Jane' }]
+
+      expect(ungroup[input]).to eql(output)
+    end
+
+    it 'returns an input when a key is absent' do
+      input = [{ name: 'Jane' }]
+      output = [{ name: 'Jane' }]
 
       expect(ungroup[input]).to eql(output)
     end

@@ -316,6 +316,8 @@ module Transproc
 
     # Splits hash to array by all values from a specified key
     #
+    # The operation adds missing keys extracted from the array to regularize the output.
+    #
     # @example
     #   input = {
     #     name: 'Joe',
@@ -328,9 +330,9 @@ module Transproc
     #   }
     #   Transproc(:split, :tasks, [:priority])
     #   => [
-    #       { name: 'Joe', priority: 1, tasks: [{ title: 'sleep well' }]              },
-    #       { name: 'Joe', priority: 2, tasks: [{ title: 'be nice' }, { title: nil }] },
-    #       { name: 'Joe',              tasks: [{ title: 'be cool' }]                 }
+    #       { name: 'Joe', priority: 1,   tasks: [{ title: 'sleep well' }]              },
+    #       { name: 'Joe', priority: 2,   tasks: [{ title: 'be nice' }, { title: nil }] },
+    #       { name: 'Joe', priority: nil, tasks: [{ title: 'be cool' }]                 }
     #     ]
     #
     # @param [Hash] hash
@@ -341,11 +343,16 @@ module Transproc
     #
     # @api public
     def split(hash, key, keys)
-      list = hash.fetch(key, [{}])
-      group_by = list.flat_map(&:keys).uniq - keys
-      list = ArrayTransformations.group(list, key, group_by) if group_by.any?
-      clone = -> item { item.merge(reject_keys(hash, [key])) }
-      list.map(&clone)
+      list = Array(hash[key])
+      return [hash.reject { |k, _| k == key }] if list.empty?
+
+      existing  = list.flat_map(&:keys).uniq
+      grouped   = existing - keys
+      ungrouped = existing & keys
+
+      list = ArrayTransformations.group(list, key, grouped) if grouped.any?
+      list = list.map { |item| item.merge(reject_keys(hash, [key])) }
+      ArrayTransformations.add_keys(list, ungrouped)
     end
   end
 end
