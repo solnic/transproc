@@ -227,5 +227,27 @@ module Transproc
     def insert_key!(array, key)
       map_array!(array, -> v { { key => v } })
     end
+
+    # Adds missing keys with nil value to all tuples in array
+    #
+    # @param [Array] keys
+    #
+    # @return [Array]
+    #
+    # @api public
+    #
+    def add_keys(array, keys)
+      add_keys!(Array[*array], keys)
+    end
+
+    # Same as `add_keys` but mutates the array
+    #
+    # @see ArrayTransformations.add_keys
+    #
+    # @api public
+    def add_keys!(array, keys)
+      base = keys.inject({}) { |a, e| a.merge(e => nil) }
+      map_array!(array, -> v { base.merge(v) })
+    end
   end
 end
