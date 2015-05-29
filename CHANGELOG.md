@@ -6,6 +6,7 @@
 * `:ungroup` is an inverse array transormation with respect to the `:group` (nepalez)
 * `:insert_key` (and `:insert_key!`) is the partial inversion of `:extract_key`.
   The method converts array of values into array of tuples with given key (nepalez)
+* `:add_keys` (and `:add_keys!`) adds missing keys to all tuples in array (nepalez)
 
 ## v0.2.2 2015-05-22
 

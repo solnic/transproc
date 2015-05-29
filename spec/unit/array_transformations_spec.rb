@@ -75,6 +75,42 @@ describe Transproc::ArrayTransformations do
     end
   end
 
+  describe '.add_keys' do
+    it 'returns a new array with missed keys added to tuples' do
+      add_keys = t(:add_keys, [:foo, :bar, :baz])
+
+      original = [{ foo: 'bar' }, { bar: 'baz' }]
+
+      input = original
+
+      output = [
+        { foo: 'bar', bar: nil, baz: nil },
+        { foo: nil, bar: 'baz', baz: nil }
+      ]
+
+      expect(add_keys[input]).to eql(output)
+      expect(input).to eql(original)
+    end
+  end
+
+  describe '.add_keys!' do
+    it 'adds missed keys to tuples' do
+      add_keys = t(:add_keys!, [:foo, :bar, :baz])
+
+      original = [{ foo: 'bar' }, { bar: 'baz' }]
+
+      input = original
+
+      output = [
+        { foo: 'bar', bar: nil, baz: nil },
+        { foo: nil, bar: 'baz', baz: nil }
+      ]
+
+      expect(add_keys[input]).to eql(output)
+      expect(input).to eql(output)
+    end
+  end
+
   describe '.map_array' do
     it 'applies funtions to all values' do
       map = t(:map_array, t(:symbolize_keys))
