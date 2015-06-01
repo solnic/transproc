@@ -1,4 +1,3 @@
-require 'transproc/array'
 require 'transproc/coercions'
 
 module Transproc

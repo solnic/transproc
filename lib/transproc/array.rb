@@ -1,5 +1,3 @@
-require 'transproc/hash'
-
 module Transproc
   # Transformation functions for Array objects
   #
