@@ -271,9 +271,10 @@ module Transproc
     # @see HashTransformations.unwrap
     #
     # @api public
-    def unwrap!(hash, root, keys = nil)
+    def unwrap!(hash, root, selected = nil)
       if nested_hash = hash[root]
-        keys ||= nested_hash.keys
+        keys = nested_hash.keys
+        keys &= selected if selected
         hash.update(Hash[keys.zip(keys.map { |key| nested_hash.delete(key) })])
         hash.delete(root) if nested_hash.empty?
       end
