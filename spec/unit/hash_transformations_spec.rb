@@ -206,6 +206,17 @@ describe Transproc::HashTransformations do
 
       expect(input).to eql(output)
     end
+
+    it 'ignores unknown keys' do
+      unwrap = t(:unwrap!, 'wrapped', %w(one two three))
+
+      input = { 'wrapped' => { 'one' => nil, 'two' => false } }
+      output = { 'one' => nil, 'two' => false }
+
+      unwrap[input]
+
+      expect(input).to eql(output)
+    end
   end
 
   describe '.unwrap' do
