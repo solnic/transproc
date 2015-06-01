@@ -1,5 +1,3 @@
-require 'transproc/hash'
-
 module Transproc
   # Transformation functions for Array objects
   #
@@ -21,6 +19,8 @@ module Transproc
   # @api public
   module ArrayTransformations
     extend Functions
+
+    require 'transproc/hash' unless defined? Transproc::HashTransformations
 
     # Map array values using transformation function
     #

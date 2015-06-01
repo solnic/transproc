@@ -1,4 +1,3 @@
-require 'transproc/array'
 require 'transproc/coercions'
 
 module Transproc
@@ -17,6 +16,8 @@ module Transproc
   # @api public
   module HashTransformations
     extend Functions
+
+    require 'transproc/array' unless defined? Transproc::ArrayTransformations
 
     # Map all keys in a hash with the provided transformation function
     #
