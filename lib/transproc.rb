@@ -4,6 +4,9 @@ require 'transproc/functions'
 require 'transproc/composer'
 require 'transproc/error'
 
+require 'transproc/array'
+require 'transproc/hash'
+
 module Transproc
   module_function
 

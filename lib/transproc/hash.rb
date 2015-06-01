@@ -17,8 +17,6 @@ module Transproc
   module HashTransformations
     extend Functions
 
-    require 'transproc/array' unless defined? Transproc::ArrayTransformations
-
     # Map all keys in a hash with the provided transformation function
     #
     # @example

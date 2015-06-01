@@ -20,8 +20,6 @@ module Transproc
   module ArrayTransformations
     extend Functions
 
-    require 'transproc/hash' unless defined? Transproc::HashTransformations
-
     # Map array values using transformation function
     #
     # @example
