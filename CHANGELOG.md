@@ -8,6 +8,10 @@
   The method converts array of values into array of tuples with given key (nepalez)
 * `:add_keys` (and `:add_keys!`) adds missing keys to all tuples in array (nepalez)
 
+### Fixed
+
+* Warning about circular requires is gone now (splattael)
+
 [Compare v0.2.2...HEAD](https://github.com/solnic/transproc/compare/v0.2.2...HEAD)
 
 ## v0.2.2 2015-05-22
