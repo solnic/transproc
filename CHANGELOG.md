@@ -1,4 +1,4 @@
-## v0.3.0 2015-06-02
+## v0.2.3 2015-06-02
 
 ### Added
 
@@ -12,7 +12,7 @@
 
 * Warning about circular requires is gone now (splattael)
 
-[Compare v0.2.2...HEAD](https://github.com/solnic/transproc/compare/v0.2.2...HEAD)
+[Compare v0.2.2...v0.2.3](https://github.com/solnic/transproc/compare/v0.2.2...v0.2.3)
 
 ## v0.2.2 2015-05-22
 
