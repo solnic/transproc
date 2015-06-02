@@ -1,6 +1,58 @@
 require 'spec_helper'
 
 describe Transproc::Recursion do
+  describe '.recursion' do
+    let(:original) do
+      {
+        'foo' => 'bar',
+        'bar' => {
+          'foo' => 'bar',
+          'bar' => ['foo', 'bar', 'baz'],
+          'baz' => 'foo'
+        },
+        'baz' => 'bar'
+      }
+    end
+
+    let(:input) { original.dup }
+
+    let(:output) do
+      {
+        'foo' => 'bar',
+        'bar' => {
+          'foo' => 'bar',
+          'bar' => ['foo', 'bar'],
+        }
+      }
+    end
+
+    context 'when function is non-destructive' do
+      let(:map) do
+        t(:recursion, -> enum {
+          enum.reject { |v| v == 'baz' }
+        })
+      end
+
+      it 'applies funtions to all items recursively' do
+        expect(map[input]).to eql(output)
+        expect(input).to eql(original)
+      end
+    end
+
+    context 'when function is destructive' do
+      let(:map) do
+        t(:recursion, -> enum {
+          enum.reject! { |v| v == 'baz' }
+        })
+      end
+
+      it 'applies funtions to all items recursively and destructively' do
+        expect(map[input]).to eql(output)
+        expect(input).to eql(output)
+      end
+    end
+  end
+
   describe '.array_recursion' do
     let(:original) do
       [

@@ -17,9 +17,49 @@ module Transproc
   module Recursion
     extend Functions
 
+    IF_ENUMERABLE = -> fn { Transproc(:is, Enumerable, fn) }
+
     IF_ARRAY = -> fn { Transproc(:is, Array, fn) }
 
     IF_HASH = -> fn { Transproc(:is, Hash, fn) }
+
+    # Recursively apply the provided transformation function to an enumerable
+    #
+    # @example
+    #   Transproc(:recursion, Transproc(:is, ::Hash, Transproc(:symbolize_keys)))[
+    #     {
+    #       'id' => 1,
+    #       'name' => 'Jane',
+    #       'tasks' => [
+    #         { 'id' => 1, 'description' => 'Write some code' },
+    #         { 'id' => 2, 'description' => 'Write some more code' }
+    #       ]
+    #     }
+    #   ]
+    #   => {:id=>1, :name=>"Jane", :tasks=>[{:id=>1, :description=>"Write some code"}, {:id=>2, :description=>"Write some more code"}]}
+    #
+    # @param [Enumerable]
+    #
+    # @return [Enumerable]
+    #
+    # @api public
+    def recursion(value, fn)
+      result = fn[value]
+      guarded = IF_ENUMERABLE[-> v { recursion(v, fn) }]
+
+      case result
+      when ::Hash
+        result.keys.each do |key|
+          result[key] = guarded[result.delete(key)]
+        end
+      when ::Array
+        result.map! do |item|
+          guarded[item]
+        end
+      end
+
+      result
+    end
 
     # Recursively apply the provided transformation function to an array
     #
@@ -36,7 +76,7 @@ module Transproc
     # @api public
     def array_recursion(value, fn)
       result = fn[value]
-      guarded = IF_ARRAY[-> v { Transproc(:array_recursion, fn)[v] }]
+      guarded = IF_ARRAY[-> v { array_recursion(v, fn) }]
 
       result.map! do |item|
         guarded[item]
@@ -58,7 +98,7 @@ module Transproc
     # @api public
     def hash_recursion(value, fn)
       result = fn[value]
-      guarded = IF_HASH[-> v { Transproc(:hash_recursion, fn)[v] }]
+      guarded = IF_HASH[-> v { hash_recursion(v, fn) }]
 
       result.keys.each do |key|
         result[key] = guarded[result.delete(key)]
