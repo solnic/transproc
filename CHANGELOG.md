@@ -1,4 +1,4 @@
-## Prepared for the next version
+## v0.3.0 2015-06-02
 
 ### Added
 
@@ -7,6 +7,8 @@
 * `:insert_key` (and `:insert_key!`) is the partial inversion of `:extract_key`.
   The method converts array of values into array of tuples with given key (nepalez)
 * `:add_keys` (and `:add_keys!`) adds missing keys to all tuples in array (nepalez)
+
+[Compare v0.2.2...HEAD](https://github.com/solnic/transproc/compare/v0.2.2...HEAD)
 
 ## v0.2.2 2015-05-22
 
