@@ -1,3 +1,10 @@
+## Prepared for the next version
+
+### Added
+* `:recursion` recurse over an enumerable (AMHOL)
+
+[Compare v0.2.3...HEAD](https://github.com/solnic/transproc/compare/v0.2.3...HEAD)
+
 ## v0.2.3 2015-06-02
 
 ### Added
