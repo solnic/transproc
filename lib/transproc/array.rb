@@ -87,7 +87,7 @@ module Transproc
     def group(array, key, keys)
       grouped = Hash.new { |h, k| h[k] = [] }
       array.each do |hash|
-        hash = hash.dup
+        hash = Hash[hash]
         child = {}
         keys.each { |k| child[k] = hash.delete(k) }
         grouped[hash] << child
