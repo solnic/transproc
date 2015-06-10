@@ -172,6 +172,28 @@ describe Transproc::HashTransformations do
       expect(input).to eql(output)
     end
 
+    it 'returns new hash with keys nested under the existing key' do
+      nest = t(:nest!, :baz, ['two'])
+
+      input  = { 'foo' => 'bar', baz: { 'one' => nil }, 'two' => false }
+      output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
+
+      nest[input]
+
+      expect(input).to eql(output)
+    end
+
+    it 'rewrites the existing key if its value is not a hash' do
+      nest = t(:nest!, :baz, ['two'])
+
+      input  = { 'foo' => 'bar', baz: 'one', 'two' => false }
+      output = { 'foo' => 'bar', baz: { 'two' => false } }
+
+      nest[input]
+
+      expect(input).to eql(output)
+    end
+
     it 'returns new hash with an empty hash under a new key when nest-keys are missing' do
       nest = t(:nest!, :baz, ['foo'])
 
