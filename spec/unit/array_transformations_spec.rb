@@ -178,11 +178,54 @@ describe Transproc::ArrayTransformations do
   end
 
   describe '.group' do
-    it 'returns a new array with grouped hashes' do
-      group = t(:group, :tasks, [:title])
+    subject(:group) { t(:group, :tasks, [:title]) }
 
-      input = [{ name: 'Jane', title: 'One' }, { name: 'Jane', title: 'Two' }]
+    it 'returns a new array with grouped hashes' do
+      input  = [{ name: 'Jane', title: 'One' }, { name: 'Jane', title: 'Two' }]
       output = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
+
+      expect(group[input]).to eql(output)
+    end
+
+    it 'updates the existing group' do
+      input  = [
+        {
+          name: 'Jane',
+          title: 'One',
+          tasks: [{ type: 'one' }, { type: 'two' }]
+        },
+        {
+          name: 'Jane',
+          title: 'Two',
+          tasks: [{ type: 'one' }, { type: 'two' }]
+        }
+      ]
+      output = [
+        {
+          name: 'Jane',
+          tasks: [
+            { title: 'One', type: 'one' },
+            { title: 'One', type: 'two' },
+            { title: 'Two', type: 'one' },
+            { title: 'Two', type: 'two' }
+          ]
+        }
+      ]
+
+      expect(group[input]).to eql(output)
+    end
+
+    it 'ingnores old values except for array of tuples' do
+      input  = [
+        { name: 'Jane', title: 'One',   tasks: [{ priority: 1 }, :wrong] },
+        { name: 'Jane', title: 'Two',   tasks: :wrong }
+      ]
+      output = [
+        {
+          name: 'Jane',
+          tasks: [{ title: 'One', priority: 1 }, { title: 'Two' }]
+        }
+      ]
 
       expect(group[input]).to eql(output)
     end
@@ -208,6 +251,34 @@ describe Transproc::ArrayTransformations do
     it 'returns an input when a key is absent' do
       input = [{ name: 'Jane' }]
       output = [{ name: 'Jane' }]
+
+      expect(ungroup[input]).to eql(output)
+    end
+
+    it 'ungroups array partially' do
+      input = [
+        {
+          name: 'Jane',
+          tasks: [
+            { title: 'One', type: 'one' },
+            { title: 'One', type: 'two' },
+            { title: 'Two', type: 'one' },
+            { title: 'Two', type: 'two' }
+          ]
+        }
+      ]
+      output = [
+        {
+          name: 'Jane',
+          title: 'One',
+          tasks: [{ type: 'one' }, { type: 'two' }]
+        },
+        {
+          name: 'Jane',
+          title: 'Two',
+          tasks: [{ type: 'one' }, { type: 'two' }]
+        }
+      ]
 
       expect(ungroup[input]).to eql(output)
     end
