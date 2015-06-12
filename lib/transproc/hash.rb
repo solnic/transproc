@@ -174,7 +174,7 @@ module Transproc
     #
     # @example
     #   Transproc(:accept_keys, [:name])[name: 'Jane', email: 'jane@doe.org']
-    #   # => {:email => "jane@doe.org"}
+    #   # => {:name=>"Jane"}
     #
     # @param [Hash] hash The input hash
     # @param [Array] keys The keys to be accepted
@@ -302,7 +302,7 @@ module Transproc
     #
     # @api public
     def fold(hash, key, tuple_key)
-      fold!(hash.dup, key, tuple_key)
+      fold!(Hash[hash], key, tuple_key)
     end
 
     # Same as `:fold` but mutates the hash
@@ -311,7 +311,7 @@ module Transproc
     #
     # @api public
     def fold!(hash, key, tuple_key)
-      hash.merge!(key => ArrayTransformations.extract_key(hash[key], tuple_key))
+      hash.update(key => ArrayTransformations.extract_key(hash[key], tuple_key))
     end
 
     # Splits hash to array by all values from a specified key
@@ -328,7 +328,7 @@ module Transproc
     #       { title: 'be cool'                 }
     #     ]
     #   }
-    #   Transproc(:split, :tasks, [:priority])
+    #   Transproc(:split, :tasks, [:priority])[input]
     #   => [
     #       { name: 'Joe', priority: 1,   tasks: [{ title: 'sleep well' }]              },
     #       { name: 'Joe', priority: 2,   tasks: [{ title: 'be nice' }, { title: nil }] },
