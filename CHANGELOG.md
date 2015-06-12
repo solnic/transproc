@@ -1,7 +1,12 @@
 ## Prepared for the next version
 
 ### Added
+
 * `:recursion` recurse over an enumerable (AMHOL)
+
+###  Changed
+
+* `:group`, `:nest`, and `:wrap` support adding new data to existing groups/wraps (nepalez)
 
 [Compare v0.2.3...HEAD](https://github.com/solnic/transproc/compare/v0.2.3...HEAD)
 
