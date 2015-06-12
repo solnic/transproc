@@ -175,6 +175,15 @@ describe Transproc::ArrayTransformations do
 
       expect(wrap[input]).to eql(output)
     end
+
+    it 'adds data to the existing tuples' do
+      wrap = t(:wrap, :task, [:title])
+
+      input  = [{ name: 'Jane', task: { priority: 1 }, title: 'One' }]
+      output = [{ name: 'Jane', task: { priority: 1, title: 'One' } }]
+
+      expect(wrap[input]).to eql(output)
+    end
   end
 
   describe '.group' do

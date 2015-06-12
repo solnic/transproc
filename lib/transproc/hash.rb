@@ -244,7 +244,9 @@ module Transproc
 
       if nest_keys.size > 0
         child = Hash[nest_keys.zip(nest_keys.map { |key| hash.delete(key) })]
-        hash.update(root => child)
+        old_nest = hash[root]
+        new_nest = old_nest.is_a?(Hash) ? old_nest.merge(child) : child
+        hash.update(root => new_nest)
       else
         hash.update(root => {})
       end
