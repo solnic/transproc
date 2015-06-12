@@ -1,3 +1,5 @@
+require 'transproc/coercions'
+
 module Transproc
   # Transformation functions for Array objects
   #
@@ -88,12 +90,14 @@ module Transproc
       grouped = Hash.new { |h, k| h[k] = [] }
       array.each do |hash|
         hash = Hash[hash]
-        child = {}
-        keys.each { |k| child[k] = hash.delete(k) }
-        grouped[hash] << child
+
+        old_group = Transproc::Coercions.to_tuples(hash.delete(key))
+        new_group = keys.inject({}) { |a, e| a.merge(e => hash.delete(e)) }
+
+        grouped[hash] << old_group.map { |item| item.merge(new_group) }
       end
       grouped.map do |root, children|
-        root.merge(key => children)
+        root.merge(key => children.flatten)
       end
     end
 
