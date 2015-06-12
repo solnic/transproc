@@ -79,4 +79,38 @@ describe Transproc::Coercions do
       end
     end
   end
+
+  describe '.to_tuples' do
+    subject(:to_tuples) { t(:to_tuples) }
+
+    context 'non-array' do
+      let(:input) { :foo }
+
+      it 'returns an array with one blank tuple' do
+        output = [{}]
+
+        expect(to_tuples[input]).to eql(output)
+      end
+    end
+
+    context 'empty array' do
+      let(:input) { [] }
+
+      it 'returns an array with one blank tuple' do
+        output = [{}]
+
+        expect(to_tuples[input]).to eql(output)
+      end
+    end
+
+    context 'array of tuples' do
+      let(:input) { [:foo, { bar: :BAZ }, :qux] }
+
+      it 'returns an array with tuples only' do
+        output = [{ bar: :BAZ }]
+
+        expect(to_tuples[input]).to eql(output)
+      end
+    end
+  end
 end

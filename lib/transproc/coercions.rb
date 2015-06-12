@@ -153,5 +153,25 @@ module Transproc
     def to_datetime(value)
       DateTime.parse(value)
     end
+
+    # Coerce value into an array containing tuples only
+    #
+    # If the source is not an array, or doesn't contain a tuple, returns
+    # an array with one empty tuple
+    #
+    # @example
+    #   Transproc(:to_tuples)[:foo]                  # => [{}]
+    #   Transproc(:to_tuples)[[]]                    # => [{}]
+    #   Transproc(:to_tuples)[[{ foo: :FOO, :bar }]] # => [{ foo: :FOO }]
+    #
+    # @param [Object] value
+    #
+    # @return [Array<Hash>]
+    #
+    def to_tuples(value)
+      array = value.is_a?(Array) ? Array[*value] : [{}]
+      array.select! { |item| item.is_a?(Hash) }
+      array.any? ? array : [{}]
+    end
   end
 end
