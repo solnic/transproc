@@ -15,6 +15,57 @@ module Transproc
   module Conditional
     extend Functions
 
+    # Does nothing and returns a value
+    #
+    # @example
+    #   fn = t(:itself)
+    #   fn[:foo] # => :foo
+    #
+    # @param [Object] value
+    #
+    # @return [Object]
+    #
+    # @api public
+    def itself(value)
+      value
+    end
+
+    # Negates the result of transformation
+    #
+    # @example
+    #   fn = t(:not, -> value { value.is_a? ::String })
+    #   fn[:foo]  # => true
+    #   fn["foo"] # => false
+    #
+    # @param [Object] value
+    # @param [Proc] fn
+    #
+    # @return [Boolean]
+    #
+    # @api public
+    def not(value, fn)
+      !fn[value]
+    end
+
+    # Applies on of transformations depending on whether predicate returns true
+    #
+    # @example
+    #   fn = t(:iif, -> v { v[/\a/] }, -> v { v.downcase }, -> v { v.upcase })
+    #   fn["Foo"] # => "FOO"
+    #   fn["Bar"] # => "bar"
+    #
+    # @param [Object] value
+    # @param [Proc] predicate
+    # @param [Proc] on_success
+    # @param [Proc] on_fail
+    #
+    # @return [Object]
+    #
+    # @api public
+    def iif(value, predicate, on_success, on_fail)
+      predicate[value] ? on_success[value] : on_fail[value]
+    end
+
     # Apply the transformation function to subject if the predicate returns true, or return un-modified
     #
     # @example
@@ -29,7 +80,7 @@ module Transproc
     #
     # @api public
     def guard(value, predicate, fn)
-      predicate[value] ? fn[value] : value
+      iif(value, predicate, fn, Transproc(:itself))
     end
 
     # Calls a function when type-check passes
@@ -49,7 +100,7 @@ module Transproc
     #
     # @api public
     def is(value, type, fn)
-      guard(value, -> v { v.is_a?(type) }, fn)
+      guard(value, -> val { val.is_a?(type) }, fn)
     end
   end
 end
