@@ -61,7 +61,7 @@ describe Transproc do
       rescue Transproc::MalformedInputError => e
         expect(e.message).to include('to_integer')
         expect(e.message).to include("undefined method `to_i'")
-        expect(e.backtrace[0]).to include('to_integer')
+        expect(e.backtrace).to eql(e.original_error.backtrace)
       end
     end
   end
