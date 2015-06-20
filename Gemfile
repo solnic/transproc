@@ -5,9 +5,12 @@ gemspec
 group :test do
   gem 'equalizer'
   gem 'anima'
-  gem 'mutant', github: 'mbj/mutant', branch: 'master'
-  gem 'mutant-rspec'
   gem 'codeclimate-test-reporter', require: nil
+
+  platform :mri do
+    gem 'mutant', github: 'mbj/mutant', branch: 'master'
+    gem 'mutant-rspec'
+  end
 end
 
 group :tools do
