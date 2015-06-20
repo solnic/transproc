@@ -12,6 +12,9 @@ begin
 rescue LoadError
 end
 
+root = Pathname(__FILE__).dirname
+Dir[root.join('support/*.rb').to_s].each { |f| require f }
+
 RSpec.configure do |config|
   config.include(Transproc::Helper)
 end
