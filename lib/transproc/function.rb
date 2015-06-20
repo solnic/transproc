@@ -23,9 +23,9 @@ module Transproc
     attr_reader :args
 
     # @api private
-    def initialize(fn, options = {})
+    def initialize(fn, options)
       @fn = fn
-      @args = options.fetch(:args) { [] }
+      @args = options[:args]
     end
 
     # Call the wrapped proc
@@ -37,8 +37,8 @@ module Transproc
     # @api public
     def call(*value)
       fn[*value, *args]
-    rescue => ex
-      raise MalformedInputError.new(@fn, value, ex)
+    rescue => e
+      raise MalformedInputError.new(@fn, value, e)
     end
     alias_method :[], :call
 
@@ -63,7 +63,7 @@ module Transproc
     #
     # @api public
     def to_ast
-      identifier = fn.is_a?(::Proc) ? fn : fn.name
+      identifier = fn.instance_of?(Proc) ? fn : fn.name
       [identifier, args]
     end
   end
