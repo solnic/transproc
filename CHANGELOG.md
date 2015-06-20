@@ -1,4 +1,4 @@
-## Prepared for the next version
+## v0.2.4 to-be-released
 
 ### Added
 
@@ -7,6 +7,7 @@
 ###  Changed
 
 * `:group`, `:nest`, and `:wrap` support adding new data to existing groups/wraps (nepalez)
+* `Transproc::MalformedInputError` includes original backtrace now (solnic)
 
 [Compare v0.2.3...HEAD](https://github.com/solnic/transproc/compare/v0.2.3...HEAD)
 
