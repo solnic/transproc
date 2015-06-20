@@ -3,6 +3,7 @@ require 'transproc/function'
 require 'transproc/functions'
 require 'transproc/composer'
 require 'transproc/error'
+require 'transproc/registry'
 
 module Transproc
   module_function
