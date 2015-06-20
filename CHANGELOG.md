@@ -2,6 +2,7 @@
 
 ### Added
 
+* `Transproc::Registry` extension for registering reusable functions within modules (nepalez)
 * `:recursion` recurse over an enumerable (AMHOL)
 
 ###  Changed
