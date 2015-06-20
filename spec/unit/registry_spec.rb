@@ -54,13 +54,13 @@ describe Transproc::Registry do
         undef_method :foo
       end
 
-      expect { ::BarModule[:foo, 'baz'] }.to raise_error
+      expect { ::BarModule[:foo, 'baz'] }.to raise_error(NameError)
     end
   end
 
   describe '.uses' do
     it 'forwards methods to another module directly' do
-      expect { ::BazModule[:baz, 'baz'] }.to raise_error
+      expect { ::BazModule[:baz, 'baz'] }.to raise_error(NameError)
 
       module BazModule
         uses :foo, as: :ffoo, from: FooModule
