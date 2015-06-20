@@ -94,7 +94,7 @@ module Transproc
 
     # @api private
     def self.extended(target)
-      target.send(:extend, ClassMethods)
+      target.extend(ClassMethods)
     end
 
     # @api private
