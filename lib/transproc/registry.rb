@@ -29,8 +29,7 @@ module Transproc
   #   fn = BarMethods[:bar, 'baz']
   #   fn['qux'] # => 'QUX_BAZ'
   #
-  # @api private
-  #
+  # @api public
   module Registry
     # Builds the transproc function either from a Proc, or from the module method
     #
@@ -44,7 +43,6 @@ module Transproc
     # @alias :t
     #
     # @api public
-    #
     def [](fn, *args)
       fun = fn.is_a?(Proc) ? fn : method(fn).to_proc
       Transproc::Function.new(fun, args: args)
@@ -86,6 +84,7 @@ module Transproc
     #
     # @return [undefined]
     #
+    # @api public
     def uses(name, options = {})
       source   = options.fetch(:from)
       new_name = options.fetch(:as, name)
@@ -102,6 +101,7 @@ module Transproc
       # Makes `[]` and all functions defined in the included modules
       # accessible in their receiver
       #
+      # @api private
       def included(other)
         other.extend(Transproc::Registry, self)
       end
@@ -109,6 +109,7 @@ module Transproc
       # Makes newly module-defined functions accessible via `[]` method
       # by adding it to the module's eigenclass
       #
+      # @api private
       def method_added(name)
         module_function(name)
       end
@@ -116,6 +117,7 @@ module Transproc
       # Makes undefined methods inaccessible via `[]` method by
       # undefining it from the module's eigenclass
       #
+      # @api private
       def method_undefined(name)
         singleton_class.__send__(:undef_method, name)
       end
