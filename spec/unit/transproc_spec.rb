@@ -52,13 +52,17 @@ describe Transproc do
 
   describe 'handling malformed input' do
     it 'raises a Transproc::MalformedInputError' do
-      Transproc.register(:im_dangerous, ->() {
-        raise ArgumentError, 'sorry, you got some bad apples in your input'
-      })
-
       expect {
-        Transproc(:im_dangerous)[hello: 'world']
+        Transproc(:to_integer)[{}]
       }.to raise_error(Transproc::MalformedInputError)
+
+      begin
+        Transproc(:to_integer)[{}]
+      rescue Transproc::MalformedInputError => e
+        expect(e.message).to include('to_integer')
+        expect(e.message).to include("undefined method `to_i'")
+        expect(e.backtrace[0]).to include('to_integer')
+      end
     end
   end
 end

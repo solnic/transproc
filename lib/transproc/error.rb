@@ -4,13 +4,14 @@ module Transproc
   FunctionAlreadyRegisteredError = Class.new(Error)
 
   class MalformedInputError < Error
+    attr_reader :function, :value, :original_error
+
     def initialize(function, value, error)
       @function = function
       @value = value
       @original_error = error
-      super("failed to call function #{function} on #{value}, #{error}")
+      super "Failed to call_function #{function} with #{value.inspect} - #{error}"
+      set_backtrace(error.backtrace)
     end
-
-    attr_reader :function, :value, :original_error
   end
 end
