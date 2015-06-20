@@ -10,7 +10,7 @@
 * `:group`, `:nest`, and `:wrap` support adding new data to existing groups/wraps (nepalez)
 * `Transproc::MalformedInputError` includes original backtrace now (solnic)
 
-[Compare v0.2.3...HEAD](https://github.com/solnic/transproc/compare/v0.2.3...HEAD)
+[Compare v0.2.3...v0.2.4](https://github.com/solnic/transproc/compare/v0.2.3...v0.2.4)
 
 ## v0.2.3 2015-06-02
 
