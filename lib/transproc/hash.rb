@@ -15,7 +15,7 @@ module Transproc
   #
   # @api public
   module HashTransformations
-    extend Functions
+    extend Registry
 
     # Map all keys in a hash with the provided transformation function
     #
@@ -356,5 +356,9 @@ module Transproc
       list = list.map { |item| item.merge(reject_keys(hash, [key])) }
       ArrayTransformations.add_keys(list, ungrouped)
     end
+  end
+
+  HashTransformations.singleton_methods(false).each do |meth|
+    uses meth, from: HashTransformations
   end
 end

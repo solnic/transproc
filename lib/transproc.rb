@@ -6,6 +6,8 @@ require 'transproc/error'
 require 'transproc/registry'
 
 module Transproc
+  extend Registry
+
   module_function
 
   # Register a new function
@@ -32,10 +34,10 @@ module Transproc
   # @param [Symbol] name The name of the registered function
   #
   # @api private
-  def [](name)
-    functions.fetch(name) {
-      raise FunctionNotFoundError, "No registered function for #{name}"
-    }
+  def [](name, *args)
+    fn = functions[name] || super
+    raise FunctionNotFoundError, "No registered function for #{name}" unless fn
+    fn
   end
 
   # Function registry
@@ -66,7 +68,7 @@ def Transproc(fn, *args)
   case fn
   when Proc then Transproc::Function.new(fn, args: args)
   when Symbol
-    fun = Transproc[fn]
+    fun = Transproc[fn, *args]
     case fun
     when Transproc::Function, Transproc::Composite then fun
     else Transproc::Function.new(fun, args: args)

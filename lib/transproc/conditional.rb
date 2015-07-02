@@ -13,7 +13,7 @@ module Transproc
   #
   # @api public
   module Conditional
-    extend Functions
+    extend Registry
 
     # Apply the transformation function to subject if the predicate returns true, or return un-modified
     #
@@ -51,5 +51,9 @@ module Transproc
     def is(value, type, fn)
       guard(value, -> v { v.is_a?(type) }, fn)
     end
+  end
+
+  Conditional.singleton_methods(false).each do |meth|
+    uses meth, from: Conditional
   end
 end

@@ -13,7 +13,7 @@ module Transproc
   #
   # @api public
   module ClassTransformations
-    extend Functions
+    extend Registry
 
     # Inject given arguments into the constructor of the class
     #
@@ -49,4 +49,7 @@ module Transproc
       object
     end
   end
+
+  uses :constructor_inject, from: ClassTransformations
+  uses :set_ivars, from: ClassTransformations
 end

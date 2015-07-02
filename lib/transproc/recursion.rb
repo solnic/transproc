@@ -15,7 +15,7 @@ module Transproc
   #
   # @api public
   module Recursion
-    extend Functions
+    extend Registry
 
     IF_ENUMERABLE = -> fn { Transproc(:is, Enumerable, fn) }
 
@@ -106,5 +106,9 @@ module Transproc
 
       result
     end
+  end
+
+  Recursion.singleton_methods(false).each do |meth|
+    uses meth, from: Recursion
   end
 end

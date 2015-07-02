@@ -20,7 +20,7 @@ module Transproc
   #
   # @api public
   module ArrayTransformations
-    extend Functions
+    extend Registry
 
     # Map array values using transformation function
     #
@@ -251,5 +251,9 @@ module Transproc
       base = keys.inject({}) { |a, e| a.merge(e => nil) }
       map_array!(array, -> v { base.merge(v) })
     end
+  end
+
+  ArrayTransformations.singleton_methods(false).each do |meth|
+    uses meth, from: ArrayTransformations
   end
 end

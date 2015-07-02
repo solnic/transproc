@@ -8,7 +8,7 @@ module Transproc
   #
   # @api public
   module Coercions
-    extend Functions
+    extend Registry
 
     TRUE_VALUES = [true, 1, '1', 'on', 't', 'true', 'y', 'yes'].freeze
     FALSE_VALUES = [false, 0, '0', 'off', 'f', 'false', 'n', 'no'].freeze
@@ -173,5 +173,9 @@ module Transproc
       array.select! { |item| item.is_a?(Hash) }
       array.any? ? array : [{}]
     end
+  end
+
+  Coercions.singleton_methods(false).each do |meth|
+    uses meth, from: Coercions
   end
 end
