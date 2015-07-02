@@ -35,7 +35,14 @@ module Transproc
   #
   # @api private
   def [](name, *args)
-    fn = functions[name] || super
+    fn =
+      if functions.key?(name)
+        functions[name]
+      else
+        begin
+          super
+        rescue NameError;end
+      end
     raise FunctionNotFoundError, "No registered function for #{name}" unless fn
     fn
   end
