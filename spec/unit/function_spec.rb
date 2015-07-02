@@ -70,10 +70,10 @@ describe 'Transproc::Function' do
 
     it 'plays well with registered functions' do
       Transproc.register(:to_s, t(:to_string))
-      f = t(:to_s)
+      fn = t(:to_s)
 
-      expect(f[:ok]).to eql('ok')
-      expect(f.to_ast).to eql([:to_string, []])
+      expect(fn[:ok]).to eql('ok')
+      expect(fn.to_ast).to eql([:to_string, []])
     end
   end
 end

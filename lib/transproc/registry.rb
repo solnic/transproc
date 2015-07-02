@@ -44,7 +44,7 @@ module Transproc
     #
     # @api public
     def [](fn, *args)
-      fun = fn.is_a?(Proc) ? fn : method(fn).to_proc
+      fun = fn.is_a?(Proc) ? fn : method(fn)
       Transproc::Function.new(fun, args: args)
     end
     alias_method :t, :[]
