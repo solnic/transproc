@@ -41,6 +41,16 @@ describe Transproc::Registry do
     end
   end
 
+  describe '.include' do
+    it 'adds all included methods to the singleton class' do
+      QuxModule.send(:define_method, :qux) { :qux }
+      expect { BazModule.send :include, QuxModule }
+        .to change { BazModule.respond_to? :qux }
+        .from(false)
+        .to(true)
+    end
+  end
+
   describe '.[]' do
     it 'builds function from the method' do
       fn = ::FooModule[:foo, 'baz']

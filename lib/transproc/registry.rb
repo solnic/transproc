@@ -108,6 +108,12 @@ module Transproc
           .each { |transproc| other.uses transproc, from: self }
       end
 
+      # Adds all public methods from the included module to singleton
+      def include(*others)
+        super
+        extend(*others)
+      end
+
       # Makes newly module-defined functions accessible via `[]` method
       # by adding it to the module's eigenclass
       #
