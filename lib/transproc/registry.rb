@@ -98,12 +98,14 @@ module Transproc
 
     # @api private
     module ClassMethods
-      # Makes `[]` and all functions defined in the included modules
+      # Makes `[]` and all public functions defined in the included modules
       # accessible in their receiver
       #
       # @api private
       def included(other)
-        other.extend(Transproc::Registry, self)
+        other.extend(Transproc::Registry)
+        (public_methods - other.public_methods)
+          .each { |transproc| other.uses transproc, from: self }
       end
 
       # Makes newly module-defined functions accessible via `[]` method

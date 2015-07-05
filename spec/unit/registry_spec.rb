@@ -21,6 +21,24 @@ describe Transproc::Registry do
     module BazModule
       extend Transproc::Registry
     end
+
+    module QuxModule; end
+  end
+
+  describe '.included' do
+    it 'makes the target module a registry' do
+      expect { QuxModule.send :include, BarModule }
+        .to change { QuxModule.is_a? Transproc::Registry }
+        .from(false)
+        .to(true)
+    end
+
+    it 'adds transformations from the included module' do
+      expect { QuxModule.send :include, BarModule }
+        .to change { QuxModule.respond_to? :foo }
+        .from(false)
+        .to(true)
+    end
   end
 
   describe '.[]' do
@@ -89,6 +107,7 @@ describe Transproc::Registry do
     end
   end
 
+  after { Object.send :remove_const, :QuxModule }
   after { Object.send :remove_const, :BazModule }
   after { Object.send :remove_const, :BarModule }
   after { Object.send :remove_const, :FooModule }
