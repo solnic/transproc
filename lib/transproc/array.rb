@@ -1,4 +1,5 @@
 require 'transproc/coercions'
+require 'transproc/hash'
 
 module Transproc
   # Transformation functions for Array objects
@@ -65,7 +66,8 @@ module Transproc
     #
     # @api public
     def self.wrap(array, key, keys)
-      map_array(array, Transproc(:nest, key, keys))
+      nest = HashTransformations[:nest, key, keys]
+      map_array(array, nest)
     end
 
     # Group array values using provided root key and value keys
@@ -91,7 +93,7 @@ module Transproc
       array.each do |hash|
         hash = Hash[hash]
 
-        old_group = Transproc::Coercions.to_tuples(hash.delete(key))
+        old_group = Coercions.to_tuples(hash.delete(key))
         new_group = keys.inject({}) { |a, e| a.merge(e => hash.delete(e)) }
 
         grouped[hash] << old_group.map { |item| item.merge(new_group) }
@@ -251,9 +253,9 @@ module Transproc
       base = keys.inject({}) { |a, e| a.merge(e => nil) }
       map_array!(array, -> v { base.merge(v) })
     end
-  end
 
-  ArrayTransformations.singleton_methods(false).each do |meth|
-    uses meth, from: ArrayTransformations
+    # @deprecated Register methods globally
+    (methods - Registry.methods - Registry.instance_methods)
+      .each { |name| Transproc.register name, t(name) }
   end
 end

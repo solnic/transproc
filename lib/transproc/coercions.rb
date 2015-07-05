@@ -173,9 +173,9 @@ module Transproc
       array.select! { |item| item.is_a?(Hash) }
       array.any? ? array : [{}]
     end
-  end
 
-  Coercions.singleton_methods(false).each do |meth|
-    uses meth, from: Coercions
+    # @deprecated Register methods globally
+    (methods - Registry.methods - Registry.instance_methods)
+      .each { |name| Transproc.register name, t(name) }
   end
 end

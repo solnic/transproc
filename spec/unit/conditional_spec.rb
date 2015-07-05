@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Transproc::Conditional do
   describe '.guard' do
-    let(:fn) { t(:guard, ->(value) { value.is_a?(::String) }, t(:to_integer)) }
+    let(:fn) { described_class.t(:guard, condition, operation) }
+    let(:condition) { ->(value) { value.is_a?(::String) } }
+    let(:operation) { Transproc::Coercions.t(:to_integer) }
 
     context 'when predicate returns truthy value' do
       it 'applies the transformation and returns the result' do

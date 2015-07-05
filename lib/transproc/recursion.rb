@@ -17,11 +17,11 @@ module Transproc
   module Recursion
     extend Registry
 
-    IF_ENUMERABLE = -> fn { Transproc(:is, Enumerable, fn) }
+    IF_ENUMERABLE = -> fn { Conditional[:is, Enumerable, fn] }
 
-    IF_ARRAY = -> fn { Transproc(:is, Array, fn) }
+    IF_ARRAY = -> fn { Conditional[:is, Array, fn] }
 
-    IF_HASH = -> fn { Transproc(:is, Hash, fn) }
+    IF_HASH = -> fn { Conditional[:is, Hash, fn] }
 
     # Recursively apply the provided transformation function to an enumerable
     #
@@ -106,9 +106,9 @@ module Transproc
 
       result
     end
-  end
 
-  Recursion.singleton_methods(false).each do |meth|
-    uses meth, from: Recursion
+    # @deprecated Register methods globally
+    (methods - Registry.methods - Registry.instance_methods)
+      .each { |name| Transproc.register name, t(name) }
   end
 end

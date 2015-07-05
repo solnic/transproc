@@ -23,9 +23,9 @@ module Transproc
     attr_reader :args
 
     # @api private
-    def initialize(fn, options)
+    def initialize(fn, options = {})
       @fn = fn
-      @args = options[:args]
+      @args = options.fetch(:args, [])
     end
 
     # Call the wrapped proc

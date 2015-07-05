@@ -6,9 +6,12 @@ require 'transproc/error'
 require 'transproc/registry'
 
 module Transproc
-  extend Registry
-
-  module_function
+  # Function registry
+  #
+  # @api private
+  def self.functions
+    @_functions ||= {}
+  end
 
   # Register a new function
   #
@@ -21,9 +24,9 @@ module Transproc
   # @return [Function]
   #
   # @api public
-  def register(*args, &block)
+  def self.register(*args, &block)
     name, fn = *args
-    if functions.include?(name)
+    if functions.include? name
       raise FunctionAlreadyRegisteredError, "Function #{name} is already defined"
     end
     functions[name] = fn || block
@@ -34,24 +37,10 @@ module Transproc
   # @param [Symbol] name The name of the registered function
   #
   # @api private
-  def [](name, *args)
-    fn =
-      if functions.key?(name)
-        functions[name]
-      else
-        begin
-          super
-        rescue NameError;end
-      end
-    raise FunctionNotFoundError, "No registered function for #{name}" unless fn
-    fn
-  end
-
-  # Function registry
-  #
-  # @api private
-  def functions
-    @_functions ||= {}
+  def self.[](name, *args)
+    functions.fetch(name) {
+      raise FunctionNotFoundError, "No globally registered function for #{name}"
+    }
   end
 end
 

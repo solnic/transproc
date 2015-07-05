@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe Transproc::ArrayTransformations do
+  let(:hashes) { Transproc::HashTransformations }
+
   describe '.extract_key' do
     it 'extracts values by key from all hashes' do
-      extract_key = t(:extract_key, 'name')
+      extract_key = described_class.t(:extract_key, 'name')
 
       original = [
         { 'name' => 'Alice', 'role' => 'sender' },
@@ -22,7 +24,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.extract_key!' do
     it 'extracts values by key from all hashes' do
-      extract_key = t(:extract_key!, 'name')
+      extract_key = described_class.t(:extract_key!, 'name')
 
       input = [
         { 'name' => 'Alice', 'role' => 'sender' },
@@ -39,7 +41,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.insert_key' do
     it 'wraps values to tuples with given key' do
-      insert_key = t(:insert_key, 'name')
+      insert_key = described_class.t(:insert_key, 'name')
 
       original = ['Alice', 'Bob', nil]
 
@@ -58,7 +60,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.insert_key!' do
     it 'wraps values to tuples with given key' do
-      insert_key = t(:insert_key!, 'name')
+      insert_key = described_class.t(:insert_key!, 'name')
 
       original = ['Alice', 'Bob', nil]
 
@@ -77,7 +79,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.add_keys' do
     it 'returns a new array with missed keys added to tuples' do
-      add_keys = t(:add_keys, [:foo, :bar, :baz])
+      add_keys = described_class.t(:add_keys, [:foo, :bar, :baz])
 
       original = [{ foo: 'bar' }, { bar: 'baz' }]
 
@@ -95,7 +97,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.add_keys!' do
     it 'adds missed keys to tuples' do
-      add_keys = t(:add_keys!, [:foo, :bar, :baz])
+      add_keys = described_class.t(:add_keys!, [:foo, :bar, :baz])
 
       original = [{ foo: 'bar' }, { bar: 'baz' }]
 
@@ -113,7 +115,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.map_array' do
     it 'applies funtions to all values' do
-      map = t(:map_array, t(:symbolize_keys))
+      map = described_class.t(:map_array, hashes[:symbolize_keys])
 
       original = [
         { 'name' => 'Jane', 'title' => 'One' },
@@ -134,7 +136,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.map_array!' do
     it 'updates array with the result of the function applied to each value' do
-      map = t(:map_array!, t(:symbolize_keys))
+      map = described_class.t(:map_array!, hashes[:symbolize_keys])
 
       input = [
         { 'name' => 'Jane', 'title' => 'One' },
@@ -154,7 +156,7 @@ describe Transproc::ArrayTransformations do
 
   describe '.wrap' do
     it 'returns a new array with wrapped hashes' do
-      wrap = t(:wrap, :task, [:title])
+      wrap = described_class.t(:wrap, :task, [:title])
 
       input = [{ name: 'Jane', title: 'One' }]
       output = [{ name: 'Jane', task: { title: 'One' } }]
@@ -164,10 +166,10 @@ describe Transproc::ArrayTransformations do
 
     it 'returns a array new with deeply wrapped hashes' do
       wrap =
-        t(
+        described_class.t(
           :map_array,
-          t(:nest, :user, [:name, :title]) +
-          t(:map_value, :user, t(:nest, :task, [:title]))
+          hashes[:nest, :user, [:name, :title]] +
+          hashes[:map_value, :user, hashes[:nest, :task, [:title]]]
         )
 
       input = [{ name: 'Jane', title: 'One' }]
@@ -177,7 +179,7 @@ describe Transproc::ArrayTransformations do
     end
 
     it 'adds data to the existing tuples' do
-      wrap = t(:wrap, :task, [:title])
+      wrap = described_class.t(:wrap, :task, [:title])
 
       input  = [{ name: 'Jane', task: { priority: 1 }, title: 'One' }]
       output = [{ name: 'Jane', task: { priority: 1, title: 'One' } }]
@@ -187,7 +189,7 @@ describe Transproc::ArrayTransformations do
   end
 
   describe '.group' do
-    subject(:group) { t(:group, :tasks, [:title]) }
+    subject(:group) { described_class.t(:group, :tasks, [:title]) }
 
     it 'returns a new array with grouped hashes' do
       input  = [{ name: 'Jane', title: 'One' }, { name: 'Jane', title: 'Two' }]
@@ -241,7 +243,7 @@ describe Transproc::ArrayTransformations do
   end
 
   describe '.ungroup' do
-    subject(:ungroup) { t(:ungroup, :tasks, [:title]) }
+    subject(:ungroup) { described_class.t(:ungroup, :tasks, [:title]) }
 
     it 'returns a new array with ungrouped hashes' do
       input = [{ name: 'Jane', tasks: [{ title: 'One' }, { title: 'Two' }] }]
@@ -325,12 +327,18 @@ describe Transproc::ArrayTransformations do
           { user: 'Jane', title: 'One', tags: [{ task: 'One', tag: 'red' }] },
           { user: 'Jane', title: 'Two', tags: [] }]
         },
-        { name: 'Joe', email: 'joe@doe.org', tasks: [
-          { user: 'Joe', title: 'Three', tags: [{ task: 'Three', tag: 'blue' }] }]
+        {
+          name: 'Joe', email: 'joe@doe.org', tasks: [
+            {
+              user: 'Joe', title: 'Three', tags: [
+                { task: 'Three', tag: 'blue' }
+              ]
+            }
+          ]
         }
       ]
 
-      combine = t(:combine, [
+      combine = described_class.t(:combine, [
         [:tasks, { name: :user }, [[:tags, title: :task]]]
       ])
 

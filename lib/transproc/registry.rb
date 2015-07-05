@@ -49,8 +49,12 @@ module Transproc
     # @alias :t
     #
     def [](fn, *args)
-      fun = fn.instance_of?(Proc) ? fn : method(fn)
-      Function.new(fun, args: args)
+      if fn.is_a?(Proc)
+        function = fn
+      else
+        function = send(:method, fn).to_proc
+      end
+      Function.new(function, args: args)
     end
     alias_method :t, :[]
 
@@ -95,25 +99,25 @@ module Transproc
     #
     # @return [itself] self
     #
-    # @alias :uses
+    # @alias :import
     #
-    def import(name, options = nil)
-      name.instance_of?(Module) ? import_module(name) : import_method(name, options)
+    def uses(name, options = nil)
+      name.instance_of?(Module) ? uses_module(name) : uses_method(name, options)
       self
     end
-    alias_method :uses, :import
+    alias_method :import, :uses
 
     private
 
-    def import_method(name, options)
+    def uses_method(name, options)
       source = options.fetch(:from)
       target = options.fetch(:as, name)
       singleton_class.def_delegator source, name, target
     end
 
-    def import_module(const)
-      (const.public_methods - Module.public_methods)
-        .each { |name| import_method(name, from: const) }
+    def uses_module(const)
+      (const.methods - Registry.methods - Registry.instance_methods)
+        .each { |name| uses_method(name, from: const) }
     end
   end
 end

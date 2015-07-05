@@ -48,8 +48,9 @@ module Transproc
       end
       object
     end
-  end
 
-  import :constructor_inject, from: ClassTransformations
-  import :set_ivars, from: ClassTransformations
+    # @deprecated Register methods globally
+    (methods - Registry.methods - Registry.instance_methods)
+      .each { |name| Transproc.register name, t(name) }
+  end
 end

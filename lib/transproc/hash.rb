@@ -63,7 +63,7 @@ module Transproc
     #
     # @api public
     def self.symbolize_keys!(hash)
-      map_keys!(hash, Transproc(:to_symbol).fn)
+      map_keys!(hash, Coercions[:to_symbol].fn)
     end
 
     # Stringify all keys in a hash
@@ -87,7 +87,7 @@ module Transproc
     #
     # @api public
     def self.stringify_keys!(hash)
-      map_keys!(hash, Transproc(:to_string).fn)
+      map_keys!(hash, Coercions[:to_string].fn)
     end
 
     # Map all values in a hash using transformation function
@@ -356,9 +356,9 @@ module Transproc
       list = list.map { |item| item.merge(reject_keys(hash, [key])) }
       ArrayTransformations.add_keys(list, ungrouped)
     end
-  end
 
-  HashTransformations.singleton_methods(false).each do |meth|
-    uses meth, from: HashTransformations
+    # @deprecated Register methods globally
+    (methods - Registry.instance_methods - Registry.methods)
+      .each { |name| Transproc.register name, t(name) }
   end
 end
