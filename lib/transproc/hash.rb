@@ -28,7 +28,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def map_keys(hash, fn)
+    def self.map_keys(hash, fn)
       map_keys!(Hash[hash], fn)
     end
 
@@ -37,7 +37,7 @@ module Transproc
     # @see HashTransformations.map_keys
     #
     # @api public
-    def map_keys!(hash, fn)
+    def self.map_keys!(hash, fn)
       hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
       hash
     end
@@ -53,7 +53,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def symbolize_keys(hash)
+    def self.symbolize_keys(hash)
       symbolize_keys!(Hash[hash])
     end
 
@@ -62,7 +62,7 @@ module Transproc
     # @see HashTransformations.symbolize_keys!
     #
     # @api public
-    def symbolize_keys!(hash)
+    def self.symbolize_keys!(hash)
       map_keys!(hash, Transproc(:to_symbol).fn)
     end
 
@@ -77,7 +77,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def stringify_keys(hash)
+    def self.stringify_keys(hash)
       stringify_keys!(Hash[hash])
     end
 
@@ -86,7 +86,7 @@ module Transproc
     # @see HashTransformations.stringify_keys
     #
     # @api public
-    def stringify_keys!(hash)
+    def self.stringify_keys!(hash)
       map_keys!(hash, Transproc(:to_string).fn)
     end
 
@@ -101,7 +101,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def map_values(hash, fn)
+    def self.map_values(hash, fn)
       map_values!(Hash[hash], fn)
     end
 
@@ -114,7 +114,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def map_values!(hash, fn)
+    def self.map_values!(hash, fn)
       hash.each { |key, value| hash[key] = fn[value] }
       hash
     end
@@ -131,7 +131,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def rename_keys(hash, mapping)
+    def self.rename_keys(hash, mapping)
       rename_keys!(Hash[hash], mapping)
     end
 
@@ -140,7 +140,7 @@ module Transproc
     # @see HashTransformations.rename_keys
     #
     # @api public
-    def rename_keys!(hash, mapping)
+    def self.rename_keys!(hash, mapping)
       mapping.each { |k, v| hash[v] = hash.delete(k) }
       hash
     end
@@ -157,7 +157,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def reject_keys(hash, keys)
+    def self.reject_keys(hash, keys)
       reject_keys!(Hash[hash], keys)
     end
 
@@ -166,7 +166,7 @@ module Transproc
     # @see HashTransformations.reject_keys
     #
     # @api public
-    def reject_keys!(hash, keys)
+    def self.reject_keys!(hash, keys)
       hash.reject { |k, _| keys.include?(k) }
     end
 
@@ -182,7 +182,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def accept_keys(hash, keys)
+    def self.accept_keys(hash, keys)
       accept_keys!(Hash[hash], keys)
     end
 
@@ -191,7 +191,7 @@ module Transproc
     # @see HashTransformations.accept
     #
     # @api public
-    def accept_keys!(hash, keys)
+    def self.accept_keys!(hash, keys)
       reject_keys!(hash, hash.keys - keys)
     end
 
@@ -206,7 +206,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def map_value(hash, key, fn)
+    def self.map_value(hash, key, fn)
       hash.merge(key => fn[hash[key]])
     end
 
@@ -215,7 +215,7 @@ module Transproc
     # @see HashTransformations.map_value
     #
     # @api public
-    def map_value!(hash, key, fn)
+    def self.map_value!(hash, key, fn)
       hash.update(key => fn[hash[key]])
     end
 
@@ -230,7 +230,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def nest(hash, key, keys)
+    def self.nest(hash, key, keys)
       nest!(Hash[hash], key, keys)
     end
 
@@ -239,7 +239,7 @@ module Transproc
     # @see HashTransformations.nest
     #
     # @api public
-    def nest!(hash, root, keys)
+    def self.nest!(hash, root, keys)
       nest_keys = hash.keys & keys
 
       if nest_keys.size > 0
@@ -263,7 +263,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def unwrap(hash, root, keys = nil)
+    def self.unwrap(hash, root, keys = nil)
       copy = Hash[hash].merge(root => Hash[hash[root]])
       unwrap!(copy, root, keys)
     end
@@ -273,7 +273,7 @@ module Transproc
     # @see HashTransformations.unwrap
     #
     # @api public
-    def unwrap!(hash, root, selected = nil)
+    def self.unwrap!(hash, root, selected = nil)
       if nested_hash = hash[root]
         keys = nested_hash.keys
         keys &= selected if selected
@@ -303,7 +303,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def fold(hash, key, tuple_key)
+    def self.fold(hash, key, tuple_key)
       fold!(Hash[hash], key, tuple_key)
     end
 
@@ -312,7 +312,7 @@ module Transproc
     # @see HashTransformations.fold
     #
     # @api public
-    def fold!(hash, key, tuple_key)
+    def self.fold!(hash, key, tuple_key)
       hash.update(key => ArrayTransformations.extract_key(hash[key], tuple_key))
     end
 
@@ -344,7 +344,7 @@ module Transproc
     # @return [Array<Hash>]
     #
     # @api public
-    def split(hash, key, keys)
+    def self.split(hash, key, keys)
       list = Array(hash[key])
       return [hash.reject { |k, _| k == key }] if list.empty?
 

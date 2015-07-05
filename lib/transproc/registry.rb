@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module Transproc
   # Container to define transproc functions in, and access them via `[]` method
   # from the outside of the module
@@ -6,7 +8,7 @@ module Transproc
   #   module FooMethods
   #     extend Transproc::Registry
   #
-  #     def foo(name, prefix)
+  #     def self.foo(name, prefix)
   #       [prefix, '_', name].join
   #     end
   #   end
@@ -15,10 +17,9 @@ module Transproc
   #   fn['qux'] # => 'qux_baz'
   #
   #   module BarMethods
-  #     # extend Transproc::Registry
-  #     include FooMethods
+  #     extend FooMethods
   #
-  #     def bar(*args)
+  #     def self.bar(*args)
   #       foo(*args).upcase
   #     end
   #   end
@@ -31,6 +32,11 @@ module Transproc
   #
   # @api public
   module Registry
+    # @private
+    def self.extended(other)
+      other.singleton_class.extend Forwardable
+    end
+
     # Builds the transproc function either from a Proc, or from the module method
     #
     # @param [Proc, Symbol] fn
@@ -42,10 +48,9 @@ module Transproc
     #
     # @alias :t
     #
-    # @api public
     def [](fn, *args)
-      fun = fn.is_a?(Proc) ? fn : method(fn)
-      Transproc::Function.new(fun, args: args)
+      fun = fn.instance_of?(Proc) ? fn : method(fn)
+      Function.new(fun, args: args)
     end
     alias_method :t, :[]
 
@@ -56,79 +61,59 @@ module Transproc
     #
     # @example
     #   module Foo
-    #     extend Transproc::Registry
-    #
-    #     def foo(value)
+    #     def self.foo(value)
     #       value.upcase
     #     end
     #
-    #     def bar(value)
+    #     def self.bar(value)
     #       value.downcase
     #     end
+    #  end
+    #
+    #  module Qux
+    #    def self.qux(value)
+    #      value.reverse
+    #    end
     #  end
     #
     #  module Bar
     #     extend Transproc::Registry
     #
-    #     uses :foo, from: Foo, as: :baz
-    #     uses :bar, from: Foo
+    #     import :foo, from: Foo, as: :baz
+    #     import :bar, from: Foo
+    #     import Qux
     #  end
     #
     #  Bar[:baz]['Qux'] # => 'QUX'
     #  Bar[:bar]['Qux'] # => 'qux'
+    #  Bar[:qux]['Qux'] # => 'xuQ'
     #
-    # @param [String, Symbol] name
+    # @param [Module, String, Symbol] name
     # @option [Class] :from The module to take the method from
     # @option [String, Symbol] :as
     #   The name of imported transproc inside the current module
     #
-    # @return [undefined]
+    # @return [itself] self
     #
-    # @api public
-    def uses(name, options = {})
-      source   = options.fetch(:from)
-      new_name = options.fetch(:as, name)
-      define_method(new_name) { |*args| source.__send__(name, *args) }
+    # @alias :uses
+    #
+    def import(name, options = nil)
+      name.instance_of?(Module) ? import_module(name) : import_method(name, options)
+      self
+    end
+    alias_method :uses, :import
+
+    private
+
+    def import_method(name, options)
+      source = options.fetch(:from)
+      target = options.fetch(:as, name)
+      singleton_class.def_delegator source, name, target
     end
 
-    # @api private
-    def self.extended(target)
-      target.extend(ClassMethods)
-    end
-
-    # @api private
-    module ClassMethods
-      # Makes `[]` and all public functions defined in the included modules
-      # accessible in their receiver
-      #
-      # @api private
-      def included(other)
-        other.extend(Transproc::Registry)
-        (public_methods - other.public_methods)
-          .each { |transproc| other.uses transproc, from: self }
-      end
-
-      # Adds all public methods from the included module to singleton
-      def include(*others)
-        super
-        extend(*others)
-      end
-
-      # Makes newly module-defined functions accessible via `[]` method
-      # by adding it to the module's eigenclass
-      #
-      # @api private
-      def method_added(name)
-        module_function(name)
-      end
-
-      # Makes undefined methods inaccessible via `[]` method by
-      # undefining it from the module's eigenclass
-      #
-      # @api private
-      def method_undefined(name)
-        singleton_class.__send__(:undef_method, name)
-      end
+    def import_module(const)
+      (const.public_methods - Module.public_methods)
+        .each { |name| import_method(name, from: const) }
     end
   end
 end

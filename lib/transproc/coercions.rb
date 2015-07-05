@@ -28,7 +28,7 @@ module Transproc
     # @return [String]
     #
     # @api public
-    def to_string(value)
+    def self.to_string(value)
       value.to_s
     end
 
@@ -43,7 +43,7 @@ module Transproc
     # @return [Symbol]
     #
     # @api public
-    def to_symbol(value)
+    def self.to_symbol(value)
       value.to_sym
     end
 
@@ -58,7 +58,7 @@ module Transproc
     # @return [Integer]
     #
     # @api public
-    def to_integer(value)
+    def self.to_integer(value)
       value.to_i
     end
 
@@ -73,7 +73,7 @@ module Transproc
     # @return [Float]
     #
     # @api public
-    def to_float(value)
+    def self.to_float(value)
       value.to_f
     end
 
@@ -88,7 +88,7 @@ module Transproc
     # @return [Decimal]
     #
     # @api public
-    def to_decimal(value)
+    def self.to_decimal(value)
       value.to_d
     end
 
@@ -105,7 +105,7 @@ module Transproc
     # @return [TrueClass,FalseClass]
     #
     # @api public
-    def to_boolean(value)
+    def self.to_boolean(value)
       BOOLEAN_MAP.fetch(value)
     end
 
@@ -120,7 +120,7 @@ module Transproc
     # @return [Date]
     #
     # @api public
-    def to_date(value)
+    def self.to_date(value)
       Date.parse(value)
     end
 
@@ -135,7 +135,7 @@ module Transproc
     # @return [Time]
     #
     # @api public
-    def to_time(value)
+    def self.to_time(value)
       Time.parse(value)
     end
 
@@ -150,7 +150,7 @@ module Transproc
     # @return [DateTime]
     #
     # @api public
-    def to_datetime(value)
+    def self.to_datetime(value)
       DateTime.parse(value)
     end
 
@@ -168,7 +168,7 @@ module Transproc
     #
     # @return [Array<Hash>]
     #
-    def to_tuples(value)
+    def self.to_tuples(value)
       array = value.is_a?(Array) ? Array[*value] : [{}]
       array.select! { |item| item.is_a?(Hash) }
       array.any? ? array : [{}]

@@ -294,8 +294,8 @@ describe Transproc::ArrayTransformations do
   end
 
   describe '.combine' do
-    let(:input) do
-      [
+    it 'merges hashes from arrays using provided join keys' do
+      input = [
         # parent users
         [
           { name: 'Jane', email: 'jane@doe.org' },
@@ -319,10 +319,8 @@ describe Transproc::ArrayTransformations do
           ]
         ]
       ]
-    end
 
-    let(:output) do
-      [
+      output = [
         { name: 'Jane', email: 'jane@doe.org', tasks: [
           { user: 'Jane', title: 'One', tags: [{ task: 'One', tag: 'red' }] },
           { user: 'Jane', title: 'Two', tags: [] }]
@@ -331,9 +329,7 @@ describe Transproc::ArrayTransformations do
           { user: 'Joe', title: 'Three', tags: [{ task: 'Three', tag: 'blue' }] }]
         }
       ]
-    end
 
-    it 'merges hashes from arrays using provided join keys' do
       combine = t(:combine, [
         [:tasks, { name: :user }, [[:tags, title: :task]]]
       ])

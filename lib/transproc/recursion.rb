@@ -43,7 +43,7 @@ module Transproc
     # @return [Enumerable]
     #
     # @api public
-    def recursion(value, fn)
+    def self.recursion(value, fn)
       result = fn[value]
       guarded = IF_ENUMERABLE[-> v { recursion(v, fn) }]
 
@@ -74,7 +74,7 @@ module Transproc
     # @return [Array]
     #
     # @api public
-    def array_recursion(value, fn)
+    def self.array_recursion(value, fn)
       result = fn[value]
       guarded = IF_ARRAY[-> v { array_recursion(v, fn) }]
 
@@ -96,7 +96,7 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def hash_recursion(value, fn)
+    def self.hash_recursion(value, fn)
       result = fn[value]
       guarded = IF_HASH[-> v { hash_recursion(v, fn) }]
 
