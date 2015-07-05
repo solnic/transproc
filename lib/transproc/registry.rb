@@ -49,12 +49,8 @@ module Transproc
     # @alias :t
     #
     def [](fn, *args)
-      if fn.is_a?(Proc)
-        function = fn
-      else
-        function = send(:method, fn).to_proc
-      end
-      Function.new(function, args: args)
+      function = fn.is_a?(Proc) ? fn : send(:method, fn).to_proc
+      Function.new(function, args: args, name: fn)
     end
     alias_method :t, :[]
 

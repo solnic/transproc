@@ -3,6 +3,22 @@ require 'spec_helper'
 describe Transproc::Function do
   let(:hashes) { Transproc::HashTransformations }
 
+  describe '#name' do
+    let(:block) { proc { |v| v } }
+
+    it 'returns the name of the module function' do
+      expect(hashes[:symbolize_keys].name).to eql :symbolize_keys
+    end
+
+    it 'returns the explicitly assigned name' do
+      expect(described_class.new(block, name: :identity).name).to eql :identity
+    end
+
+    it 'returns the unnamed closure' do
+      expect(described_class.new(block).name).to eql block
+    end
+  end
+
   describe '#>>' do
     it 'composes named functions' do
       f1 = hashes[:symbolize_keys]
