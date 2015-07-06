@@ -38,9 +38,15 @@ module Transproc
   #
   # @api private
   def self.[](name, *args)
-    functions.fetch(name) {
+    fn = functions.fetch(name) {
       raise FunctionNotFoundError, "No globally registered function for #{name}"
     }
+
+    if args.any?
+      fn.with(*args)
+    else
+      fn
+    end
   end
 end
 

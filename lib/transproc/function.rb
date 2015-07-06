@@ -65,6 +65,15 @@ module Transproc
     alias_method :+, :compose
     alias_method :>>, :compose
 
+    # Return a new fn with curried args
+    #
+    # @return [Function]
+    #
+    # @api private
+    def with(*args)
+      self.class.new(fn, name: name, args: args)
+    end
+
     # Return a simple AST representation of this function
     #
     # @return [Array]
