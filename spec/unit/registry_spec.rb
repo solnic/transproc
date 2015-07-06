@@ -1,124 +1,104 @@
 require 'spec_helper'
 
 describe Transproc::Registry do
-  before do
-    module FooModule
+  before { module Transproc::Test; end         }
+  after  { Transproc.send :remove_const, :Test }
+
+  let(:foo) do
+    Transproc::Test::Foo = Module.new do
       extend Transproc::Registry
 
-      def foo(value, prefix)
-        [prefix, '_', value].join
+      def self.prefix(value, prefix)
+        "#{prefix}_#{value}"
       end
     end
-
-    module BarModule
-      include FooModule
-
-      def bar(*args)
-        foo(*args).upcase
-      end
-    end
-
-    module BazModule
-      extend Transproc::Registry
-    end
-
-    module QuxModule; end
   end
-
-  describe '.included' do
-    it 'makes the target module a registry' do
-      expect { QuxModule.send :include, BarModule }
-        .to change { QuxModule.is_a? Transproc::Registry }
-        .from(false)
-        .to(true)
-    end
-
-    it 'adds transformations from the included module' do
-      expect { QuxModule.send :include, BarModule }
-        .to change { QuxModule.respond_to? :foo }
-        .from(false)
-        .to(true)
-    end
-  end
-
-  describe '.include' do
-    it 'adds all included methods to the singleton class' do
-      QuxModule.send(:define_method, :qux) { :qux }
-      expect { BazModule.send :include, QuxModule }
-        .to change { BazModule.respond_to? :qux }
-        .from(false)
-        .to(true)
-    end
-  end
+  let(:bar) { Transproc::Test::Bar = Module.new { extend Transproc::Registry } }
 
   describe '.[]' do
-    it 'builds function from the method' do
-      fn = ::FooModule[:foo, 'baz']
+    subject { foo[fn, 'baz'] }
 
-      expect(fn['qux']).to eql 'baz_qux'
+    context 'from a method' do
+      let(:fn) { :prefix }
+
+      it 'builds a function from a method' do
+        expect(subject['qux']).to eql 'baz_qux'
+      end
     end
 
-    it 'builds function from the proc' do
-      fun = -> value, prefix { [prefix, '_', value].join }
-      fn  = ::FooModule[fun, 'baz']
+    context 'from a closure' do
+      let(:fn) { -> value, prefix { [prefix, '_', value].join } }
 
-      expect(fn['qux']).to eql 'baz_qux'
+      it 'builds a function from a method' do
+        expect(subject['qux']).to eql 'baz_qux'
+      end
     end
+  end
 
-    it 'builds function using methods from included modules' do
-      fn = ::BarModule[:bar, 'baz']
+  describe '.t' do
+    subject { foo.t(:prefix, 'baz') }
 
-      expect(fn['qux']).to eql 'BAZ_QUX'
+    it 'is an alias for .[]' do
+      expect(subject['qux']).to eql 'baz_qux'
     end
+  end
 
-    it 'can access methods from included modules directly' do
-      fn = ::BarModule[:foo, 'baz']
+  describe '.import' do
+    context 'a module' do
+      subject { bar.import foo }
 
-      expect(fn['qux']).to eql 'baz_qux'
-    end
-
-    it 'cannot access undefined methods' do
-      module ::BarModule
-        undef_method :foo
+      it 'imports its methods' do
+        expect { subject }
+          .to change { bar.respond_to? :prefix }
+          .from(false)
+          .to(true)
+        expect(bar[:prefix, 'baz']['qux']).to eql 'baz_qux'
       end
 
-      expect { ::BarModule[:foo, 'baz'] }.to raise_error(NameError)
+      it { is_expected.to eq bar }
+    end
+
+    context 'a module with the same method' do
+      subject { bar.import foo }
+      before  { bar.singleton_class.send(:define_method, :prefix) { |*| nil } }
+
+      it 'redefines method' do
+        expect { subject }
+          .to change { bar[:prefix, 'baz']['qux'] }.from(nil).to('baz_qux')
+      end
+    end
+
+    context 'a method' do
+      subject { bar.import :prefix, from: foo }
+
+      it 'imports the method with the same name' do
+        expect { subject }
+          .to change { bar.respond_to? :prefix }
+          .from(false)
+          .to(true)
+        expect(bar[:prefix, 'bar']['baz']).to eql 'bar_baz'
+      end
+    end
+
+    context 'a renamed method' do
+      subject { bar.import :prefix, from: foo, as: :affix }
+
+      it 'imports the method with the new name' do
+        expect { subject }
+          .to change { bar.respond_to? :affix }
+          .from(false)
+          .to(true)
+        expect(bar[:affix, 'bar']['baz']).to eql 'bar_baz'
+      end
     end
   end
 
   describe '.uses' do
-    it 'forwards methods to another module directly' do
-      expect { ::BazModule[:baz, 'baz'] }.to raise_error(NameError)
-
-      module BazModule
-        uses :foo, as: :ffoo, from: FooModule
-        uses :bar, from: BarModule
-      end
-
-      ffoo = ::BazModule[:ffoo, 'baz']
-      bar  = ::BazModule[:bar, 'baz']
-
-      expect(ffoo['qux']).to eql 'baz_qux'
-      expect(bar['qux']).to eql 'BAZ_QUX'
+    it 'is an alias for .import' do
+      expect { bar.import foo }
+        .to change { bar.respond_to? :prefix }
+        .from(false)
+        .to(true)
     end
   end
-
-  describe '#t' do
-    it 'is an alias for .[]' do
-      module FooModule
-        def qux(value, *args)
-          t(:foo, *args)[value]
-        end
-      end
-
-      fn = ::FooModule[:foo, 'baz']
-
-      expect(fn['qux']).to eql 'baz_qux'
-    end
-  end
-
-  after { Object.send :remove_const, :QuxModule }
-  after { Object.send :remove_const, :BazModule }
-  after { Object.send :remove_const, :BarModule }
-  after { Object.send :remove_const, :FooModule }
 end

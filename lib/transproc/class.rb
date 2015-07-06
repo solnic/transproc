@@ -26,7 +26,7 @@ module Transproc
     # @return [Object] An instance of the given klass
     #
     # @api public
-    def constructor_inject(*args, klass)
+    def self.constructor_inject(*args, klass)
       klass.new(*args)
     end
 
@@ -41,15 +41,16 @@ module Transproc
     # @return [Object]
     #
     # @api public
-    def set_ivars(ivar_hash, klass)
+    def self.set_ivars(ivar_hash, klass)
       object = klass.allocate
       ivar_hash.each do |ivar_name, ivar_value|
         object.instance_variable_set("@#{ivar_name}", ivar_value)
       end
       object
     end
-  end
 
-  uses :constructor_inject, from: ClassTransformations
-  uses :set_ivars, from: ClassTransformations
+    # @deprecated Register methods globally
+    (methods - Registry.methods - Registry.instance_methods)
+      .each { |name| Transproc.register name, t(name) }
+  end
 end
