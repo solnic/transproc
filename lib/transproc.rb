@@ -3,6 +3,7 @@ require 'transproc/function'
 require 'transproc/functions'
 require 'transproc/composer'
 require 'transproc/error'
+require 'transproc/store'
 require 'transproc/registry'
 
 module Transproc
@@ -38,9 +39,7 @@ module Transproc
   #
   # @api private
   def self.[](name, *args)
-    fn = functions.fetch(name) {
-      raise FunctionNotFoundError, "No globally registered function for #{name}"
-    }
+    fn = functions.fetch(name) { raise FunctionNotFoundError.new(name) }
 
     if args.any?
       fn.with(*args)
