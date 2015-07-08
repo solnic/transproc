@@ -84,6 +84,15 @@ describe Transproc::Registry do
         expect(bar[:affix, 'bar']['baz']).to eql 'bar_baz'
       end
     end
+
+    context 'an unknown method' do
+      it 'fails' do
+        expect { bar.import :suffix, from: foo }.to raise_error do |error|
+          expect(error).to be_kind_of Transproc::FunctionNotFoundError
+          expect(error.message).to include 'Foo[:suffix]'
+        end
+      end
+    end
   end
 
   describe '.uses' do

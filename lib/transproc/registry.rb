@@ -1,4 +1,4 @@
-require 'forwardable'
+# encoding: utf-8
 
 module Transproc
   # Container to define transproc functions in, and access them via `[]` method
@@ -32,15 +32,11 @@ module Transproc
   #
   # @api public
   module Registry
-    # @private
-    def self.extended(other)
-      other.singleton_class.extend Forwardable
-    end
-
-    # Builds the transproc function either from a Proc, or from the module method
+    # Builds the transformation
     #
     # @param [Proc, Symbol] fn
-    #   Either a proc, or a name of the module's function to be wrapped to transproc
+    #   A proc, a name of the module's own function, or a name of imported
+    #   procedure from another module
     # @param [Object, Array] args
     #   Args to be carried by the transproc
     #
@@ -49,15 +45,14 @@ module Transproc
     # @alias :t
     #
     def [](fn, *args)
-      function = fn.is_a?(Proc) ? fn : send(:method, fn).to_proc
-      Function.new(function, args: args, name: fn)
+      Function.new(fetch(fn), args: args, name: fn)
     end
     alias_method :t, :[]
 
-    # Forwards the named method (transproc) to another module
+    # Imports either a method (converted to a proc) from another module, or
+    # all methods from that module.
     #
-    # Allows using transprocs from other modules without including those
-    # modules as a whole
+    # If the external module is a registry, looks for its imports too.
     #
     # @example
     #   module Foo
@@ -88,32 +83,42 @@ module Transproc
     #  Bar[:bar]['Qux'] # => 'qux'
     #  Bar[:qux]['Qux'] # => 'xuQ'
     #
-    # @param [Module, String, Symbol] name
-    # @option [Class] :from The module to take the method from
-    # @option [String, Symbol] :as
+    # @param [Module, #to_sym] name
+    # @option [Module] :from The module to take the method from
+    # @option [#to_sym] :as
     #   The name of imported transproc inside the current module
     #
     # @return [itself] self
     #
     # @alias :import
     #
-    def uses(name, options = nil)
-      name.instance_of?(Module) ? uses_module(name) : uses_method(name, options)
+    def import(source, options = nil)
+      @store = store.import(source, options)
       self
     end
-    alias_method :import, :uses
+    alias_method :uses, :import
 
-    private
-
-    def uses_method(name, options)
-      source = options.fetch(:from)
-      target = options.fetch(:as, name)
-      singleton_class.def_delegator source, name, target
+    # The store of procedures imported from external modules
+    #
+    # @return [Transproc::Store]
+    #
+    def store
+      @store ||= Store.new
     end
 
-    def uses_module(const)
-      (const.methods - Registry.methods - Registry.instance_methods)
-        .each { |name| uses_method(name, from: const) }
+    # Gets the procedure for creating a transproc
+    #
+    # @param [#call, Symbol] fn
+    #   Either the procedure, or the name of the method of the current module,
+    #   or the registered key of imported procedure in a store.
+    #
+    # @return [#call]
+    #
+    def fetch(fn)
+      return fn unless fn.instance_of? Symbol
+      respond_to?(fn) ? method(fn) : store.fetch(fn)
+    rescue
+      raise FunctionNotFoundError.new(fn, self)
     end
   end
 end
