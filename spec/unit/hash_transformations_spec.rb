@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'transproc/rspec'
 
 describe Transproc::HashTransformations do
   describe '.map_keys' do
@@ -345,22 +346,14 @@ describe Transproc::HashTransformations do
       }
     end
 
-    it 'returns an updated hash with folded key' do
-      fold = described_class.t(:fold, :tasks, :title)
-
-      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
-
-      expect { fold[input] }.not_to change { input }
-      expect(fold[input]).to eq output
+    it_behaves_like :transforming_immutable_data do
+      let(:arguments) { [:fold, :tasks, :title] }
+      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
     end
 
-    it 'does not compact results' do
-      fold = described_class.t(:fold, :tasks, :priority)
-
-      output = { name: 'Jane', tasks: [1, nil] }
-
-      expect { fold[input] }.not_to change { input }
-      expect(fold[input]).to eql output
+    it_behaves_like :transforming_immutable_data do
+      let(:arguments) { [:fold, :tasks, :priority] }
+      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
     end
   end
 
@@ -372,22 +365,14 @@ describe Transproc::HashTransformations do
       }
     end
 
-    it 'returns an updated hash with folded key' do
-      fold = described_class.t(:fold!, :tasks, :title)
-
-      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
-
-      expect(fold[input]).to eql output
-      expect(input).to eql output
+    it_behaves_like :mutating_input_data do
+      let(:arguments) { [:fold!, :tasks, :title] }
+      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
     end
 
-    it 'does not compact results' do
-      fold = described_class.t(:fold!, :tasks, :priority)
-
-      output = { name: 'Jane', tasks: [1, nil] }
-
-      expect(fold[input]).to eql output
-      expect(input).to eql output
+    it_behaves_like :mutating_input_data do
+      let(:arguments) { [:fold!, :tasks, :priority] }
+      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
     end
   end
 
