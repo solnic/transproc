@@ -5,6 +5,7 @@ require 'transproc/composer'
 require 'transproc/error'
 require 'transproc/store'
 require 'transproc/registry'
+require 'transproc/support/deprecations'
 
 module Transproc
   # Function registry
@@ -66,6 +67,11 @@ require 'transproc/hash'
 #
 # @api public
 def Transproc(fn, *args)
+  Transproc::Deprecations.announce(
+    'Transproc()',
+    'Define your own function registry using Transproc::Registry extension'
+  )
+
   case fn
   when Proc then Transproc::Function.new(fn, args: args)
   when Symbol
