@@ -94,4 +94,18 @@ describe Transproc::Function do
       expect(fn.to_ast).to eql([:to_string, []])
     end
   end
+
+  describe '#==' do
+    it 'returns true when the other is equal' do
+      fns = Module.new do
+        extend Transproc::Registry
+        import :wrap, from: Transproc::ArrayTransformations
+      end
+
+      left = fns[:wrap, :user, [:name, :email]]
+      right = fns[:wrap, :user, [:name, :email]]
+
+      expect(left == right).to be(true)
+    end
+  end
 end

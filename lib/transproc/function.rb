@@ -74,6 +74,12 @@ module Transproc
       self.class.new(fn, name: name, args: args)
     end
 
+    # @api public
+    def ==(other)
+      [fn, name, args] == [other.fn, other.name, other.args]
+    end
+    alias_method :eql?, :==
+
     # Return a simple AST representation of this function
     #
     # @return [Array]
