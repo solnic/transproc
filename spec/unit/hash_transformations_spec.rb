@@ -38,6 +38,18 @@ describe Transproc::HashTransformations do
     end
   end
 
+  describe '.deep_symbolize_keys' do
+    it 'returns a new hash with symbolized keys' do
+      symbolize_keys = described_class.t(:deep_symbolize_keys)
+
+      input = { 'foo' => 'bar', 'baz' => [{ 'one' => 1 }] }
+      output = { foo: 'bar', baz: [{ one: 1 }] }
+
+      expect(symbolize_keys[input]).to eql(output)
+      expect(input).to eql({ 'foo' => 'bar', 'baz' => [{ 'one' => 1 }] })
+    end
+  end
+
   describe '.symbolize_keys!' do
     it 'returns updated hash with symbolized keys' do
       symbolize_keys = described_class.t(:symbolize_keys!)

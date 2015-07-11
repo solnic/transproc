@@ -66,6 +66,34 @@ module Transproc
       map_keys!(hash, Coercions[:to_symbol].fn)
     end
 
+    # Symbolize keys in a hash recursively
+    #
+    # @example
+    #
+    #   input = { 'foo' => 'bar', 'baz' => [{ 'one' => 1 }] }
+    #
+    #   t(:deep_symbolize_keys)[input]
+    #   # => { :foo => "bar", :baz => [{ :one => 1 }] }
+    #
+    # @param [Hash]
+    #
+    # @return [Hash]
+    #
+    # @api public
+    def self.deep_symbolize_keys(hash)
+      hash.each_with_object({}) do |(key, value), output|
+        output[key.to_sym] =
+          case value
+          when Hash
+            deep_symbolize_keys(value)
+          when Array
+            value.map { |item| deep_symbolize_keys(item) }
+          else
+            value
+          end
+      end
+    end
+
     # Stringify all keys in a hash
     #
     # @example
