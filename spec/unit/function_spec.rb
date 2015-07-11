@@ -96,16 +96,25 @@ describe Transproc::Function do
   end
 
   describe '#==' do
-    it 'returns true when the other is equal' do
-      fns = Module.new do
+    let(:fns) do
+      Module.new do
         extend Transproc::Registry
         import :wrap, from: Transproc::ArrayTransformations
       end
+    end
 
+    it 'returns true when the other is equal' do
       left = fns[:wrap, :user, [:name, :email]]
       right = fns[:wrap, :user, [:name, :email]]
 
       expect(left == right).to be(true)
+    end
+
+    it 'returns false when the other is not a fn' do
+      left = fns[:wrap, :user, [:name, :email]]
+      right = 'boo!'
+
+      expect(left == right).to be(false)
     end
   end
 end

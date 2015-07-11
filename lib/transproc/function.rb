@@ -76,6 +76,7 @@ module Transproc
 
     # @api public
     def ==(other)
+      return false unless other.instance_of?(self.class)
       [fn, name, args] == [other.fn, other.name, other.args]
     end
     alias_method :eql?, :==
