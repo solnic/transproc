@@ -1,95 +1,105 @@
 require 'spec_helper'
 
 describe Transproc::Registry do
-  before do
-    module FooModule
+  before { module Transproc::Test; end         }
+  after  { Transproc.send :remove_const, :Test }
+
+  let(:foo) do
+    Transproc::Test::Foo = Module.new do
       extend Transproc::Registry
 
-      def foo(value, prefix)
-        [prefix, '_', value].join
+      def self.prefix(value, prefix)
+        "#{prefix}_#{value}"
+      end
+    end
+  end
+  let(:bar) { Transproc::Test::Bar = Module.new { extend Transproc::Registry } }
+  let(:baz) { Transproc::Test::Baz = Module.new { extend Transproc::Registry } }
+
+  describe '.[]' do
+    subject(:transproc) { foo[fn, 'baz'] }
+
+    context 'from a method' do
+      let(:fn) { :prefix }
+
+      it 'builds a function from a method' do
+        expect(transproc['qux']).to eql 'baz_qux'
       end
     end
 
-    module BarModule
-      include FooModule
+    context 'from a closure' do
+      let(:fn) { -> value, prefix { [prefix, '_', value].join } }
 
-      def bar(*args)
-        foo(*args).upcase
+      it 'builds a function from a method' do
+        expect(transproc['qux']).to eql 'baz_qux'
       end
-    end
-
-    module BazModule
-      extend Transproc::Registry
     end
   end
 
-  describe '.[]' do
-    it 'builds function from the method' do
-      fn = ::FooModule[:foo, 'baz']
+  describe '.t' do
+    subject(:transproc) { foo.t(:prefix, 'baz') }
 
-      expect(fn['qux']).to eql 'baz_qux'
+    it 'is an alias for .[]' do
+      expect(transproc['qux']).to eql 'baz_qux'
     end
+  end
 
-    it 'builds function from the proc' do
-      fun = -> value, prefix { [prefix, '_', value].join }
-      fn  = ::FooModule[fun, 'baz']
+  describe '.import' do
+    context 'a module' do
+      subject(:import) { bar.import foo }
 
-      expect(fn['qux']).to eql 'baz_qux'
-    end
-
-    it 'builds function using methods from included modules' do
-      fn = ::BarModule[:bar, 'baz']
-
-      expect(fn['qux']).to eql 'BAZ_QUX'
-    end
-
-    it 'can access methods from included modules directly' do
-      fn = ::BarModule[:foo, 'baz']
-
-      expect(fn['qux']).to eql 'baz_qux'
-    end
-
-    it 'cannot access undefined methods' do
-      module ::BarModule
-        undef_method :foo
+      it 'registers all its methods' do
+        import
+        expect(bar[:prefix, 'baz']['qux']).to eql 'baz_qux'
       end
 
-      expect { ::BarModule[:foo, 'baz'] }.to raise_error(NameError)
+      it 'returns itself' do
+        expect(import).to eq bar
+      end
+    end
+
+    context 'a method' do
+      before { bar.import :prefix, from: foo }
+
+      it 'registers a transproc' do
+        expect(bar[:prefix, 'bar']['baz']).to eql 'bar_baz'
+      end
+    end
+
+    context 'an imported method' do
+      before do
+        bar.import :prefix, from: foo, as: :affix
+        baz.import :affix, from: bar
+      end
+
+      it 'registers a transproc' do
+        expect(baz[:affix, 'bar']['baz']).to eql 'bar_baz'
+      end
+    end
+
+    context 'a renamed method' do
+      before { bar.import :prefix, from: foo, as: :affix }
+
+      it 'registers a transproc under the new name' do
+        expect(bar[:affix, 'bar']['baz']).to eql 'bar_baz'
+      end
+    end
+
+    context 'an unknown method' do
+      it 'fails' do
+        expect { bar.import :suffix, from: foo }.to raise_error do |error|
+          expect(error).to be_kind_of Transproc::FunctionNotFoundError
+          expect(error.message).to include 'Foo[:suffix]'
+        end
+      end
     end
   end
 
   describe '.uses' do
-    it 'forwards methods to another module directly' do
-      expect { ::BazModule[:baz, 'baz'] }.to raise_error(NameError)
+    before { bar.uses foo }
 
-      module BazModule
-        uses :foo, as: :ffoo, from: FooModule
-        uses :bar, from: BarModule
-      end
-
-      ffoo = ::BazModule[:ffoo, 'baz']
-      bar  = ::BazModule[:bar, 'baz']
-
-      expect(ffoo['qux']).to eql 'baz_qux'
-      expect(bar['qux']).to eql 'BAZ_QUX'
+    it 'is an alias for .import' do
+      expect(bar[:prefix, 'baz']['qux']).to eql 'baz_qux'
     end
   end
-
-  describe '#t' do
-    it 'is an alias for .[]' do
-      module FooModule
-        def qux(value, *args)
-          t(:foo, *args)[value]
-        end
-      end
-
-      fn = ::FooModule[:foo, 'baz']
-
-      expect(fn['qux']).to eql 'baz_qux'
-    end
-  end
-
-  after { Object.send :remove_const, :BazModule }
-  after { Object.send :remove_const, :BarModule }
-  after { Object.send :remove_const, :FooModule }
 end

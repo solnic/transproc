@@ -50,6 +50,14 @@ describe Transproc do
     end
   end
 
+  describe 'accessing a function with args' do
+    it 'curries the args' do
+      fn = Transproc(:map_array, Transproc(:to_string))
+
+      expect(fn.args).to include(Transproc(:to_string))
+    end
+  end
+
   describe 'handling malformed input' do
     it 'raises a Transproc::MalformedInputError' do
       expect {

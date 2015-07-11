@@ -3,10 +3,17 @@ require 'transproc/function'
 require 'transproc/functions'
 require 'transproc/composer'
 require 'transproc/error'
+require 'transproc/store'
 require 'transproc/registry'
+require 'transproc/support/deprecations'
 
 module Transproc
-  module_function
+  # Function registry
+  #
+  # @api private
+  def self.functions
+    @_functions ||= {}
+  end
 
   # Register a new function
   #
@@ -19,9 +26,9 @@ module Transproc
   # @return [Function]
   #
   # @api public
-  def register(*args, &block)
+  def self.register(*args, &block)
     name, fn = *args
-    if functions.include?(name)
+    if functions.include? name
       raise FunctionAlreadyRegisteredError, "Function #{name} is already defined"
     end
     functions[name] = fn || block
@@ -32,17 +39,14 @@ module Transproc
   # @param [Symbol] name The name of the registered function
   #
   # @api private
-  def [](name)
-    functions.fetch(name) {
-      raise FunctionNotFoundError, "No registered function for #{name}"
-    }
-  end
+  def self.[](name, *args)
+    fn = functions.fetch(name) { raise FunctionNotFoundError.new(name) }
 
-  # Function registry
-  #
-  # @api private
-  def functions
-    @_functions ||= {}
+    if args.any?
+      fn.with(*args)
+    else
+      fn
+    end
   end
 end
 
@@ -63,10 +67,15 @@ require 'transproc/hash'
 #
 # @api public
 def Transproc(fn, *args)
+  Transproc::Deprecations.announce(
+    'Transproc()',
+    'Define your own function registry using Transproc::Registry extension'
+  )
+
   case fn
   when Proc then Transproc::Function.new(fn, args: args)
   when Symbol
-    fun = Transproc[fn]
+    fun = Transproc[fn, *args]
     case fun
     when Transproc::Function, Transproc::Composite then fun
     else Transproc::Function.new(fun, args: args)

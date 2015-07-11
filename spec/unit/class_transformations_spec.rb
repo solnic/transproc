@@ -7,7 +7,7 @@ describe Transproc::ClassTransformations do
     end
 
     it 'returns a new object initialized with the given arguments' do
-      constructor_inject = t(:constructor_inject, klass)
+      constructor_inject = described_class.t(:constructor_inject, klass)
 
       input = ['Jane', 25]
       output = klass.new(*input)
@@ -33,7 +33,7 @@ describe Transproc::ClassTransformations do
     end
 
     it 'allocates a new object and sets instance variables from hash key/value pairs' do
-      set_ivars = t(:set_ivars, klass)
+      set_ivars = described_class.t(:set_ivars, klass)
 
       input = { name: 'Jane', age: 25 }
       output = klass.new(input)

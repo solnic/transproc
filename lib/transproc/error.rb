@@ -1,7 +1,13 @@
 module Transproc
   Error = Class.new(StandardError)
-  FunctionNotFoundError = Class.new(Error)
   FunctionAlreadyRegisteredError = Class.new(Error)
+
+  class FunctionNotFoundError < Error
+    def initialize(function, source = nil)
+      return super "No registered function #{source}[:#{function}]" if source
+      super "No globally registered function for #{function}"
+    end
+  end
 
   class MalformedInputError < Error
     attr_reader :function, :value, :original_error

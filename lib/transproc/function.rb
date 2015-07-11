@@ -22,10 +22,18 @@ module Transproc
     # @api private
     attr_reader :args
 
+    # @!attribute [r] name
+    #
+    # @return [<type] The name of the function
+    #
+    # @api public
+    attr_reader :name
+
     # @api private
-    def initialize(fn, options)
+    def initialize(fn, options = {})
       @fn = fn
-      @args = options[:args]
+      @args = options.fetch(:args, [])
+      @name = options.fetch(:name, fn)
     end
 
     # Call the wrapped proc
@@ -38,7 +46,7 @@ module Transproc
     def call(*value)
       fn[*value, *args]
     rescue => e
-      raise MalformedInputError.new(@fn, value, e)
+      raise MalformedInputError.new(@name, value, e)
     end
     alias_method :[], :call
 
@@ -57,14 +65,22 @@ module Transproc
     alias_method :+, :compose
     alias_method :>>, :compose
 
+    # Return a new fn with curried args
+    #
+    # @return [Function]
+    #
+    # @api private
+    def with(*args)
+      self.class.new(fn, name: name, args: args)
+    end
+
     # Return a simple AST representation of this function
     #
     # @return [Array]
     #
     # @api public
     def to_ast
-      identifier = fn.instance_of?(Proc) ? fn : fn.name
-      [identifier, args]
+      [name, args]
     end
   end
 end

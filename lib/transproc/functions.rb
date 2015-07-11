@@ -14,6 +14,11 @@ module Transproc
   #
   # @api public
   module Functions
+    def self.extended(mod)
+      warn 'Transproc::Functions is deprecated please switch to Transproc::Registry'
+      super
+    end
+
     def method_added(meth)
       module_function meth
       Transproc.register(meth, method(meth))

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Transproc::Recursion do
+  let(:hashes) { Transproc::HashTransformations }
+
   describe '.recursion' do
     let(:original) do
       {
@@ -28,7 +30,7 @@ describe Transproc::Recursion do
 
     context 'when function is non-destructive' do
       let(:map) do
-        t(:recursion, -> enum {
+        described_class.t(:recursion, -> enum {
           enum.reject { |v| v == 'baz' }
         })
       end
@@ -41,7 +43,7 @@ describe Transproc::Recursion do
 
     context 'when function is destructive' do
       let(:map) do
-        t(:recursion, -> enum {
+        described_class.t(:recursion, -> enum {
           enum.reject! { |v| v == 'baz' }
         })
       end
@@ -87,7 +89,7 @@ describe Transproc::Recursion do
     end
 
     context 'when function is non-destructive' do
-      let(:map) { t(:array_recursion, proc(&:compact)) }
+      let(:map) { described_class.t(:array_recursion, proc(&:compact)) }
 
       it 'applies funtions to all items recursively' do
         expect(map[input]).to eql(output)
@@ -96,7 +98,7 @@ describe Transproc::Recursion do
     end
 
     context 'when function is destructive' do
-      let(:map) { t(:array_recursion, proc(&:compact!)) }
+      let(:map) { described_class.t(:array_recursion, proc(&:compact!)) }
 
       it 'applies funtions to all items recursively and destructively' do
         expect(map[input]).to eql(output)
@@ -135,7 +137,9 @@ describe Transproc::Recursion do
     end
 
     context 'when function is non-destructive' do
-      let(:map) { t(:hash_recursion, t(:symbolize_keys)) }
+      let(:map) do
+        described_class.t(:hash_recursion, hashes.t(:symbolize_keys))
+      end
 
       it 'applies funtions to all values recursively' do
         expect(map[input]).to eql(output)
@@ -144,7 +148,9 @@ describe Transproc::Recursion do
     end
 
     context 'when function is destructive' do
-      let(:map) { t(:hash_recursion, t(:symbolize_keys!)) }
+      let(:map) do
+        described_class.t(:hash_recursion, hashes.t(:symbolize_keys!))
+      end
 
       it 'applies funtions to all values recursively and destructively' do
         expect(map[input]).to eql(output)

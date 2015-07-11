@@ -1,4 +1,5 @@
 require 'transproc/coercions'
+require 'transproc/hash'
 
 module Transproc
   # Transformation functions for Array objects
@@ -20,7 +21,7 @@ module Transproc
   #
   # @api public
   module ArrayTransformations
-    extend Functions
+    extend Registry
 
     # Map array values using transformation function
     #
@@ -36,7 +37,7 @@ module Transproc
     # @return [Array]
     #
     # @api public
-    def map_array(array, fn)
+    def self.map_array(array, fn)
       map_array!(Array[*array], fn)
     end
 
@@ -45,7 +46,7 @@ module Transproc
     # @see ArrayTransformations.map_array
     #
     # @api public
-    def map_array!(array, fn)
+    def self.map_array!(array, fn)
       array.map! { |value| fn[value] }
     end
 
@@ -64,8 +65,9 @@ module Transproc
     # @return [Array]
     #
     # @api public
-    def wrap(array, key, keys)
-      map_array(array, Transproc(:nest, key, keys))
+    def self.wrap(array, key, keys)
+      nest = HashTransformations[:nest, key, keys]
+      map_array(array, nest)
     end
 
     # Group array values using provided root key and value keys
@@ -86,12 +88,12 @@ module Transproc
     # @return [Array]
     #
     # @api public
-    def group(array, key, keys)
+    def self.group(array, key, keys)
       grouped = Hash.new { |h, k| h[k] = [] }
       array.each do |hash|
         hash = Hash[hash]
 
-        old_group = Transproc::Coercions.to_tuples(hash.delete(key))
+        old_group = Coercions.to_tuples(hash.delete(key))
         new_group = keys.inject({}) { |a, e| a.merge(e => hash.delete(e)) }
 
         grouped[hash] << old_group.map { |item| item.merge(new_group) }
@@ -121,7 +123,7 @@ module Transproc
     # @return [Array]
     #
     # @api public
-    def ungroup(array, key, keys)
+    def self.ungroup(array, key, keys)
       array.flat_map { |item| HashTransformations.split(item, key, keys) }
     end
 
@@ -139,7 +141,7 @@ module Transproc
     # @return [Array<Hash>]
     #
     # @api public
-    def combine(array, mappings)
+    def self.combine(array, mappings)
       root, groups = array
 
       cache = Hash.new { |h, k| h[k] = {} }
@@ -189,7 +191,7 @@ module Transproc
     # @return [Array]
     #
     # @api public
-    def extract_key(array, key)
+    def self.extract_key(array, key)
       extract_key!(Array[*array], key)
     end
 
@@ -198,7 +200,7 @@ module Transproc
     # @see ArrayTransformations.extract_key
     #
     # @api public
-    def extract_key!(array, key)
+    def self.extract_key!(array, key)
       map_array!(array, -> v { v[key] })
     end
 
@@ -217,7 +219,7 @@ module Transproc
     # @return [Array]
     #
     # @api public
-    def insert_key(array, key)
+    def self.insert_key(array, key)
       insert_key!(Array[*array], key)
     end
 
@@ -226,7 +228,7 @@ module Transproc
     # @see ArrayTransformations.insert_key
     #
     # @api public
-    def insert_key!(array, key)
+    def self.insert_key!(array, key)
       map_array!(array, -> v { { key => v } })
     end
 
@@ -238,7 +240,7 @@ module Transproc
     #
     # @api public
     #
-    def add_keys(array, keys)
+    def self.add_keys(array, keys)
       add_keys!(Array[*array], keys)
     end
 
@@ -247,9 +249,13 @@ module Transproc
     # @see ArrayTransformations.add_keys
     #
     # @api public
-    def add_keys!(array, keys)
+    def self.add_keys!(array, keys)
       base = keys.inject({}) { |a, e| a.merge(e => nil) }
       map_array!(array, -> v { base.merge(v) })
     end
+
+    # @deprecated Register methods globally
+    (methods - Registry.methods - Registry.instance_methods)
+      .each { |name| Transproc.register name, t(name) }
   end
 end

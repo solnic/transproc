@@ -13,7 +13,7 @@ module Transproc
   #
   # @api public
   module Conditional
-    extend Functions
+    extend Registry
 
     # Apply the transformation function to subject if the predicate returns true, or return un-modified
     #
@@ -28,7 +28,7 @@ module Transproc
     # @return [Mixed]
     #
     # @api public
-    def guard(value, predicate, fn)
+    def self.guard(value, predicate, fn)
       predicate[value] ? fn[value] : value
     end
 
@@ -48,8 +48,12 @@ module Transproc
     # @return [Object]
     #
     # @api public
-    def is(value, type, fn)
+    def self.is(value, type, fn)
       guard(value, -> v { v.is_a?(type) }, fn)
     end
+
+    # @deprecated Register methods globally
+    (methods - Registry.methods - Registry.instance_methods)
+      .each { |name| Transproc.register name, t(name) }
   end
 end

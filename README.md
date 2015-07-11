@@ -38,14 +38,35 @@ Or install it yourself as:
 ``` ruby
 require 'json'
 require 'transproc/all'
+require 'inflecto'
+
+# create your own local registry for transformation functions
+module Functions
+  extend Transproc::Registry
+end
+
+# import necessary functions from external modules
+module Functions
+  # ...
+
+  # all transformations available in the imported module
+  import Transproc::HashTransforations 
+  import Transproc::ArrayTransformations
+
+  # only specific transformation (renamed into the desired local name)
+  import :camelize, from: Inflecto, as: :camel_case
+end
+
+# use imported transformation
+transformation = Functions[:camel_case]
+transformation.call 'i_am_a_camel'
+# => "IAmACamel"
 
 # compose transformation functions
 include Transproc::Helper
 
-transformation = t(:map_array, t(:symbolize_keys) >> t(:rename_keys, user_name: :user))
-transformation >>= t(:wrap, :address, [:city, :street, :zipcode])
-
-# call the function
+transformation = Functions[:map_array, Functions[:symbolize_keys] >> Functions[:rename_keys, user_name: :user]]
+transformation >>= Functions[:wrap, :address, [:city, :street, :zipcode]]
 transformation.call(
   [
     { 'user_name' => 'Jane',
@@ -56,22 +77,22 @@ transformation.call(
 )
 # => [{:user=>"Jane", :address=>{:city=>"NYC", :street=>"Street 1", :zipcode=>"123"}}]
 
-# Define your own transformations easily
-Transproc.register(:to_json, -> v { JSON.dump(v) })
+# define your own composable transformation easily
+transformation = Functions[-> v { JSON.dump(v) }]
+transformation.call(name: 'Jane')
+# => "{\"name\":\"Jane\"}"
 
-Transproc(:to_json).call([{ name: 'Jane' }])
-# => "[{\"name\":\"Jane\"}]"
+# ...or add it to registered functions via singleton method of the registry
+module Functions
+  # ...
 
-# ...or create a module with custom transformations
-module MyTransformations
-  extend Transproc::Functions
-
-  def load_json(v)
+  def self.load_json(v)
     JSON.load(v)
   end
 end
 
-(Transproc(:load_json) >> Transproc(:map_array, Transproc(:symbolize_keys))).call('[{"name":"Jane"}]')
+transformation = Functions[:load_json] >> Functions[:map_array, Functions[:symbolize_keys]]
+transformation.call('[{"name":"Jane"}]')
 # => [{ :name => "Jane" }]
 ```
 

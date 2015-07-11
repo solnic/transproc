@@ -1,9 +1,10 @@
 require 'spec_helper'
+require 'transproc/rspec'
 
 describe Transproc::HashTransformations do
   describe '.map_keys' do
     it 'returns a new hash with given proc applied to keys' do
-      map_keys = t(:map_keys, ->(key) { key.strip })
+      map_keys = described_class.t(:map_keys, ->(key) { key.strip })
 
       input = { ' foo ' => 'bar' }
       output = { 'foo' => 'bar' }
@@ -15,7 +16,7 @@ describe Transproc::HashTransformations do
 
   describe '.map_keys!' do
     it 'returns updated hash with given proc applied to keys' do
-      map_keys = t(:map_keys!, ->(key) { key.strip })
+      map_keys = described_class.t(:map_keys!, ->(key) { key.strip })
 
       input = { ' foo ' => 'bar' }
       output = { 'foo' => 'bar' }
@@ -27,7 +28,7 @@ describe Transproc::HashTransformations do
 
   describe '.symbolize_keys' do
     it 'returns a new hash with symbolized keys' do
-      symbolize_keys = t(:symbolize_keys)
+      symbolize_keys = described_class.t(:symbolize_keys)
 
       input = { 'foo' => 'bar' }
       output = { foo: 'bar' }
@@ -39,7 +40,7 @@ describe Transproc::HashTransformations do
 
   describe '.symbolize_keys!' do
     it 'returns updated hash with symbolized keys' do
-      symbolize_keys = t(:symbolize_keys!)
+      symbolize_keys = described_class.t(:symbolize_keys!)
 
       input = { 'foo' => 'bar' }
       output = { foo: 'bar' }
@@ -52,7 +53,7 @@ describe Transproc::HashTransformations do
 
   describe '.stringify_keys' do
     it 'returns a new hash with stringified keys' do
-      stringify_keys = t(:stringify_keys)
+      stringify_keys = described_class.t(:stringify_keys)
 
       input = { foo: 'bar' }
       output = { 'foo' => 'bar' }
@@ -64,7 +65,7 @@ describe Transproc::HashTransformations do
 
   describe '.stringify_keys!' do
     it 'returns a new hash with stringified keys' do
-      stringify_keys = t(:stringify_keys!)
+      stringify_keys = described_class.t(:stringify_keys!)
 
       input = { foo: 'bar' }
       output = { 'foo' => 'bar' }
@@ -76,7 +77,7 @@ describe Transproc::HashTransformations do
 
   describe '.map_values' do
     it 'returns a new hash with given proc applied to values' do
-      map_values = t(:map_values, ->(value) { value.strip })
+      map_values = described_class.t(:map_values, ->(value) { value.strip })
 
       input = { 'foo' => ' bar ' }
       output = { 'foo' => 'bar' }
@@ -88,7 +89,7 @@ describe Transproc::HashTransformations do
 
   describe '.map_values!' do
     it 'returns updated hash with given proc applied to values' do
-      map_values = t(:map_values!, ->(value) { value.strip })
+      map_values = described_class.t(:map_values!, ->(value) { value.strip })
 
       input = { 'foo' => ' bar ' }
       output = { 'foo' => 'bar' }
@@ -100,7 +101,7 @@ describe Transproc::HashTransformations do
 
   describe '.rename_keys' do
     it 'returns a new hash with applied functions' do
-      map = t(:rename_keys, 'foo' => :foo)
+      map = described_class.t(:rename_keys, 'foo' => :foo)
 
       input = { 'foo' => 'bar', :bar => 'baz' }
       output = { foo: 'bar', bar: 'baz' }
@@ -112,7 +113,7 @@ describe Transproc::HashTransformations do
 
   describe '.rename_keys!' do
     it 'returns updated hash with applied functions' do
-      map = t(:rename_keys!, 'foo' => :foo)
+      map = described_class.t(:rename_keys!, 'foo' => :foo)
 
       input = { 'foo' => 'bar', :bar => 'baz' }
       output = { foo: 'bar', bar: 'baz' }
@@ -125,7 +126,8 @@ describe Transproc::HashTransformations do
 
   describe '.map_value' do
     it 'applies function to value under specified key' do
-      transformation = t(:map_value, :user, t(:symbolize_keys))
+      transformation =
+        described_class.t(:map_value, :user, described_class.t(:symbolize_keys))
 
       input = { user: { 'name' => 'Jane' } }
       output = { user: { name: 'Jane' } }
@@ -137,7 +139,9 @@ describe Transproc::HashTransformations do
 
   describe '.map_value!' do
     it 'applies function to value under specified key' do
-      transformation = t(:map_value!, :user, t(:symbolize_keys))
+      transformation =
+        described_class
+        .t(:map_value!, :user, described_class.t(:symbolize_keys))
 
       input = { user: { 'name' => 'Jane' } }
       output = { user: { name: 'Jane' } }
@@ -150,7 +154,7 @@ describe Transproc::HashTransformations do
 
   describe '.nest' do
     it 'returns new hash with keys nested under a new key' do
-      nest = t(:nest, :baz, ['foo'])
+      nest = described_class.t(:nest, :baz, ['foo'])
 
       input = { 'foo' => 'bar' }
       output = { baz: { 'foo' => 'bar' } }
@@ -162,7 +166,7 @@ describe Transproc::HashTransformations do
 
   describe '.nest!' do
     it 'returns new hash with keys nested under a new key' do
-      nest = t(:nest!, :baz, ['one', 'two', 'not-here'])
+      nest = described_class.t(:nest!, :baz, ['one', 'two', 'not-here'])
 
       input = { 'foo' => 'bar', 'one' => nil, 'two' => false }
       output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
@@ -173,7 +177,7 @@ describe Transproc::HashTransformations do
     end
 
     it 'returns new hash with keys nested under the existing key' do
-      nest = t(:nest!, :baz, ['two'])
+      nest = described_class.t(:nest!, :baz, ['two'])
 
       input  = { 'foo' => 'bar', baz: { 'one' => nil }, 'two' => false }
       output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
@@ -184,7 +188,7 @@ describe Transproc::HashTransformations do
     end
 
     it 'rewrites the existing key if its value is not a hash' do
-      nest = t(:nest!, :baz, ['two'])
+      nest = described_class.t(:nest!, :baz, ['two'])
 
       input  = { 'foo' => 'bar', baz: 'one', 'two' => false }
       output = { 'foo' => 'bar', baz: { 'two' => false } }
@@ -195,7 +199,7 @@ describe Transproc::HashTransformations do
     end
 
     it 'returns new hash with an empty hash under a new key when nest-keys are missing' do
-      nest = t(:nest!, :baz, ['foo'])
+      nest = described_class.t(:nest!, :baz, ['foo'])
 
       input = { 'bar' => 'foo' }
       output = { 'bar' => 'foo', baz: {} }
@@ -208,7 +212,7 @@ describe Transproc::HashTransformations do
 
   describe '.unwrap!' do
     it 'returns updated hash with nested keys lifted to the root' do
-      unwrap = t(:unwrap!, 'wrapped', %w(one))
+      unwrap = described_class.t(:unwrap!, 'wrapped', %w(one))
 
       input = { 'foo' => 'bar', 'wrapped' => { 'one' => nil, 'two' => false } }
       output = { 'foo' => 'bar', 'one' => nil, 'wrapped' => { 'two' => false } }
@@ -219,7 +223,7 @@ describe Transproc::HashTransformations do
     end
 
     it 'lifts all keys if none are passed' do
-      unwrap = t(:unwrap!, 'wrapped')
+      unwrap = described_class.t(:unwrap!, 'wrapped')
 
       input = { 'wrapped' => { 'one' => nil, 'two' => false } }
       output = { 'one' => nil, 'two' => false }
@@ -230,7 +234,7 @@ describe Transproc::HashTransformations do
     end
 
     it 'ignores unknown keys' do
-      unwrap = t(:unwrap!, 'wrapped', %w(one two three))
+      unwrap = described_class.t(:unwrap!, 'wrapped', %w(one two three))
 
       input = { 'wrapped' => { 'one' => nil, 'two' => false } }
       output = { 'one' => nil, 'two' => false }
@@ -243,7 +247,7 @@ describe Transproc::HashTransformations do
 
   describe '.unwrap' do
     it 'returns new hash with nested keys lifted to the root' do
-      unwrap = t(:unwrap, 'wrapped')
+      unwrap = described_class.t(:unwrap, 'wrapped')
 
       input = {
         'foo' => 'bar',
@@ -260,8 +264,8 @@ describe Transproc::HashTransformations do
 
   describe 'nested transform' do
     it 'applies functions to nested hashes' do
-      symbolize_keys = t(:symbolize_keys)
-      map_user_key = t(:map_value, :user, symbolize_keys)
+      symbolize_keys = described_class.t(:symbolize_keys)
+      map_user_key = described_class.t(:map_value, :user, symbolize_keys)
 
       transformation = symbolize_keys >> map_user_key
 
@@ -274,8 +278,8 @@ describe Transproc::HashTransformations do
 
   describe 'combining transformations' do
     it 'applies functions to the hash' do
-      symbolize_keys = t(:symbolize_keys)
-      map = t(:rename_keys, user_name: :name, user_email: :email)
+      symbolize_keys = described_class.t(:symbolize_keys)
+      map = described_class.t(:rename_keys, user_name: :name, user_email: :email)
 
       transformation = symbolize_keys >> map
 
@@ -290,7 +294,7 @@ describe Transproc::HashTransformations do
 
   describe '.reject_keys!' do
     it 'returns an updated hash with rejected keys' do
-      reject_keys = t(:reject_keys, [:name, :age])
+      reject_keys = described_class.t(:reject_keys, [:name, :age])
 
       input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
       output = { email: 'jane@doe.org' }
@@ -301,7 +305,7 @@ describe Transproc::HashTransformations do
 
   describe '.reject_keys' do
     it 'returns a new hash with rejected keys' do
-      reject_keys = t(:reject_keys, [:name, :age])
+      reject_keys = described_class.t(:reject_keys, [:name, :age])
 
       input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
       output = { email: 'jane@doe.org' }
@@ -313,7 +317,7 @@ describe Transproc::HashTransformations do
 
   describe '.accept_keys!' do
     it 'returns an updated hash with accepted keys' do
-      accept_keys = t(:accept_keys, [:age])
+      accept_keys = described_class.t(:accept_keys, [:age])
 
       input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
       output = { age: 21 }
@@ -324,7 +328,7 @@ describe Transproc::HashTransformations do
 
   describe '.reject_keys' do
     it 'returns a new hash with rejected keys' do
-      accept_keys = t(:accept_keys, [:age])
+      accept_keys = described_class.t(:accept_keys, [:age])
 
       input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
       output = { age: 21 }
@@ -342,22 +346,14 @@ describe Transproc::HashTransformations do
       }
     end
 
-    it 'returns an updated hash with folded key' do
-      fold = t(:fold, :tasks, :title)
-
-      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
-
-      expect { fold[input] }.not_to change { input }
-      expect(fold[input]).to eq output
+    it_behaves_like :transforming_immutable_data do
+      let(:arguments) { [:fold, :tasks, :title] }
+      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
     end
 
-    it 'does not compact results' do
-      fold = t(:fold, :tasks, :priority)
-
-      output = { name: 'Jane', tasks: [1, nil] }
-
-      expect { fold[input] }.not_to change { input }
-      expect(fold[input]).to eql output
+    it_behaves_like :transforming_immutable_data do
+      let(:arguments) { [:fold, :tasks, :priority] }
+      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
     end
   end
 
@@ -369,22 +365,14 @@ describe Transproc::HashTransformations do
       }
     end
 
-    it 'returns an updated hash with folded key' do
-      fold = t(:fold!, :tasks, :title)
-
-      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
-
-      expect(fold[input]).to eql output
-      expect(input).to eql output
+    it_behaves_like :mutating_input_data do
+      let(:arguments) { [:fold!, :tasks, :title] }
+      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
     end
 
-    it 'does not compact results' do
-      fold = t(:fold!, :tasks, :priority)
-
-      output = { name: 'Jane', tasks: [1, nil] }
-
-      expect(fold[input]).to eql output
-      expect(input).to eql output
+    it_behaves_like :mutating_input_data do
+      let(:arguments) { [:fold!, :tasks, :priority] }
+      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
     end
   end
 
@@ -403,7 +391,7 @@ describe Transproc::HashTransformations do
     end
 
     it 'splits a tuple into array partially by given keys' do
-      split = t(:split, :tasks, [:priority])
+      split = described_class.t(:split, :tasks, [:priority])
 
       output = [
         {
@@ -424,7 +412,7 @@ describe Transproc::HashTransformations do
     end
 
     it 'splits a tuple into array fully by all subkeys' do
-      split = t(:split, :tasks, [:priority, :title])
+      split = described_class.t(:split, :tasks, [:priority, :title])
 
       output = [
         { name: 'Joe', title: 'sleep well', priority: 1   },
@@ -451,22 +439,22 @@ describe Transproc::HashTransformations do
         }
       ]
 
-      split = t(:split, :tasks, [])
+      split = described_class.t(:split, :tasks, [])
       expect(split[input]).to eql output
 
-      split = t(:split, :tasks, [:absent])
+      split = described_class.t(:split, :tasks, [:absent])
       expect(split[input]).to eql output
     end
 
     it 'returns an array of initial tuple when attribute is absent' do
-      split = t(:split, :absent, [:priority, :title])
+      split = described_class.t(:split, :absent, [:priority, :title])
       expect(split[input]).to eql [input]
     end
 
     it 'ignores empty array' do
       input = { name: 'Joe', tasks: [] }
 
-      split = t(:split, :tasks, [:title])
+      split = described_class.t(:split, :tasks, [:title])
 
       expect(split[input]).to eql [{ name: 'Joe' }]
     end
