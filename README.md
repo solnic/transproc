@@ -50,7 +50,7 @@ module Functions
   # ...
 
   # all transformations available in the imported module
-  import Transproc::HashTransforations 
+  import Transproc::HashTransforations
   import Transproc::ArrayTransformations
 
   # only specific transformation (renamed into the desired local name)
@@ -61,9 +61,6 @@ end
 transformation = Functions[:camel_case]
 transformation.call 'i_am_a_camel'
 # => "IAmACamel"
-
-# compose transformation functions
-include Transproc::Helper
 
 transformation = Functions[:map_array, Functions[:symbolize_keys] >> Functions[:rename_keys, user_name: :user]]
 transformation >>= Functions[:wrap, :address, [:city, :street, :zipcode]]
