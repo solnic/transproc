@@ -357,6 +357,47 @@ module Transproc
       ArrayTransformations.add_keys(list, ungrouped)
     end
 
+    # Recursively evaluate hash values if they are procs/lambdas
+    #
+    # @example
+    #   hash = {
+    #     num: -> i { i + 1 },
+    #     str: -> i { "num #{i}" }
+    #   }
+    #
+    #   t(:eval_values, 1)[hash]
+    #   # => {:num => 2, :str => "num 1" }
+    #
+    #   # with filters
+    #   t(:eval_values, 1, [:str])[hash]
+    #   # => {:num => #{still a proc}, :str => "num 1" }
+    #
+    # @param [Hash]
+    # @param [Array,Object] args Anything that should be passed to procs
+    # @param [Array] filters A list of attribute names that should be evaluated
+    #
+    # @api public
+    def self.eval_values(hash, args, filters = [])
+      evaluator = -> value do
+        case value
+        when Proc
+          if filters.empty? || filters.include?(key)
+            value.call(*args)
+          else
+            value
+          end
+        when Hash
+          eval_values(value, args, filters)
+        when Array
+          value.map { |item| eval_values(item, args, filters) }
+        else
+          value
+        end
+      end
+
+      map_values(hash, evaluator)
+    end
+
     # @deprecated Register methods globally
     (methods - Registry.instance_methods - Registry.methods)
       .each { |name| Transproc.register name, t(name) }
