@@ -497,14 +497,16 @@ describe Transproc::HashTransformations do
       input = {
         one: 1, two: -> i { i+1 },
         three: -> i { i+2 }, four: 4,
-        more: [{ one: -> i { i }, two: 2 }]
+        array: [{ one: -> i { i }, two: 2 }],
+        hash: { one: -> i { i } }
       }
 
       result = evaluate[input]
 
       expect(result[:three]).to be_a(Proc)
       expect(result).to include(two: 2)
-      expect(result[:more]).to eql([{ one: 1, two: 2 }])
+      expect(result[:array]).to eql([{ one: 1, two: 2 }])
+      expect(result[:hash]).to eql(one: 1)
     end
   end
 end

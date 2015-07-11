@@ -418,7 +418,7 @@ module Transproc
               value
             end
           when Hash
-            eval_keys(value, args, filters)
+            eval_values(value, args, filters)
           when Array
             value.map { |item|
               item.is_a?(Hash) ? eval_values(item, args, filters) : item
