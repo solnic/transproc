@@ -87,7 +87,7 @@ module Transproc
           when Hash
             deep_symbolize_keys(value)
           when Array
-            value.map { |item| deep_symbolize_keys(item) }
+            value.map { |item| item.is_a?(Hash) ? deep_symbolize_keys(item) : item }
           else
             value
           end
