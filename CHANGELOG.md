@@ -6,6 +6,8 @@
   recursively (solnic)
 * `HashTransformations.deep_symbolize_keys` which, surprise surprise, symbolizes
   keys in a hash, recursively (solnic)
+* Shared examples `:transforming_immutable_data` and `:mutating_input_data`
+  to specify transformations in RSpec (nepalez)
 
 ### Changed
 
