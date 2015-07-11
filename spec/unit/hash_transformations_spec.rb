@@ -490,5 +490,21 @@ describe Transproc::HashTransformations do
 
       expect(evaluate[input]).to eql(output)
     end
+
+    it 'recursively evaluates values matching key names' do
+      evaluate = described_class.t(:eval_values, 1, [:one, :two])
+
+      input = {
+        one: 1, two: -> i { i+1 },
+        three: -> i { i+2 }, four: 4,
+        more: [{ one: -> i { i }, two: 2 }]
+      }
+
+      result = evaluate[input]
+
+      expect(result[:three]).to be_a(Proc)
+      expect(result).to include(two: 2)
+      expect(result[:more]).to eql([{ one: 1, two: 2 }])
+    end
   end
 end

@@ -87,7 +87,9 @@ module Transproc
           when Hash
             deep_symbolize_keys(value)
           when Array
-            value.map { |item| item.is_a?(Hash) ? deep_symbolize_keys(item) : item }
+            value.map { |item|
+              item.is_a?(Hash) ? deep_symbolize_keys(item) : item
+            }
           else
             value
           end
@@ -406,24 +408,25 @@ module Transproc
     #
     # @api public
     def self.eval_values(hash, args, filters = [])
-      evaluator = -> value do
-        case value
-        when Proc
-          if filters.empty? || filters.include?(key)
-            value.call(*args)
+      hash.each_with_object({}) do |(key, value), output|
+        output[key] =
+          case value
+          when Proc
+            if filters.empty? || filters.include?(key)
+              value.call(*args)
+            else
+              value
+            end
+          when Hash
+            eval_keys(value, args, filters)
+          when Array
+            value.map { |item|
+              item.is_a?(Hash) ? eval_values(item, args, filters) : item
+            }
           else
             value
           end
-        when Hash
-          eval_values(value, args, filters)
-        when Array
-          value.map { |item| eval_values(item, args, filters) }
-        else
-          value
-        end
       end
-
-      map_values(hash, evaluator)
     end
 
     # @deprecated Register methods globally
