@@ -1,3 +1,18 @@
+## v0.3.0 to-be-released
+
+### Added
+
+* New `Transproc::Registry` extension for importing methods from arbitrary modules
+  as transproc functions (nepalez)
+
+### Changed
+
+* Updated all built-in modules to the new registry API (nepalez + solnic)
+* `Transproc()` has been deprecated (solnic)
+* `Transproc::Helper` has been deprecated (solnic)
+
+[Compare v0.2.4...HEAD](https://github.com/solnic/transproc/compare/v0.2.4...HEAD)
+
 ## v0.2.4 2015-06-20
 
 ### Added
