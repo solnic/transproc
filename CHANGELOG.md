@@ -1,5 +1,12 @@
 ## v0.3.0 to-be-released
 
+### Added
+
+* `HashTransformations.eval_values` which evaluates callable values in a hash
+  recursively (solnic)
+* `HashTransformations.deep_symbolize_keys` which, surprise surprise, symbolizes
+  keys in a hash, recursively (solnic)
+
 ### Changed
 
 * `Transproc::Registry` now uses singleton methods that can be imported from
