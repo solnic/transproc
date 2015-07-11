@@ -51,8 +51,6 @@ module Transproc
   #
   # @api public
   module Composer
-    include Helper
-
     # @api private
     class Factory
       attr_reader :fns, :default
@@ -72,6 +70,12 @@ module Transproc
       # @api private
       def to_fn
         fns.reduce(:+) || default
+      end
+
+      # @deprecated
+      # @api public
+      def t(*args, &block)
+        Transproc(*args, &block)
       end
     end
 
