@@ -14,8 +14,9 @@
 [![Test Coverage](https://codeclimate.com/github/solnic/transproc/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/solnic/transproc.svg?branch=master)][inchpages]
 
-Functional transformations for Ruby. It's currently used as one of the data
-mapping backends in [Ruby Object Mapper](http://rom-rb.org).
+Transproc is a small library that allows you to compose methods into a functional pipeline using left-to-right function composition. It works like `|>` in Elixir or `>>` in F#.
+
+It's currently used as the data mapping backend in [Ruby Object Mapper](http://rom-rb.org).
 
 ## Installation
 
@@ -57,13 +58,18 @@ module Functions
   import :camelize, from: Inflecto, as: :camel_case
 end
 
+def f(*args)
+  Functions[*args]
+end
+
 # use imported transformation
-transformation = Functions[:camel_case]
+transformation = t[:camel_case]
 transformation.call 'i_am_a_camel'
 # => "IAmACamel"
 
-transformation = Functions[:map_array, Functions[:symbolize_keys] >> Functions[:rename_keys, user_name: :user]]
-transformation >>= Functions[:wrap, :address, [:city, :street, :zipcode]]
+transformation = t(:map_array, t(:symbolize_keys) >> t(:rename_keys, user_name: :user))
+transformation >>= t(:wrap, :address, [:city, :street, :zipcode])
+
 transformation.call(
   [
     { 'user_name' => 'Jane',
@@ -75,7 +81,8 @@ transformation.call(
 # => [{:user=>"Jane", :address=>{:city=>"NYC", :street=>"Street 1", :zipcode=>"123"}}]
 
 # define your own composable transformation easily
-transformation = Functions[-> v { JSON.dump(v) }]
+transformation = t(-> v { JSON.dump(v) })
+
 transformation.call(name: 'Jane')
 # => "{\"name\":\"Jane\"}"
 
@@ -88,7 +95,8 @@ module Functions
   end
 end
 
-transformation = Functions[:load_json] >> Functions[:map_array, Functions[:symbolize_keys]]
+transformation = t(:load_json) >> t(:map_array, t(:symbolize_keys))
+
 transformation.call('[{"name":"Jane"}]')
 # => [{ :name => "Jane" }]
 ```
