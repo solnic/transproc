@@ -48,8 +48,6 @@ end
 
 # import necessary functions from external modules
 module Functions
-  # ...
-
   # all transformations available in the imported module
   import Transproc::HashTransforations
   import Transproc::ArrayTransformations
@@ -63,7 +61,8 @@ def f(*args)
 end
 
 # use imported transformation
-transformation = t[:camel_case]
+transformation = t(:camel_case)
+
 transformation.call 'i_am_a_camel'
 # => "IAmACamel"
 
