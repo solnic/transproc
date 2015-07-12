@@ -26,7 +26,7 @@ in 1.0.0.
 * `Transproc()` has been deprecated (solnic)
 * `Transproc::Helper` has been deprecated (solnic)
 
-[Compare v0.2.4...HEAD](https://github.com/solnic/transproc/compare/v0.2.4...HEAD)
+[Compare v0.2.4...v0.3.0](https://github.com/solnic/transproc/compare/v0.2.4...v0.3.0)
 
 ## v0.2.4 2015-06-20
 
