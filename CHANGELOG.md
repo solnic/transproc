@@ -1,4 +1,13 @@
-## v0.3.0 to-be-released
+## v0.3.0 2015-07-12
+
+This release deprecates a couple of APIs and changes the way functions can be
+accessed. The global `Transproc()` function registry is now deprecated and you
+should define your own function registry via `extend Transproc::Registry` and its
+`import` interface. See API docs for the details.
+
+Proper deprecation warnings will appear as this is still a backward-compatible
+release, however, please update to the new API as the global registry will be gone
+in 1.0.0.
 
 ### Added
 
