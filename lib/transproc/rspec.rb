@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 # ==============================================================================
-# Examples for testing transproc __fn__s
+# Examples for testing transproc functions
 # ==============================================================================
 
 shared_context :call_transproc do
