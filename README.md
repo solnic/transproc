@@ -56,7 +56,7 @@ module Functions
   import :camelize, from: Inflecto, as: :camel_case
 end
 
-def f(*args)
+def t(*args)
   Functions[*args]
 end
 
