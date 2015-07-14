@@ -49,7 +49,7 @@ end
 # import necessary functions from external modules
 module Functions
   # all transformations available in the imported module
-  import Transproc::HashTransforations
+  import Transproc::HashTransformations
   import Transproc::ArrayTransformations
 
   # only specific transformation (renamed into the desired local name)
