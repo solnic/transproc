@@ -429,6 +429,32 @@ module Transproc
       end
     end
 
+    # Merge a hash recursively
+    #
+    # @example
+    #
+    #   input = { 'foo' => 'bar', 'baz' => { 'one' => 1 } }
+    #   other = { 'foo' => 'buz', 'baz' => { :one => 'one', :two => 2 } }
+    #
+    #   t(:deep_merge)[input, other]
+    #   # => { 'foo' => "buz", :baz => { :one => 'one', 'one' => 1, :two => 2 } }
+    #
+    # @param [Hash]
+    # @param [Hash]
+    #
+    # @return [Hash]
+    #
+    # @api public
+    def self.deep_merge(hash, other)
+      Hash[hash].merge(other) do |key, original_value, new_value|
+        if original_value.respond_to?(:to_hash) && new_value.respond_to?(:to_hash)
+          deep_merge(Hash[original_value], Hash[new_value])
+        else
+          new_value
+        end
+      end
+    end
+
     # @deprecated Register methods globally
     (methods - Registry.instance_methods - Registry.methods)
       .each { |name| Transproc.register name, t(name) }
