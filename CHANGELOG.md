@@ -1,3 +1,11 @@
+## v0.3.1 to-be-released
+
+### Added
+
+* `:deep_merge` in `HashTransformations` (saturnflyer)
+
+[Compare v0.3.0...HEAD](https://github.com/solnic/transproc/compare/v0.3.0...HEAD)
+
 ## v0.3.0 2015-07-12
 
 This release deprecates a couple of APIs and changes the way functions can be
