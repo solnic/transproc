@@ -3,6 +3,7 @@
 ### Added
 
 * `:deep_merge` in `HashTransformations` (saturnflyer)
+* `Transproc::Function#to_proc` method (nepalez)
 
 [Compare v0.3.0...HEAD](https://github.com/solnic/transproc/compare/v0.3.0...HEAD)
 
