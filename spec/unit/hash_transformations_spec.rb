@@ -509,4 +509,44 @@ describe Transproc::HashTransformations do
       expect(result[:hash]).to eql(one: 1)
     end
   end
+
+  describe '.deep_merge' do
+    let(:hash){
+      {
+        name: 'Jane',
+        email: 'jane@doe.org',
+        favorites:
+          {
+            food: 'stroopwafel'
+          }
+      }
+    }
+
+    let(:update){
+      {
+        email: 'jane@example.org',
+        favorites:
+          {
+            color: 'orange'
+          }
+      }
+    }
+
+    it 'recursively merges hash values' do
+      deep_merge = described_class.t(:deep_merge)
+      output = { name: 'Jane', email: 'jane@example.org', favorites: { food: 'stroopwafel', color: 'orange' } }
+
+      expect(deep_merge[hash, update]).to eql(output)
+    end
+
+    it 'does not alter the provided arguments' do
+      original_hash = hash.dup
+      original_update = update.dup
+
+      described_class.t(:deep_merge)[hash, update]
+
+      expect(hash).to eql(original_hash)
+      expect(update).to eql(original_update)
+    end
+  end
 end
