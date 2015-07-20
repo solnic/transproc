@@ -89,5 +89,13 @@ module Transproc
     def to_ast
       [name, args]
     end
+
+    # Converts a transproc to a simple proc
+    #
+    # @return [Proc]
+    #
+    def to_proc
+      fn.to_proc
+    end
   end
 end

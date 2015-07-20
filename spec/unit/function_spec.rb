@@ -117,4 +117,45 @@ describe Transproc::Function do
       expect(left == right).to be(false)
     end
   end
+
+  describe '#to_proc' do
+    shared_examples :providing_a_proc do
+      let(:fn) { described_class.new(source) }
+      subject  { fn.to_proc }
+
+      it 'returns a proc' do
+        expect(subject).to be_instance_of Proc
+      end
+
+      it 'works fine' do
+        expect(subject.call :foo).to eql('foo')
+      end
+    end
+
+    context 'from a method' do
+      let(:source) do
+        mod = Module.new do
+          def self.get(x)
+            x.to_s
+          end
+        end
+        mod.method(:get)
+      end
+      it_behaves_like :providing_a_proc
+    end
+
+    context 'from a proc' do
+      let(:source) { -> value { value.to_s } }
+      it_behaves_like :providing_a_proc
+    end
+
+    context 'from a transproc' do
+      let(:source) { Transproc::Function.new -> value { value.to_s } }
+      it_behaves_like :providing_a_proc
+
+      it 'can be applied to collection' do
+        expect([:foo, :bar].map(&source)).to eql(%w(foo bar))
+      end
+    end
+  end
 end
