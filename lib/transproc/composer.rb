@@ -19,15 +19,6 @@ module Transproc
       super
     end
 
-    # @api private
-    def self.included(*)
-      Transproc::Deprecations.announce(
-        'Transproc::Helper',
-        'Define your own function registry using Transproc::Registry extension'
-      )
-      super
-    end
-
     # @see Transproc
     #
     # @api public
