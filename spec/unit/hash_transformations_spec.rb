@@ -30,11 +30,11 @@ describe Transproc::HashTransformations do
     it 'returns a new hash with symbolized keys' do
       symbolize_keys = described_class.t(:symbolize_keys)
 
-      input = { 'foo' => 'bar' }
-      output = { foo: 'bar' }
+      input = { 1 => 'bar' }
+      output = { :'1' => 'bar' }
 
       expect(symbolize_keys[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
+      expect { symbolize_keys[input] }.not_to change { input }
     end
   end
 
