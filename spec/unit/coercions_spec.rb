@@ -11,6 +11,10 @@ describe Transproc::Coercions do
     it 'turns string into a symbol' do
       expect(described_class.t(:to_symbol)['test']).to eql(:test)
     end
+
+    it 'turns non-string into a symbol' do
+      expect(described_class.t(:to_symbol)[1]).to eql(:'1')
+    end
   end
 
   describe '.to_integer' do

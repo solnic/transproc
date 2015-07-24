@@ -38,13 +38,13 @@ module Transproc
     #   Transproc(:to_symbol)['foo']
     #   # => :foo
     #
-    # @param [Object] value The input value
+    # @param [#to_s] value The input value
     #
     # @return [Symbol]
     #
     # @api public
     def self.to_symbol(value)
-      value.to_sym
+      value.to_s.to_sym
     end
 
     # Coerce value into a integer
