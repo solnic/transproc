@@ -1,6 +1,18 @@
 require 'spec_helper'
 
 describe Transproc::Coercions do
+  describe '.identity' do
+    let(:fn) { described_class.t(:identity) }
+
+    it 'returns the original value' do
+      expect(fn[:foo]).to eql :foo
+    end
+
+    it 'returns nil by default' do
+      expect(fn[]).to eql nil
+    end
+  end
+
   describe '.to_string' do
     it 'turns integer into a string' do
       expect(described_class.t(:to_string)[1]).to eql('1')
