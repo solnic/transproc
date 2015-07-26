@@ -17,6 +17,21 @@ module Transproc
       TRUE_VALUES.product([true]) + FALSE_VALUES.product([false])
     ].freeze
 
+    # Does nothing and returns a value
+    #
+    # @example
+    #   fn = Coercions[:identity]
+    #   fn[:foo] # => :foo
+    #
+    # @param [Object] value
+    #
+    # @return [Object]
+    #
+    # @api public
+    def self.identity(value = nil)
+      value
+    end
+
     # Coerce value into a string
     #
     # @example

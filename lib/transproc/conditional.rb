@@ -15,6 +15,23 @@ module Transproc
   module Conditional
     extend Registry
 
+    # Negates the result of transformation
+    #
+    # @example
+    #   fn = Conditional[:not, -> value { value.is_a? ::String }]
+    #   fn[:foo]  # => true
+    #   fn["foo"] # => false
+    #
+    # @param [Object] value
+    # @param [Proc] fn
+    #
+    # @return [Boolean]
+    #
+    # @api public
+    def self.not(value, fn)
+      !fn[value]
+    end
+
     # Apply the transformation function to subject if the predicate returns true, or return un-modified
     #
     # @example

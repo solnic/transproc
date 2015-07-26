@@ -17,11 +17,11 @@ describe Transproc do
 
   describe '.register' do
     it 'allows registering functions by name' do
-      Transproc.register(:identity, -> value { value })
+      Transproc.register(:id, -> value { value })
 
       value = 'hello world'
 
-      result = t(:identity)[value]
+      result = t(:id)[value]
 
       expect(result).to be(value)
     end
