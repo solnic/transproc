@@ -5,6 +5,7 @@
 * `:deep_merge` in `HashTransformations` (saturnflyer)
 * `Transproc::Function#to_proc` method (nepalez)
 * Support symbolizing non-string values by `Coercions[:to_symbol]` and `HashTransformations[:symbolize_keys]` (nepalez)
+* Support for importing several functions at once `import :foo, :bar, from: Foo` (nepalez)
 
 [Compare v0.3.0...HEAD](https://github.com/solnic/transproc/compare/v0.3.0...HEAD)
 
