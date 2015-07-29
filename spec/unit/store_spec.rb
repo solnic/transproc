@@ -38,7 +38,7 @@ describe Transproc::Store do
     end
   end # describe #fetch
 
-  describe '#import' do
+  describe '#import', :focus do
     before do
       module Bar
         def self.bar
@@ -88,6 +88,20 @@ describe Transproc::Store do
       it_behaves_like :importing_method do
         let(:key)   { :qux }
         let(:value) { :qux }
+      end
+    end
+
+    context 'named methods' do
+      subject { store.import 'qux', 'bar', from: Qux }
+
+      it_behaves_like :importing_method do
+        let(:key)   { :qux }
+        let(:value) { :qux }
+      end
+
+      it_behaves_like :importing_method do
+        let(:key)   { :bar }
+        let(:value) { :bar }
       end
     end
 
