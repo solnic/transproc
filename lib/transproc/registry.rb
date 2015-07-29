@@ -54,46 +54,32 @@ module Transproc
     #
     # If the external module is a registry, looks for its imports too.
     #
-    # @example
-    #   module Foo
-    #     def self.foo(value)
-    #       value.upcase
-    #     end
+    # @overload import(source)
+    #   Loads all methods from the source object
     #
-    #     def self.bar(value)
-    #       value.downcase
-    #     end
-    #  end
+    #   @param [Object] source
     #
-    #  module Qux
-    #    def self.qux(value)
-    #      value.reverse
-    #    end
-    #  end
+    # @overload import(*names, **options)
+    #   Loads selected methods from the source object
     #
-    #  module Bar
-    #     extend Transproc::Registry
+    #   @param [Array<Symbol>] names
+    #   @param [Hash] options
+    #   @options options [Object] :from The source object
     #
-    #     import :foo, from: Foo, as: :baz
-    #     import :bar, from: Foo
-    #     import Qux
-    #  end
+    # @overload import(name, **options)
+    #   Loads selected methods from the source object
     #
-    #  Bar[:baz]['Qux'] # => 'QUX'
-    #  Bar[:bar]['Qux'] # => 'qux'
-    #  Bar[:qux]['Qux'] # => 'xuQ'
-    #
-    # @param [Module, #to_sym] name
-    # @option [Module] :from The module to take the method from
-    # @option [#to_sym] :as
-    #   The name of imported transproc inside the current module
+    #   @param [Symbol] name
+    #   @param [Hash] options
+    #   @options options [Object] :from The source object
+    #   @options options [Object] :as The new name for the transformation
     #
     # @return [itself] self
     #
     # @alias :import
     #
-    def import(source, options = nil)
-      @store = store.import(source, options)
+    def import(*args)
+      @store = store.import(*args)
       self
     end
     alias_method :uses, :import

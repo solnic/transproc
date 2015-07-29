@@ -77,6 +77,17 @@ describe Transproc::Registry do
       end
     end
 
+    context 'a list of methods' do
+      before { bar.import :prefix, from: foo }
+      before { bar.import :prefix, from: foo, as: :affix }
+      before { baz.import :prefix, :affix, from: bar }
+
+      it 'registers a transproc' do
+        expect(baz[:prefix, 'bar']['baz']).to eql 'bar_baz'
+        expect(baz[:affix, 'bar']['baz']).to eql 'bar_baz'
+      end
+    end
+
     context 'a renamed method' do
       before { bar.import :prefix, from: foo, as: :affix }
 

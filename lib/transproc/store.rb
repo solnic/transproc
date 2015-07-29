@@ -38,17 +38,18 @@ module Transproc
 
     # Imports proc(s) to the collection from another module
     #
-    # @overload add(source)
-    #   @param  (see #import_methods)
-    #   @return (see #import_methods)
+    # @private
     #
-    # @overload add(source, options)
-    #   @param  (see #import_method)
-    #   @return (see #import_method)
-    #
-    def import(source, options = nil)
-      return import_methods(source) if source.instance_of?(Module)
-      import_method(source, options)
+    def import(*args)
+      first = args.first
+      return import_all(first) if first.instance_of?(Module)
+
+      opts   = args.pop
+      source = opts.fetch(:from)
+      rename = opts.fetch(:as) { first.to_sym }
+
+      return import_methods(source, args) if args.count > 1
+      import_method(source, first, rename)
     end
 
     protected
@@ -57,22 +58,31 @@ module Transproc
     # updated with either the module's singleton method,
     # or the proc having been imported from another module.
     #
-    # @param [Symbol] source The name of the method, or imported proc
-    # @param [Hash] options
-    # @option options [Module] :from
-    #   The module whose method or imported proc should be added
-    # @option options [Symbol] :as
-    #   The key for the proc in the current collection
+    # @param [Module] source
+    # @param [Symbol] name
+    # @param [Symbol] new_name
     #
     # @return [Transproc::Store]
     #
-    def import_method(source, options)
-      src  = options.fetch(:from)
-      name = source.to_sym
-      key  = options.fetch(:as) { name }.to_sym
-      fn   = src.is_a?(Registry) ? src.fetch(name) : src.method(name)
+    def import_method(source, name, new_name = name)
+      from = name.to_sym
+      to   = new_name.to_sym
 
-      self.class.new(methods.merge(key => fn))
+      fn = source.is_a?(Registry) ? source.fetch(from) : source.method(from)
+      self.class.new(methods.merge(to => fn))
+    end
+
+    # Creates new immutable collection from the current one,
+    # updated with either the module's singleton methods,
+    # or the procs having been imported from another module.
+    #
+    # @param [Module] source
+    # @param [Array<Symbol>] names
+    #
+    # @return [Transproc::Store]
+    #
+    def import_methods(source, names)
+      names.inject(self) { |a, e| a.import_method(source, e) }
     end
 
     # Creates new immutable collection from the current one,
@@ -83,12 +93,12 @@ module Transproc
     #
     # @return [Transproc::Store]
     #
-    def import_methods(source)
-      list =  source.public_methods - Registry.instance_methods - Module.methods
-      list -= [:initialize] # for compatibility with Rubinius
-      list += source.store.methods.keys if source.is_a? Registry
+    def import_all(source)
+      names = source.public_methods - Registry.instance_methods - Module.methods
+      names -= [:initialize] # for compatibility with Rubinius
+      names += source.store.methods.keys if source.is_a? Registry
 
-      list.inject(self) { |a, e| a.import_method(e, from: source) }
+      import_methods(source, names)
     end
   end # class Store
 end # module Transproc
