@@ -66,8 +66,9 @@ transformation = t(:camel_case)
 transformation.call 'i_am_a_camel'
 # => "IAmACamel"
 
-transformation = t(:map_array, t(:symbolize_keys) >> t(:rename_keys, user_name: :user))
-transformation >>= t(:wrap, :address, [:city, :street, :zipcode])
+transformation = t(:map_array, t(:symbolize_keys)
+ .>> t(:rename_keys, user_name: :user))
+ .>> t(:wrap, :address, [:city, :street, :zipcode])
 
 transformation.call(
   [
