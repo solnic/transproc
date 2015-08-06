@@ -1,13 +1,14 @@
-## v0.3.1 to-be-released
+## v0.3.1 2015-08-06
 
 ### Added
 
 * `:deep_merge` in `HashTransformations` (saturnflyer)
 * `Transproc::Function#to_proc` method (nepalez)
+* `to_boolean` coercion turns `nil` into `false` (c0)
 * Support symbolizing non-string values by `Coercions[:to_symbol]` and `HashTransformations[:symbolize_keys]` (nepalez)
 * Support for importing several functions at once `import :foo, :bar, from: Foo` (nepalez)
 
-[Compare v0.3.0...HEAD](https://github.com/solnic/transproc/compare/v0.3.0...HEAD)
+[Compare v0.3.0...v0.3.1](https://github.com/solnic/transproc/compare/v0.3.0...v0.3.1)
 
 ## v0.3.0 2015-07-12
 
