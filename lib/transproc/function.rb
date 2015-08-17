@@ -44,7 +44,7 @@ module Transproc
     #
     # @api public
     def call(*value)
-      fn.call(*value, *args)
+      fn.(*value, *args)
     rescue => e
       raise MalformedInputError.new(@name, value, e)
     end
