@@ -1,3 +1,15 @@
+## v0.3.2 2015-08-17
+
+## Changed
+
+* Functions now use `.call` rather than `.[]` as it's more common (solnic)
+
+## Fixed
+
+* `Function#to_proc` properly carries additional args required by the proc (solnic)
+
+[Compare v0.3.1...v0.3.2](https://github.com/solnic/transproc/compare/v0.3.1...v0.3.2)
+
 ## v0.3.1 2015-08-06
 
 ### Added
