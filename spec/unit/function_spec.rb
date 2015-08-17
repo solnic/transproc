@@ -157,5 +157,17 @@ describe Transproc::Function do
         expect([:foo, :bar].map(&source)).to eql(%w(foo bar))
       end
     end
+
+    context 'with curried args' do
+      let(:source) { -> i, j { [i, j].join(' ') } }
+
+      it 'works fine' do
+        fn = described_class.new(source, args: ['world'])
+
+        result = fn.to_proc.call('hello')
+
+        expect(result).to eql('hello world')
+      end
+    end
   end
 end
