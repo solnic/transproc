@@ -57,20 +57,4 @@ describe Transproc do
       expect(fn.args).to include(Transproc(:to_string))
     end
   end
-
-  describe 'handling malformed input' do
-    it 'raises a Transproc::MalformedInputError' do
-      expect {
-        Transproc(:to_integer)[{}]
-      }.to raise_error(Transproc::MalformedInputError)
-
-      begin
-        Transproc(:to_integer)[{}]
-      rescue Transproc::MalformedInputError => e
-        expect(e.message).to include('to_integer')
-        expect(e.message).to include("undefined method `to_i'")
-        expect(e.backtrace).to eql(e.original_error.backtrace)
-      end
-    end
-  end
 end

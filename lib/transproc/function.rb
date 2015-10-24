@@ -45,8 +45,6 @@ module Transproc
     # @api public
     def call(*value)
       fn.(*value, *args)
-    rescue => e
-      raise MalformedInputError.new(@name, value, e)
     end
     alias_method :[], :call
 
