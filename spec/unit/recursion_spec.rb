@@ -9,7 +9,7 @@ describe Transproc::Recursion do
         'foo' => 'bar',
         'bar' => {
           'foo' => 'bar',
-          'bar' => ['foo', 'bar', 'baz'],
+          'bar' => %w(foo bar baz),
           'baz' => 'foo'
         },
         'baz' => 'bar'
@@ -23,7 +23,7 @@ describe Transproc::Recursion do
         'foo' => 'bar',
         'bar' => {
           'foo' => 'bar',
-          'bar' => ['foo', 'bar'],
+          'bar' => %w(foo bar)
         }
       }
     end

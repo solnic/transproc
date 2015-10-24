@@ -44,7 +44,7 @@ module Transproc
     #
     # @api public
     def call(*value)
-      fn.(*value, *args)
+      fn.call(*value, *args)
     end
     alias_method :[], :call
 
