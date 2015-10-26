@@ -135,6 +135,59 @@ describe Transproc::HashTransformations do
       expect(input).to eql(output)
     end
   end
+  describe '.copy_keys' do
+    context 'with single destination key' do
+      it 'returns a new hash with applied functions' do
+        map = described_class.t(:copy_keys, 'foo' => :foo)
+
+        input = { 'foo' => 'bar', :bar => 'baz' }
+        output = { 'foo' => 'bar', foo: 'bar', bar: 'baz' }
+
+        expect(map[input]).to eql(output)
+        expect(input).to eql('foo' => 'bar', :bar => 'baz')
+      end
+    end
+
+    context 'with multiple destination keys' do
+      it 'returns a new hash with applied functions' do
+        map = described_class.t(:copy_keys, 'foo' => [:foo, :baz])
+
+        input = { 'foo' => 'bar', :bar => 'baz' }
+        output = { 'foo' => 'bar', foo: 'bar', baz: 'bar', bar: 'baz' }
+
+        expect(map[input]).to eql(output)
+        expect(input).to eql('foo' => 'bar', :bar => 'baz')
+      end
+    end
+  end
+
+  describe '.copy_keys!' do
+    context 'with single destination key' do
+      it 'returns updated hash with applied functions' do
+        map = described_class.t(:copy_keys!, 'foo' => :foo)
+
+        input = { 'foo' => 'bar', :bar => 'baz' }
+        output = { 'foo' => 'bar', foo: 'bar', bar: 'baz' }
+
+        map[input]
+
+        expect(input).to eql(output)
+      end
+    end
+
+    context 'with multiple destination keys' do
+      it 'returns updated hash with applied functions' do
+        map = described_class.t(:copy_keys!, 'foo' => [:foo, :baz])
+
+        input = { 'foo' => 'bar', :bar => 'baz' }
+        output = { 'foo' => 'bar', foo: 'bar', baz: 'bar', bar: 'baz' }
+
+        map[input]
+
+        expect(input).to eql(output)
+      end
+    end
+  end
 
   describe '.map_value' do
     it 'applies function to value under specified key' do

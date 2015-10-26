@@ -175,6 +175,36 @@ module Transproc
       hash
     end
 
+    # Copy all keys in a hash using provided mapping hash
+    #
+    # @example
+    #   Transproc(:copy_keys, user_name: :name)[user_name: 'Jane']
+    #   # => {:user_name => "Jane", :name => "Jane"}
+    #
+    # @param [Hash] hash The input hash
+    # @param [Hash] mapping The key-copy mapping
+    #
+    # @return [Hash]
+    #
+    # @api public
+    def self.copy_keys(hash, mapping)
+      copy_keys!(Hash[hash], mapping)
+    end
+
+    # Same as `:copy_keys` but mutates the hash
+    #
+    # @see HashTransformations.copy_keys
+    #
+    # @api public
+    def self.copy_keys!(hash, mapping)
+      mapping.each do |original_key, new_keys|
+        [*new_keys].each do |new_key|
+          hash[new_key] = hash[original_key]
+        end
+      end
+      hash
+    end
+
     # Rejects specified keys from a hash
     #
     # @example
