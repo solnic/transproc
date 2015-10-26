@@ -5,6 +5,7 @@ end
 
 require 'equalizer'
 require 'anima'
+require 'ostruct'
 require 'transproc/all'
 
 begin
