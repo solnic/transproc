@@ -40,7 +40,7 @@ module Transproc
   #
   # @api private
   def self.[](name, *args)
-    fn = functions.fetch(name) { raise FunctionNotFoundError.new(name) }
+    fn = functions.fetch(name) { raise(FunctionNotFoundError, name) }
 
     if args.any?
       fn.with(*args)

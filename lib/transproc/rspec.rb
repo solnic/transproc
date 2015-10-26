@@ -5,8 +5,15 @@
 # ==============================================================================
 
 shared_context :call_transproc do
-  let!(:__initial__) { input.dup rescue input      }
-  let!(:__fn__)      { described_class[*arguments] }
+  let!(:__fn__) { described_class[*arguments] }
+  let!(:__initial__) do
+    begin
+      input.dup
+    rescue
+      input
+    end
+  end
+
   subject { __fn__[input] }
 end
 
@@ -14,7 +21,7 @@ shared_examples :transforming_data do
   include_context :call_transproc
 
   it '[returns the expected output]' do
-    expect(subject).to eql(output), <<-REPORT.gsub(/.+\|/, "")
+    expect(subject).to eql(output), <<-REPORT.gsub(%r{.+\|}, '')
       |
       |fn = #{described_class}#{Array[*arguments]}
       |
@@ -33,7 +40,7 @@ shared_examples :transforming_immutable_data do
 
   it '[keeps input unchanged]' do
     expect { subject }
-      .not_to change { input }, <<-REPORT.gsub(/.+\|/, "")
+      .not_to change { input }, <<-REPORT.gsub(%r{.+\|}, '')
         |
         |fn = #{described_class}#{Array[*arguments]}
         |
@@ -51,7 +58,7 @@ shared_examples :mutating_input_data do
   it '[changes input]' do
     expect { subject }
       .to change { input }
-      .to(output), <<-REPORT.gsub(/.+\|/, "")
+      .to(output), <<-REPORT.gsub(%r{.+\|}, '')
         |
         |fn = #{described_class}#{Array[*arguments]}
         |

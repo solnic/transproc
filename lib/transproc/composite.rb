@@ -27,7 +27,7 @@ module Transproc
     #
     # @api public
     def call(value)
-      right.(left.(value))
+      right.call(left.call(value))
     end
     alias_method :[], :call
 

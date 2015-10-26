@@ -10,8 +10,8 @@ module Transproc
   #
   #   fn = t(:hash_recursion, t(:symbolize_keys))
   #
-  #   fn["name" => "Jane", "address" => { "street" => "Street 1", "zipcode" => "123" }]
-  #   # => {:name=>"Jane", :address=>{:street=>"Street 1", :zipcode=>"123"}}
+  #   fn["name" => "Jane", "address" => { "street" => "Street 1" }]
+  #   # => {:name=>"Jane", :address=>{:street=>"Street 1"}}
   #
   # @api public
   module Recursion
@@ -36,7 +36,14 @@ module Transproc
     #       ]
     #     }
     #   ]
-    #   => {:id=>1, :name=>"Jane", :tasks=>[{:id=>1, :description=>"Write some code"}, {:id=>2, :description=>"Write some more code"}]}
+    #   => {
+    #        :id=>1,
+    #        :name=>"Jane",
+    #        :tasks=>[
+    #          {:id=>1, :description=>"Write some code"},
+    #          {:id=>2, :description=>"Write some more code"}
+    #        ]
+    #      }
     #
     # @param [Enumerable]
     #

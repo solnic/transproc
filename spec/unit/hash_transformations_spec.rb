@@ -31,7 +31,7 @@ describe Transproc::HashTransformations do
       symbolize_keys = described_class.t(:symbolize_keys)
 
       input = { 1 => 'bar' }
-      output = { :'1' => 'bar' }
+      output = { '1'.to_sym => 'bar' }
 
       expect(symbolize_keys[input]).to eql(output)
       expect { symbolize_keys[input] }.not_to change { input }
@@ -46,7 +46,7 @@ describe Transproc::HashTransformations do
       output = { foo: 'bar', baz: [{ one: 1 }, 'two'] }
 
       expect(symbolize_keys[input]).to eql(output)
-      expect(input).to eql({ 'foo' => 'bar', 'baz' => [{ 'one' => 1 }, 'two'] })
+      expect(input).to eql('foo' => 'bar', 'baz' => [{ 'one' => 1 }, 'two'])
     end
   end
 
@@ -178,7 +178,7 @@ describe Transproc::HashTransformations do
 
   describe '.nest!' do
     it 'returns new hash with keys nested under a new key' do
-      nest = described_class.t(:nest!, :baz, ['one', 'two', 'not-here'])
+      nest = described_class.t(:nest!, :baz, %w(one two not-here))
 
       input = { 'foo' => 'bar', 'one' => nil, 'two' => false }
       output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
@@ -291,7 +291,7 @@ describe Transproc::HashTransformations do
   describe 'combining transformations' do
     it 'applies functions to the hash' do
       symbolize_keys = described_class.t(:symbolize_keys)
-      map = described_class.t(:rename_keys, user_name: :name, user_email: :email)
+      map = described_class.t :rename_keys, user_name: :name, user_email: :email
 
       transformation = symbolize_keys >> map
 
@@ -477,8 +477,8 @@ describe Transproc::HashTransformations do
       evaluate = described_class.t(:eval_values, 1)
 
       input = {
-        one: 1, two: -> i { i+1 },
-        three: -> i { i+2 }, four: 4,
+        one: 1, two: -> i { i + 1 },
+        three: -> i { i + 2 }, four: 4,
         more: [{ one: -> i { i }, two: 2 }]
       }
 
@@ -495,8 +495,8 @@ describe Transproc::HashTransformations do
       evaluate = described_class.t(:eval_values, 1, [:one, :two])
 
       input = {
-        one: 1, two: -> i { i+1 },
-        three: -> i { i+2 }, four: 4,
+        one: 1, two: -> i { i + 1 },
+        three: -> i { i + 2 }, four: 4,
         array: [{ one: -> i { i }, two: 2 }],
         hash: { one: -> i { i } }
       }
@@ -511,7 +511,7 @@ describe Transproc::HashTransformations do
   end
 
   describe '.deep_merge' do
-    let(:hash){
+    let(:hash) {
       {
         name: 'Jane',
         email: 'jane@doe.org',
@@ -522,7 +522,7 @@ describe Transproc::HashTransformations do
       }
     }
 
-    let(:update){
+    let(:update) {
       {
         email: 'jane@example.org',
         favorites:
@@ -534,7 +534,11 @@ describe Transproc::HashTransformations do
 
     it 'recursively merges hash values' do
       deep_merge = described_class.t(:deep_merge)
-      output = { name: 'Jane', email: 'jane@example.org', favorites: { food: 'stroopwafel', color: 'orange' } }
+      output = {
+        name: 'Jane',
+        email: 'jane@example.org',
+        favorites: { food: 'stroopwafel', color: 'orange' }
+      }
 
       expect(deep_merge[hash, update]).to eql(output)
     end
