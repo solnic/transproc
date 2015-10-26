@@ -1,3 +1,11 @@
+## upcoming version
+
+## Deleted
+
+* `MalformedInputError` exception. Transproc doesn't catch and re-raise exceptions any longer (nepalez)
+
+[Compare v0.3.2...HEAD](https://github.com/solnic/transproc/compare/v0.3.2...HEAD)
+
 ## v0.3.2 2015-08-17
 
 ## Changed
