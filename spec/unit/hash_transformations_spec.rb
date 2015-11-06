@@ -121,6 +121,16 @@ describe Transproc::HashTransformations do
       expect(map[input]).to eql(output)
       expect(input).to eql('foo' => 'bar', :bar => 'baz')
     end
+
+    it "only renames keys and never creates new ones" do
+      map = described_class.t(:rename_keys, 'foo' => :foo, 'bar' => :bar)
+
+      input = { 'bar' => 'baz' }
+      output = { bar: 'baz' }
+
+      expect(map[input]).to eql(output)
+      expect(input).to eql('bar' => 'baz')
+    end
   end
 
   describe '.rename_keys!' do
