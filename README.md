@@ -39,20 +39,24 @@ Or install it yourself as:
 ``` ruby
 require 'json'
 require 'transproc/all'
-require 'inflecto'
 
 # create your own local registry for transformation functions
 module Functions
   extend Transproc::Registry
 end
 
-# import necessary functions from external modules
+# import necessary functions from other transprocs...
 module Functions
-  # all transformations available in the imported module
+  # import all singleton methods from a module/class
   import Transproc::HashTransformations
   import Transproc::ArrayTransformations
+end
 
-  # only specific transformation (renamed into the desired local name)
+# ...or from any external library
+require 'inflecto'
+module Functions
+  # import only necessary singleton methods from a module/class
+  # and rename them locally
   import :camelize, from: Inflecto, as: :camel_case
 end
 
