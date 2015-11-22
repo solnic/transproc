@@ -171,7 +171,7 @@ module Transproc
     #
     # @api public
     def self.rename_keys!(hash, mapping)
-      mapping.each { |k, v| hash[v] = hash.delete(k) }
+      mapping.each { |k, v| hash[v] = hash.delete(k) if hash.has_key?(k) }
       hash
     end
 
