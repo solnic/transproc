@@ -1,4 +1,8 @@
-## upcoming version
+## v0.3.3 to-be-released
+
+## Fixed
+
+* `rename_keys` no longer creates new keys (robmiller)
 
 ## Deleted
 
