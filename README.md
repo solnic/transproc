@@ -5,7 +5,7 @@
 [coveralls]: https://coveralls.io/r/solnic/transproc
 [inchpages]: http://inch-ci.org/github/solnic/transproc
 
-# Transproc [![Join the chat at https://gitter.im/solnic/transproc](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/solnic/transproc)
+# Transproc
 
 [![Gem Version](https://badge.fury.io/rb/transproc.svg)][gem]
 [![Build Status](https://travis-ci.org/solnic/transproc.svg?branch=master)][travis]
