@@ -1,3 +1,15 @@
+## v0.4.1 2016-11-08
+
+## Added
+
+* Class level transproc DSL (AMHOL)
+
+## Fixed
+
+* Works on latest rubinius again (katafrakt)
+
+[Compare v0.4.0...HEAD](https://github.com/solnic/transproc/compare/v0.4.0...HEAD)
+
 ## v0.4.0 2015-11-23
 
 ## Fixed
