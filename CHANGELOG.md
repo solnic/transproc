@@ -1,4 +1,4 @@
-## v0.3.3 to-be-released
+## v0.4.0 2015-11-23
 
 ## Fixed
 
@@ -8,7 +8,7 @@
 
 * `MalformedInputError` exception. Transproc doesn't catch and re-raise exceptions any longer (nepalez)
 
-[Compare v0.3.2...HEAD](https://github.com/solnic/transproc/compare/v0.3.2...HEAD)
+[Compare v0.3.2...v0.4.0](https://github.com/solnic/transproc/compare/v0.3.2...v0.4.0)
 
 ## v0.3.2 2015-08-17
 
