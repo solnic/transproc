@@ -8,7 +8,7 @@
 
 * Works on latest rubinius again (katafrakt)
 
-[Compare v0.4.0...HEAD](https://github.com/solnic/transproc/compare/v0.4.0...HEAD)
+[Compare v0.4.0...v0.4.1](https://github.com/solnic/transproc/compare/v0.4.0...v0.4.1)
 
 ## v0.4.0 2015-11-23
 
