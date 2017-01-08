@@ -1,3 +1,9 @@
+## v0.4.2 To Be Released
+
+## Added
+
+* prefix option to HashTransformations#unwrap and HashTransformations#unwrap! (AMHOL)
+
 ## v0.4.1 2016-11-08
 
 ## Added
