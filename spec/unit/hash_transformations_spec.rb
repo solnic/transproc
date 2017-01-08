@@ -318,6 +318,28 @@ describe Transproc::HashTransformations do
 
       expect(input).to eql(output)
     end
+
+    it 'prefixes unwrapped keys and retains root string type if prefix option is truthy' do
+      unwrap = described_class.t(:unwrap!, 'wrapped', prefix: true)
+
+      input = { 'wrapped' => { one: nil, two: false } }
+      output = { 'wrapped_one' => nil, 'wrapped_two' => false }
+
+      unwrap[input]
+
+      expect(input).to eql(output)
+    end
+
+    it 'prefixes unwrapped keys and retains root type if prefix option is truthy' do
+      unwrap = described_class.t(:unwrap!, :wrapped, prefix: true)
+
+      input = { wrapped: { 'one' => nil, 'two' => false } }
+      output = { wrapped_one: nil, wrapped_two: false }
+
+      unwrap[input]
+
+      expect(input).to eql(output)
+    end
   end
 
   describe '.unwrap' do
