@@ -15,7 +15,7 @@ module Transproc
   #     include Anima.new(:city, :street, :zipcode)
   #   end
   #
-  #   class UsersMapper
+  #   class UsersMapper < Transproc::Transformer
   #     map_array do
   #       symbolize_keys
   #       rename_keys user_name: :name
