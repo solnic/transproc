@@ -132,6 +132,14 @@ describe Transproc::ArrayTransformations do
       expect(map[input]).to eql(output)
       expect(input).to eql(original)
     end
+
+    it 'handles huge arrays' do
+      map = described_class.t(:map_array, hashes[:symbolize_keys])
+
+      input = 138706.times.map { |i| { 'key' => i } }
+
+      expect { map[input] }.to_not raise_error(SystemStackError, /stack level too deep/)
+    end
   end
 
   describe '.map_array!' do

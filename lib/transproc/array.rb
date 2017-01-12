@@ -38,7 +38,7 @@ module Transproc
     #
     # @api public
     def self.map_array(array, fn)
-      map_array!(Array[*array], fn)
+      map_array!(array.dup, fn)
     end
 
     # Same as `map_array` but mutates the array
