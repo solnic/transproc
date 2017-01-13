@@ -37,6 +37,16 @@ module Transproc
     functions[name] = fn || block
   end
 
+  # Returns wether the collection contains registered function by its key
+  #
+  # @param [Symbol] key
+  #
+  # @return [Boolean]
+  #
+  def self.contain?(key)
+    functions.key?(key)
+  end
+
   # Get registered function with provided name
   #
   # @param [Symbol] name The name of the registered function
