@@ -38,6 +38,16 @@ describe Transproc::Store do
     end
   end # describe #fetch
 
+  describe '#contain?' do
+    it 'returns true for registered proc' do
+      expect(store.contain?(:foo)).to be true
+    end
+
+    it 'returns false if requested proc is unknown' do
+      expect(store.contain?(:bar)).to be false
+    end
+  end # describe #fetch
+
   describe '#import', :focus do
     before do
       module Bar

@@ -49,6 +49,16 @@ module Transproc
     end
     alias_method :t, :[]
 
+    # Returns wether the registry contains such transformation by its key
+    #
+    # @param [Symbol] key
+    #
+    # @return [Boolean]
+    #
+    def contain?(key)
+      respond_to?(key) || store.contain?(key)
+    end
+
     # Imports either a method (converted to a proc) from another module, or
     # all methods from that module.
     #

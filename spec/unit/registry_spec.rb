@@ -44,6 +44,22 @@ describe Transproc::Registry do
     end
   end
 
+  describe '.contain?' do
+    context 'with absent function' do
+      it { expect(foo.contain?(:something)).to be false }
+    end
+
+    context 'with class method' do
+      it { expect(foo.contain?(:prefix)).to be true }
+    end
+
+    context 'with imported methods' do
+      before { bar.import foo }
+
+      it { expect(bar.contain?(:prefix)).to be true }
+    end
+  end
+
   describe '.import' do
     context 'a module' do
       subject(:import) { bar.import foo }
