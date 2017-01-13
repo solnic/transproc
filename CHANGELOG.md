@@ -1,3 +1,11 @@
+## master
+
+## Added
+
+* Add support of custom `Transproc::Registry` to `Transproc::Transformer` (Kukunin)
+
+[Compare v0.4.2...master](https://github.com/solnic/transproc/compare/v0.4.2...master)
+
 ## v0.4.2 2017-01-12
 
 ## Added
