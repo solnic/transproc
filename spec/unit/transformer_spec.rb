@@ -82,5 +82,25 @@ describe Transproc::Transformer do
     subject! { transformer.call(input) }
 
     it { is_expected.to eq(output) }
+
+    context 'with custom registry' do
+      let(:klass) do
+        Class.new(Transproc::Transformer[registry]) do
+          custom ' is awesome'
+        end
+      end
+      let(:registry) do
+        Module.new do
+          extend Transproc::Registry
+
+          def self.custom(value, suffix)
+            value + suffix
+          end
+        end
+      end
+      let(:input) { 'transproc' }
+
+      it { is_expected.to eq('transproc is awesome') }
+    end
   end
 end

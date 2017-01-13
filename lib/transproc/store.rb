@@ -36,6 +36,16 @@ module Transproc
       methods.fetch(key.to_sym)
     end
 
+    # Returns wether the collection contains such procedure by its key
+    #
+    # @param [Symbol] key
+    #
+    # @return [Boolean]
+    #
+    def contain?(key)
+      methods.key?(key)
+    end
+
     # Imports proc(s) to the collection from another module
     #
     # @private

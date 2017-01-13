@@ -55,7 +55,7 @@ module Transproc
 
       # @api private
       def method_missing(method, *args, &block)
-        if container.functions.has_key?(method)
+        if container.contain?(method)
           if block_given?
             transformations << container[
               method,
@@ -72,7 +72,7 @@ module Transproc
 
       # @api private
       def respond_to_missing?(method, _include_private = false)
-        container.functions.has_key?(method) || super
+        container.contain?(method) || super
       end
 
       # @api private

@@ -41,6 +41,17 @@ describe Transproc do
     end
   end
 
+  describe '.contain?' do
+    it 'returns false for absent function' do
+      expect(Transproc.contain?(:absent)).to be false
+    end
+
+    it 'returns true for registered function' do
+      Transproc.register(:my_function, -> value { value })
+      expect(Transproc.contain?(:my_function)).to be true
+    end
+  end
+
   describe 'nonextistent functions' do
     it 'raises a Transproc::FunctionNotFoundError if asking for function that is non exsistent' do
       expect {
