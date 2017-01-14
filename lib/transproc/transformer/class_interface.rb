@@ -53,17 +53,42 @@ module Transproc
         end
       end
 
+      # Get a transformation from the container,
+      # without adding it to the transformation pipeline
+      #
+      # @example
+      #
+      #   class Stringify < Transproc::Transformer
+      #     map_values t(:to_string)
+      #   end
+      #
+      #   Stringify.new.call(a: 1, b: 2)
+      #   # => {a: '1', b: '2'}
+      #
+      # @param [Proc, Symbol] fn
+      #   A proc, a name of the module's own function, or a name of imported
+      #   procedure from another module
+      # @param [Object, Array] args
+      #   Args to be carried by the transproc
+      #
+      # @return [Transproc::Function]
+      #
+      # @api public
+      def t(fn, *args)
+        container[fn, *args]
+      end
+
       # @api private
       def method_missing(method, *args, &block)
         if container.contain?(method)
           if block_given?
-            transformations << container[
+            transformations << t(
               method,
               *args,
               create(container, &block).transproc
-            ]
+            )
           else
-            transformations << container[method, *args]
+            transformations << t(method, *args)
           end
         else
           super
