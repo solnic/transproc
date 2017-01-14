@@ -31,6 +31,32 @@ describe Transproc::Transformer do
     it { is_expected.to be_a(::Class) }
   end
 
+  describe '.t' do
+    let(:container) do
+      Module.new do
+        extend Transproc::Registry
+
+        import Transproc::HashTransformations
+
+        def self.custom(value, suffix)
+          value + suffix
+        end
+      end
+    end
+
+    subject!(:klass) { Transproc::Transformer[container] }
+
+    it { expect(klass.t(:custom, '_bar')).to eq container[:custom, '_bar'] }
+
+    it 'is useful in DSL' do
+      transproc = Class.new(klass) do
+        map_value :a, t(:custom, '_bar')
+      end.new
+
+      expect(transproc.call(a: 'foo')).to eq(a: 'foo_bar')
+    end
+  end
+
   describe '#call' do
     let(:klass) do
       Class.new(Transproc::Transformer) do
