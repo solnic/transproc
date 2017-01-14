@@ -37,6 +37,7 @@ describe Transproc::Transformer do
         extend Transproc::Registry
 
         import Transproc::HashTransformations
+        import Transproc::Conditional
 
         def self.custom(value, suffix)
           value + suffix
@@ -54,6 +55,16 @@ describe Transproc::Transformer do
       end.new
 
       expect(transproc.call(a: 'foo')).to eq(a: 'foo_bar')
+    end
+
+    it 'works in nested block' do
+      transproc = Class.new(klass) do
+        map_values do
+          is String, t(:custom, '_bar')
+        end
+      end.new
+
+      expect(transproc.call(a: 'foo', b: :symbol)).to eq(a: 'foo_bar', b: :symbol)
     end
   end
 
