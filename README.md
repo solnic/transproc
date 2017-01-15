@@ -14,7 +14,13 @@
 [![Test Coverage](https://codeclimate.com/github/solnic/transproc/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/solnic/transproc.svg?branch=master)][inchpages]
 
-Transproc is a small library that allows you to compose methods into a functional pipeline using left-to-right function composition. It works like `|>` in Elixir or `>>` in F#.
+Transproc is a small library that allows you to compose procs into a functional pipeline using left-to-right function composition.
+
+The approach came from Functional Programming, where simple functions are composed into more complex functions in order to transform some data. It works like `|>` in Elixir
+or `>>` in F#.
+
+`transproc` provides a mechanism to define and compose transformations,
+along with a number of built-in transformations.
 
 It's currently used as the data mapping backend in [Ruby Object Mapper](http://rom-rb.org).
 
@@ -34,7 +40,128 @@ Or install it yourself as:
 
     $ gem install transproc
 
-## Usage
+## Basics
+
+Simple transformations are defined as easy as:
+
+```ruby
+increament = Transproc::Function.new(-> (data) { data + 1 })
+increament[1] # => 2
+```
+
+It's easy to compose transformations:
+
+```ruby
+to_string = Transproc::Function.new(:to_s.to_proc)
+(increament >> to_string)[1] => '2'
+```
+
+It's easy to pass additional arguments to transformations:
+
+```ruby
+append = Transproc::Function.new(-> (value, suffix) { value + suffix })
+append_bar = append.with('_bar')
+append_bar['foo'] # => foo_bar
+```
+
+Or even accept another transformation as an argument:
+
+```ruby
+map_array = Transproc::Function.new(-> (array, fn) { array.map(&fn) })
+map_array.with(to_string).call([1, 2, 3]) # => ['1', '2', '3']
+```
+
+To improve this low-level definition, you can use class methods
+with `Transproc::Registry`:
+
+```ruby
+M = Module.new do
+  extend Transproc::Registry
+
+  def self.to_string(value)
+    value.to_s
+  end
+
+  def self.map_array(array, fn)
+    array.map(&fn)
+  end
+end
+M[:map_array, M[:to_string]].([1, 2, 3]) # => ['1', '2', '3']
+```
+
+### Built-in transformations
+
+`transproc` comes with a lot of built-in functions. They come in the form of
+modules with class methods, which you can import into a registry:
+
+* [Coercions](http://www.rubydoc.info/gems/transproc/Transproc/Coercions)
+* [Array transformations](http://www.rubydoc.info/gems/transproc/Transproc/ArrayTransformations)
+* [Hash transformations](http://www.rubydoc.info/gems/transproc/Transproc/HashTransformations)
+* [Class transformations](http://www.rubydoc.info/gems/transproc/Transproc/ClassTransformations)
+* [Proc transformations](http://www.rubydoc.info/gems/transproc/Transproc/ProcTransformations)
+* [Conditional](http://www.rubydoc.info/gems/transproc/Transproc/Conditional)
+* [Recursion](http://www.rubydoc.info/gems/transproc/Transproc/Recursion)
+
+You can import everything with:
+
+```ruby
+module T
+  extend Transproc::Registry
+
+  import Transproc::Coercions
+  import Transproc::ArrayTransformations
+  import Transproc::HashTransformations
+  import Transproc::ClassTransformations
+  import Transproc::ProcTransformations
+  import Transproc::Conditional
+  import Transproc::Recursion
+end
+T[:to_string].call(:abc) # => 'abc'
+```
+
+Or import selectively with:
+
+```ruby
+module T
+  extend Transproc::Registry
+
+  import :to_string, from: Transproc::Coercions, as: :stringify
+end
+T[:stringify].call(:abc) # => 'abc'
+T[:to_string].call(:abc)
+# => Transproc::FunctionNotFoundError: No registered function T[:to_string]
+```
+
+### Transformer
+
+Transformer is a class-level DSL for composing transformation pipelines,
+for example:
+
+```ruby
+T = Class.new(Transproc::Transformer) do
+  map_array do
+    symbolize_keys
+    rename_keys user_name: :name
+    nest :address, [:city, :street, :zipcode]
+  end
+end
+
+T.new.call(
+  [
+    { 'user_name' => 'Jane',
+      'city' => 'NYC',
+      'street' => 'Street 1',
+      'zipcode' => '123'
+    }
+  ]
+)
+# => [{:name=>"Jane", :address=>{:city=>"NYC", :street=>"Street 1", :zipcode=>"123"}}]
+```
+
+It converts every method call to its corresponding transformation, and joins
+these transformations into a transformation pipeline (a transproc).
+
+## Transproc Example Usage
 
 ``` ruby
 require 'json'
