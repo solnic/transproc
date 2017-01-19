@@ -216,7 +216,7 @@ module Transproc
 
           child_arr = cache[key][child_keys][pkey_value] || []
 
-          child_hash.update(key => child_arr)
+          child_hash[key] = child_arr
         end
 
         parent.merge(child_hash)
