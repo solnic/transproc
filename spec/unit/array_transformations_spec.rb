@@ -361,10 +361,10 @@ describe Transproc::ArrayTransformations do
       input_hash = input.hash
 
       output = [
-        {:name=>"Jane", :tasks=>[{:user=>"Jane", :title=>"One"}]}
+        { name: 'Jane', tasks: [{ user: 'Jane', title: 'One' }] }
       ]
 
-      combine = described_class.t(:combine, [[:tasks, name: :user] ])
+      combine = described_class.t(:combine, [[:tasks, name: :user]])
 
       expect(combine[input]).to eql(output)
       expect(input_hash).to eql(input.hash)
