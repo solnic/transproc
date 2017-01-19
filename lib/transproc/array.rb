@@ -132,7 +132,7 @@ module Transproc
     # @example
     #   fn = t(:combine, [[:tasks, name: :user]])
     #
-    #   fn.call([[{ name: 'Jane' }], [{ user: 'Jane', title: 'One' }]])
+    #   fn.call([[{ name: 'Jane' }], [[{ user: 'Jane', title: 'One' }]]])
     #   # => [{:name=>"Jane", :tasks=>[{:user=>"Jane", :title=>"One"}]}]
     #
     # @param [Array<Array>] array The input array

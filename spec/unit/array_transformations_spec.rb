@@ -352,5 +352,22 @@ describe Transproc::ArrayTransformations do
 
       expect(combine[input]).to eql(output)
     end
+
+    it 'does not modify its input' do
+      input = [
+        [{ name: 'Jane' }],
+        [[{ user: 'Jane', title: 'One' }]]
+      ]
+      input_hash = input.hash
+
+      output = [
+        {:name=>"Jane", :tasks=>[{:user=>"Jane", :title=>"One"}]}
+      ]
+
+      combine = described_class.t(:combine, [[:tasks, name: :user] ])
+
+      expect(combine[input]).to eql(output)
+      expect(input_hash).to eql(input.hash)
+    end
   end
 end
