@@ -127,53 +127,6 @@ module Transproc
       array.flat_map { |item| HashTransformations.split(item, key, keys) }
     end
 
-    # Combines two arrays by merging child items from right array using join keys
-    #
-    # @example
-    #   fn = t(:combine, [[:tasks, name: :user]])
-    #
-    #   fn.call([[{ name: 'Jane' }], [{ user: 'Jane', title: 'One' }]])
-    #   # => [{:name=>"Jane", :tasks=>[{:user=>"Jane", :title=>"One"}]}]
-    #
-    # @param [Array<Array>] array The input array
-    # @param [Array<Hash>] mappings The mapping definitions array
-    #
-    # @return [Array<Hash>]
-    #
-    # @api public
-    def self.combine_slow(array, mappings)
-      root, groups = array
-
-      cache = Hash.new { |h, k| h[k] = {} }
-
-      root.map { |parent|
-        child_hash = {}
-
-        groups.each_with_index do |candidates, index|
-          key, keys, group_mappings = mappings[index]
-
-          children =
-            if group_mappings
-              combine_slow(candidates, group_mappings)
-            else
-              candidates
-            end
-
-          child_keys = keys.values
-          pkey_value = parent.values_at(*keys.keys) # ugh
-
-          cache[key][child_keys] ||= children.group_by { |child|
-            child.values_at(*child_keys)
-          }
-          child_arr = cache[key][child_keys][pkey_value] || []
-
-          child_hash.update(key => child_arr)
-        end
-
-        parent.merge(child_hash)
-      }
-    end
-
     CACHE = Hash.new { |h, k| h[k] = {} }
 
     def self.combine(array, mappings, cache = CACHE.dup)
