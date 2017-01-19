@@ -193,7 +193,7 @@ module Transproc
             if data.size == 2
               candidates
             else
-              combine(candidates, data[2])
+              combine(candidates, data[2], cache)
             end
 
           child_keys = keys.size > 1 ? keys.values : keys.values[0]
