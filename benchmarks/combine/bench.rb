@@ -2,6 +2,7 @@ require 'transproc/all'
 require 'benchmark/ips'
 require 'yaml'
 require 'byebug'
+require 'pathname'
 
 combine_slow = Transproc[
   :combine_slow,
@@ -31,7 +32,7 @@ combine_fast = Transproc[
 
 m = -> b, m { s = Time.now; b.call; puts "#{m} done in #{Time.now-s} seconds" }
 
-size = ENV['SIZE']
+size = ENV['SIZE'] or abort "usage: SIZE=50|100|200 #$0"
 data = YAML.load_file("#{Pathname(__FILE__).dirname.realpath}/data_#{size}.yml")
 
 m.(-> { combine_slow[data] }, 'combine_slow')
