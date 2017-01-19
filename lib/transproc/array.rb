@@ -219,7 +219,7 @@ module Transproc
           child_hash[key] = child_arr
         end
 
-        parent.merge!(child_hash)
+        parent.merge(child_hash)
       end
     end
 
