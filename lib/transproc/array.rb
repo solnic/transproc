@@ -174,30 +174,29 @@ module Transproc
       }
     end
 
-    CACHE = Hash.new { |h, k| h[k] = {} }
+    def self.combine(array, mappings)
+      mappings = prepare_mappings(mappings)
 
-    def self.combine(array, mappings, cache = CACHE.dup)
+      cache = Hash.new { |h, k| h[k] = {} }
+      _combine(array, mappings, cache)
+    end
+
+    def self._combine(array, mappings, cache)
       root, groups = array
 
       root.map do |parent|
         child_hash = {}
 
+        index = 0
         for candidates in groups
-          index = groups.index(candidates)
-          data = mappings[index]
-
-          key = data[0]
-          keys = data[1]
+          key, child_keys, pk_names, group_mappings = mappings[index]
 
           children =
-            if data.size == 2
-              candidates
+            if group_mappings
+              _combine(candidates, group_mappings, cache)
             else
-              combine(candidates, data[2], cache)
+              candidates
             end
-
-          child_keys = keys.size > 1 ? keys.values : keys.values[0]
-          pk_names = keys.size > 1 ? keys.keys : keys.keys[0]
 
           pkey_value =
             if pk_names.is_a?(Array)
@@ -217,9 +216,25 @@ module Transproc
           child_arr = cache[key][child_keys][pkey_value] || []
 
           child_hash[key] = child_arr
+          index += 1
         end
 
         parent.merge(child_hash)
+      end
+    end
+
+    def self.prepare_mappings(mappings)
+      mappings.map do |(key, keys, group_mappings)|
+        child_keys = keys.size > 1 ? keys.values : keys.values[0]
+        pk_names = keys.size > 1 ? keys.keys : keys.keys[0]
+
+        group_mappings = if group_mappings
+                           prepare_mappings(group_mappings)
+                         else
+                           nil
+                         end
+
+        [key, child_keys, pk_names, group_mappings]
       end
     end
 
