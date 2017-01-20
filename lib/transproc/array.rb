@@ -191,7 +191,7 @@ module Transproc
 
         index = 0
         for candidates in groups
-          key, child_keys, pk_names, group_mappings = mappings[index]
+          key, mapper, group_mappings = mappings[index]
 
           children =
             if group_mappings
@@ -200,22 +200,10 @@ module Transproc
               candidates
             end
 
-          pkey_value =
-            if pk_names.is_a?(Array)
-              parent.values_at(*pk_names)
-            else
-              parent[pk_names]
-            end
+          pkey_value = mapper.pkey_value(parent)
 
-          cache[key][child_keys] ||= children.group_by do |child|
-            if child_keys.is_a?(Array)
-              child.values_at(*child_keys)
-            else
-              child[child_keys]
-            end
-          end
-
-          child_arr = cache[key][child_keys][pkey_value] || []
+          cache[key][mapper.child_keys] ||= mapper.group_by(children)
+          child_arr = cache[key][mapper.child_keys][pkey_value] || []
 
           child_hash[key] = child_arr
           index += 1
@@ -227,10 +215,48 @@ module Transproc
       root
     end
 
+    class Composite
+      attr_reader :child_keys
+
+      def initialize(child_keys, pk_names)
+        @child_keys = child_keys
+        @pk_names = pk_names
+      end
+
+      def group_by(children)
+        children.group_by do |child|
+          child.values_at(*@child_keys)
+        end
+      end
+
+      def pkey_value(parent)
+        parent.values_at(*@pk_names)
+      end
+    end
+
+    class Single
+      attr_reader :child_keys
+
+      def initialize(child_keys, pk_names)
+        @child_keys = child_keys[0]
+        @pk_names = pk_names[0]
+      end
+
+      def group_by(children)
+        children.group_by do |child|
+          child[@child_keys]
+        end
+      end
+
+      def pkey_value(parent)
+        parent[@pk_names]
+      end
+    end
+
     def self.prepare_mappings(mappings)
       mappings.map do |(key, keys, group_mappings)|
-        child_keys = keys.size > 1 ? keys.values : keys.values[0]
-        pk_names = keys.size > 1 ? keys.keys : keys.keys[0]
+        klass = keys.size > 1 ? Composite : Single
+        mapper = klass.new(keys.values, keys.keys)
 
         group_mappings = if group_mappings
                            prepare_mappings(group_mappings)
@@ -238,7 +264,7 @@ module Transproc
                            nil
                          end
 
-        [key, child_keys, pk_names, group_mappings]
+        [key, mapper, group_mappings]
       end
     end
 
