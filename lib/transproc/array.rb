@@ -178,15 +178,13 @@ module Transproc
       mappings = prepare_mappings(mappings)
 
       cache = Hash.new { |h, k| h[k] = {} }
-      # deep copy
-      copy = Marshal.load(Marshal.dump(array))
-      _combine(copy, mappings, cache)
+      _combine(array, mappings, cache)
     end
 
     def self._combine(array, mappings, cache)
       root, groups = array
 
-      root.each do |parent|
+      root.map do |parent|
         child_hash = {}
 
         index = 0
@@ -209,10 +207,8 @@ module Transproc
           index += 1
         end
 
-        parent.merge!(child_hash)
+        parent.merge(child_hash)
       end
-
-      root
     end
 
     class Composite
