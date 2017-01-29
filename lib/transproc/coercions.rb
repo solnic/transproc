@@ -184,7 +184,7 @@ module Transproc
     # @return [Array<Hash>]
     #
     def self.to_tuples(value)
-      array = value.is_a?(Array) ? Array[*value] : [{}]
+      array = value.is_a?(Array) ? value.dup : [{}]
       array.select! { |item| item.is_a?(Hash) }
       array.any? ? array : [{}]
     end
