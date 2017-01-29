@@ -1,4 +1,4 @@
-## master
+## v1.0.0 2017-01-29
 
 ## Added
 
@@ -12,7 +12,7 @@
 * Remove deprecated `Transproc` global container with `Transproc::Helper`(Kukunin)
 * Remove support of `Transproc::Transformer` without registry (Kukunin)
 
-[Compare v0.4.2...master](https://github.com/solnic/transproc/compare/v0.4.2...master)
+[Compare v0.4.2...v1.0.0](https://github.com/solnic/transproc/compare/v0.4.2...v1.0.0)
 
 ## v0.4.2 2017-01-12
 
