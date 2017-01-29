@@ -33,7 +33,7 @@ module Transproc
     # @return [Proc]
     #
     def fetch(key)
-      methods.fetch(key.to_sym)
+      methods.fetch(key)
     end
 
     # Returns wether the collection contains such procedure by its key

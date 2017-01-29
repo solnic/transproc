@@ -33,6 +33,10 @@ describe Transproc::Store do
       expect(store.fetch(:foo)).to eql methods[:foo]
     end
 
+    it 'does not accepts anything but symbol as key' do
+      expect { store.fetch('foo') }.to raise_error KeyError
+    end
+
     it 'raises KeyError if requested proc is unknown' do
       expect { store.fetch(:bar) }.to raise_error KeyError
     end
