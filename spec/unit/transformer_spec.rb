@@ -22,20 +22,6 @@ describe Transproc::Transformer do
     end
   end
 
-  describe '.[]' do
-    let(:container) { double('Transproc') }
-
-    subject!(:klass) { Transproc::Transformer[container] }
-
-    it { expect(klass.container).to eq(container) }
-    it { is_expected.to be_a(::Class) }
-    it { expect(klass.ancestors).to include(Transproc::Transformer) }
-
-    it 'does not change super class' do
-      expect(Transproc::Transformer.container).not_to eq(container)
-    end
-  end
-
   describe 'inheritance' do
     let(:container) do
       Module.new do
@@ -64,6 +50,46 @@ describe Transproc::Transformer do
     it 'combines transprocs from every level of inheritance' do
       expect(superclass.new.call(2)).to eq 3
       expect(subclass.new.call(2)).to eq 6
+    end
+
+    context 'with nested transformations' do
+      let(:subclass) do
+        Class.new(superclass) do
+          arbitrary do
+            arbitrary ->(v) { v * 2 }
+          end
+        end
+      end
+
+      it 'does not interfere into nested transformations' do
+        expect(subclass.new.call(2)).to eq 6
+      end
+    end
+  end
+
+  describe '.[]' do
+    let(:container) { double('Transproc') }
+
+    subject!(:klass) { Transproc::Transformer[container] }
+
+    it { expect(klass.container).to eq(container) }
+    it { is_expected.to be_a(::Class) }
+    it { expect(klass.ancestors).to include(Transproc::Transformer) }
+
+    it 'does not change super class' do
+      expect(Transproc::Transformer.container).not_to eq(container)
+    end
+
+    context 'with predefined transformer' do
+      let(:klass) do
+        Class.new(Transproc::Transformer) do
+          map_value :attr, t(:to_symbol)
+        end
+      end
+    end
+
+    it 'does not inherit transproc' do
+      expect(klass[container].transproc).to be_nil
     end
   end
 
