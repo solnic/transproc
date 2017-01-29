@@ -80,6 +80,12 @@ describe Transproc::ArrayTransformations do
 
       expect { map[input] }.to_not raise_error
     end
+
+    it 'handles flat value arrays' do
+      map = described_class.t(:map_array, :upcase.to_proc)
+
+      expect(map['foo']).to eql(%w(FOO))
+    end
   end
 
   it { expect(described_class).not_to be_contain(:map_array!) }

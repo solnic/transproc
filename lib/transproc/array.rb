@@ -38,7 +38,7 @@ module Transproc
     #
     # @api public
     def self.map_array(array, fn)
-      array.map { |value| fn[value] }
+      Array(array).map { |value| fn[value] }
     end
 
     # Wrap array values using HashTransformations.nest function
