@@ -80,11 +80,18 @@ describe Transproc::Transformer do
   end
 
   describe '.define' do
-    it 'defines anonymous transformer instance' do
+    it 'defines anonymous transproc' do
       transproc = described_class.define do
         map_value(:attr, t(:to_symbol))
       end
-      expect(transproc.call(attr: 'abc')).to eq(attr: :abc)
+      expect(transproc[attr: 'abc']).to eq(attr: :abc)
+    end
+
+    it 'has .build alias' do
+      transproc = described_class.build do
+        map_value(:attr, t(:to_symbol))
+      end
+      expect(transproc[attr: 'abc']).to eq(attr: :abc)
     end
 
     it 'does not affect original transformer' do

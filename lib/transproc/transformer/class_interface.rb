@@ -78,6 +78,7 @@ module Transproc
 
         Class.new(self).tap { |klass| klass.instance_eval(&block) }.transproc
       end
+      alias build define
 
       # Get a transformation from the container,
       # without adding it to the transformation pipeline
