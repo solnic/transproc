@@ -67,6 +67,62 @@ describe Transproc::Transformer do
     end
   end
 
+  describe '.define' do
+    it 'defines anonymous transformer instance' do
+      transproc = described_class.define do
+        map_value(:attr, t(:to_symbol))
+      end
+      expect(transproc.call(attr: 'abc')).to eq(attr: :abc)
+    end
+
+    it 'does not affect original transformer' do
+      described_class.define do
+        map_value(:attr, t(:to_symbol))
+      end
+      expect(described_class.transproc).to be_nil
+    end
+
+    context 'with custom container' do
+      let(:container) do
+        Module.new do
+          extend Transproc::Registry
+
+          def self.arbitrary(value, fn)
+            fn[value]
+          end
+        end
+      end
+      let(:klass) { described_class[container] }
+
+      it 'uses a container from the transformer' do
+        transproc = klass.define do
+          arbitrary ->(v) { v + 1 }
+        end
+        expect(transproc.call(2)).to eq 3
+      end
+    end
+
+    context 'with predefined transformer' do
+      let(:klass) do
+        Class.new(described_class) do
+          map_value :attr, ->(v) { v + 1 }
+        end
+      end
+
+      it 'inherits transformations from superclass' do
+        transproc = klass.define do
+          map_value :attr, ->(v) { v * 2 }
+        end
+        expect(transproc.call(attr: 2)).to eq(attr: 6)
+      end
+
+      it 'just initializes transformer if no block was given' do
+        transproc = klass.define
+        expect(transproc.call(attr: 2)).to eq(attr: 3)
+      end
+    end
+  end
+
   describe '.t' do
     let(:container) do
       Module.new do

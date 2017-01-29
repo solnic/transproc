@@ -54,6 +54,12 @@ module Transproc
         end
       end
 
+      def define(&block)
+        klass = Class.new(self)
+        klass.instance_eval(&block) if block_given?
+        klass.new
+      end
+
       # Get a transformation from the container,
       # without adding it to the transformation pipeline
       #
