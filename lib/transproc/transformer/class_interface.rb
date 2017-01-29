@@ -81,15 +81,8 @@ module Transproc
       # @api private
       def method_missing(method, *args, &block)
         if container.contain?(method)
-          if block_given?
-            transformations << t(
-              method,
-              *args,
-              create(container, &block).transproc
-            )
-          else
-            transformations << t(method, *args)
-          end
+          args.push(create(container, &block).transproc) if block_given?
+          transformations << t(method, *args)
         else
           super
         end
