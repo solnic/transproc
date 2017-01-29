@@ -68,9 +68,5 @@ module Transproc
     def self.is(value, type, fn)
       guard(value, -> v { v.is_a?(type) }, fn)
     end
-
-    # @deprecated Register methods globally
-    (methods - Registry.methods - Registry.instance_methods)
-      .each { |name| Transproc.register name, t(name) }
   end
 end

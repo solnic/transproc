@@ -38,9 +38,5 @@ module Transproc
     def self.bind(value, binding, fn)
       binding.instance_exec(value, &fn)
     end
-
-    # @deprecated Register methods globally
-    (methods - Registry.instance_methods - Registry.methods)
-      .each { |name| Transproc.register name, t(name) }
   end
 end

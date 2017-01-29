@@ -8,9 +8,7 @@ describe Transproc::Transformer do
     context 'without setter argument' do
       subject! { klass.container }
 
-      it 'defaults to Transproc' do
-        is_expected.to eq(Transproc)
-      end
+      it { is_expected.to eq Transproc::Transformer::EMPTY_CONTAINER }
     end
 
     context 'with setter argument' do
@@ -80,25 +78,38 @@ describe Transproc::Transformer do
   end
 
   describe '.define' do
+    let(:container) do
+      Module.new do
+        extend Transproc::Registry
+
+        import Transproc::HashTransformations
+
+        def self.to_symbol(v)
+          v.to_sym
+        end
+      end
+    end
+    let(:klass) { Transproc::Transformer[container] }
+
     it 'defines anonymous transproc' do
-      transproc = described_class.define do
+      transproc = klass.define do
         map_value(:attr, t(:to_symbol))
       end
       expect(transproc[attr: 'abc']).to eq(attr: :abc)
     end
 
     it 'has .build alias' do
-      transproc = described_class.build do
+      transproc = klass.build do
         map_value(:attr, t(:to_symbol))
       end
       expect(transproc[attr: 'abc']).to eq(attr: :abc)
     end
 
     it 'does not affect original transformer' do
-      described_class.define do
-        map_value(:attr, t(:to_symbol))
+      klass.define do
+        map_value(:attr, :to_sym.to_proc)
       end
-      expect(described_class.transproc).to be_nil
+      expect(klass.transproc).to be_nil
     end
 
     context 'with custom container' do
@@ -123,7 +134,7 @@ describe Transproc::Transformer do
 
     context 'with predefined transformer' do
       let(:klass) do
-        Class.new(described_class) do
+        Class.new(described_class[container]) do
           map_value :attr, ->(v) { v + 1 }
         end
       end
@@ -180,8 +191,18 @@ describe Transproc::Transformer do
   end
 
   describe '#call' do
+    let(:container) do
+      Module.new do
+        extend Transproc::Registry
+
+        import Transproc::HashTransformations
+        import Transproc::ArrayTransformations
+        import Transproc::ClassTransformations
+      end
+    end
+
     let(:klass) do
-      Class.new(Transproc::Transformer) do
+      Class.new(Transproc::Transformer[container]) do
         map_array do
           symbolize_keys
           rename_keys user_name: :name

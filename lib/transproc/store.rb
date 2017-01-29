@@ -33,7 +33,7 @@ module Transproc
     # @return [Proc]
     #
     def fetch(key)
-      methods.fetch(key.to_sym)
+      methods.fetch(key)
     end
 
     # Returns wether the collection contains such procedure by its key
@@ -44,6 +44,17 @@ module Transproc
     #
     def contain?(key)
       methods.key?(key)
+    end
+
+    # Register a new function
+    #
+    # @example
+    #   store.register(:to_json, -> v { v.to_json })
+
+    #   store.register(:to_json) { |v| v.to_json }
+    #
+    def register(name, fn = nil, &block)
+      self.class.new(methods.merge(name => fn || block))
     end
 
     # Imports proc(s) to the collection from another module

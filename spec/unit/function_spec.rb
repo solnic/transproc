@@ -1,13 +1,19 @@
 require 'spec_helper'
 
 describe Transproc::Function do
-  let(:hashes) { Transproc::HashTransformations }
+  let(:container) do
+    Module.new do
+      extend Transproc::Registry
+
+      import Transproc::HashTransformations
+    end
+  end
 
   describe '#name' do
     let(:block) { proc { |v| v } }
 
     it 'returns the name of the module function' do
-      expect(hashes[:symbolize_keys].name).to eql :symbolize_keys
+      expect(container[:symbolize_keys].name).to eql :symbolize_keys
     end
 
     it 'returns the explicitly assigned name' do
@@ -21,8 +27,8 @@ describe Transproc::Function do
 
   describe '#>>' do
     it 'composes named functions' do
-      f1 = hashes[:symbolize_keys]
-      f2 = hashes[:rename_keys, user_name: :name]
+      f1 = container[:symbolize_keys]
+      f2 = container[:rename_keys, user_name: :name]
 
       f3 = f1 >> f2
 
@@ -37,7 +43,7 @@ describe Transproc::Function do
 
       expect(f3['user_name' => 'Jane']).to eql(name: 'Jane')
 
-      f4 = f3 >> hashes[:nest, :details, [:name]]
+      f4 = f3 >> container[:nest, :details, [:name]]
 
       expect(f4.to_ast).to eql(
         [
@@ -55,9 +61,8 @@ describe Transproc::Function do
     end
 
     it 'composes anonymous functions' do
-      # TODO: Use Transproc -> (v) { v.to_s } after release of jruby-9k
-      f1 = Transproc proc { |v, m| v * m }, 2
-      f2 = Transproc proc(&:to_s)
+      f1 = container[->(v, m) { v * m }, 2]
+      f2 = container[:to_s.to_proc]
 
       f3 = f1 >> f2
 
@@ -72,8 +77,8 @@ describe Transproc::Function do
     end
 
     it 'plays well with registered compositions' do
-      Transproc.register(:user_names, hashes[:symbolize_keys] + hashes[:rename_keys, user_name: :name])
-      f = t(:user_names)
+      container.register(:user_names, container[:symbolize_keys] + container[:rename_keys, user_name: :name])
+      f = container[:user_names]
 
       expect(f['user_name' => 'Jane']).to eql(name: 'Jane')
       expect(f.to_ast).to eql(
@@ -87,8 +92,8 @@ describe Transproc::Function do
     end
 
     it 'plays well with registered functions' do
-      Transproc.register(:to_s, t(:to_string))
-      fn = t(:to_s)
+      container.register(:to_string, Transproc::Coercions.t(:to_string))
+      fn = container.t(:to_string)
 
       expect(fn[:ok]).to eql('ok')
       expect(fn.to_ast).to eql([:to_string, []])

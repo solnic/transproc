@@ -45,7 +45,9 @@ module Transproc
     # @alias :t
     #
     def [](fn, *args)
-      Function.new(fetch(fn), args: args, name: fn)
+      fetched = fetch(fn)
+      return fetched if already_wrapped?(fetched)
+      Function.new(fetched, args: args, name: fn)
     end
     alias_method :t, :[]
 
@@ -57,6 +59,21 @@ module Transproc
     #
     def contain?(key)
       respond_to?(key) || store.contain?(key)
+    end
+
+    # Register a new function
+    #
+    # @example
+    #   store.register(:to_json, -> v { v.to_json })
+
+    #   store.register(:to_json) { |v| v.to_json }
+    #
+    def register(name, fn = nil, &block)
+      if contain?(name)
+        raise FunctionAlreadyRegisteredError, "Function #{name} is already defined"
+      end
+      @store = store.register(name, fn, &block)
+      self
     end
 
     # Imports either a method (converted to a proc) from another module, or
@@ -115,6 +132,13 @@ module Transproc
       respond_to?(fn) ? method(fn) : store.fetch(fn)
     rescue
       raise FunctionNotFoundError.new(fn, self)
+    end
+
+    private
+
+    # @api private
+    def already_wrapped?(func)
+      func.is_a?(Transproc::Function) || func.is_a?(Transproc::Composite)
     end
   end
 end

@@ -1,32 +1,6 @@
 require 'transproc/support/deprecations'
 
 module Transproc
-  # Transproc helper that adds `t` method as a shortcut for `Transproc` method
-  #
-  # @example
-  #   include Transproc::Helper
-  #
-  #   t(:to_string)
-  #
-  # @api public
-  module Helper
-    # @api private
-    def self.included(*)
-      Transproc::Deprecations.announce(
-        'Transproc::Helper',
-        'Define your own function registry using Transproc::Registry extension'
-      )
-      super
-    end
-
-    # @see Transproc
-    #
-    # @api public
-    def t(*args, &block)
-      Transproc(*args, &block)
-    end
-  end
-
   # Helper extension handy for composing many functions in multiple steps
   #
   # @example

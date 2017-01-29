@@ -226,6 +226,9 @@ module Functions
   end
 end
 
+# ...or add it to registered functions via .register method
+Functions.register(:load_json) { |v| JSON.load(v) }
+
 transformation = t(:load_json) >> t(:map_array, t(:symbolize_keys))
 
 transformation.call('[{"name":"Jane"}]')

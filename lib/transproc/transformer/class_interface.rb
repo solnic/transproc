@@ -47,7 +47,7 @@ module Transproc
       # @api private
       def container(container = ::Transproc::Undefined)
         if container == ::Transproc::Undefined
-          @container
+          @container ||= Transformer::EMPTY_CONTAINER
         else
           @container = container
         end
