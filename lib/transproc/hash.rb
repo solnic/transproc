@@ -29,17 +29,9 @@ module Transproc
     #
     # @api public
     def self.map_keys(hash, fn)
-      map_keys!(Hash[hash], fn)
-    end
-
-    # Same as `:map_keys` but mutates the hash
-    #
-    # @see HashTransformations.map_keys
-    #
-    # @api public
-    def self.map_keys!(hash, fn)
-      hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
-      hash
+      Hash[hash].tap do |copy|
+        copy.keys.each { |key| copy[fn[key]] = copy.delete(key) }
+      end
     end
 
     # Symbolize all keys in a hash
@@ -54,16 +46,7 @@ module Transproc
     #
     # @api public
     def self.symbolize_keys(hash)
-      symbolize_keys!(Hash[hash])
-    end
-
-    # Same as `:symbolize_keys` but mutates the hash
-    #
-    # @see HashTransformations.symbolize_keys!
-    #
-    # @api public
-    def self.symbolize_keys!(hash)
-      map_keys!(hash, Coercions[:to_symbol].fn)
+      map_keys(hash, Coercions[:to_symbol].fn)
     end
 
     # Symbolize keys in a hash recursively
@@ -108,16 +91,7 @@ module Transproc
     #
     # @api public
     def self.stringify_keys(hash)
-      stringify_keys!(Hash[hash])
-    end
-
-    # Same as `:stringify_keys` but mutates the hash
-    #
-    # @see HashTransformations.stringify_keys
-    #
-    # @api public
-    def self.stringify_keys!(hash)
-      map_keys!(hash, Coercions[:to_string].fn)
+      map_keys(hash, Coercions[:to_string].fn)
     end
 
     # Map all values in a hash using transformation function

@@ -108,20 +108,18 @@ describe Transproc::Recursion do
   end
 
   describe '.hash_recursion' do
-    let(:original) do
+    let(:input) do
       {
         'foo' => 'bar',
         'bar' => {
           'foo' => 'bar',
           'bar' => {
             'foo' => 'bar'
-          }
-        },
+          }.freeze
+        }.freeze,
         'baz' => 'bar'
-      }
+      }.freeze
     end
-
-    let(:input) { original.dup }
 
     let(:output) do
       {
@@ -136,26 +134,12 @@ describe Transproc::Recursion do
       }
     end
 
-    context 'when function is non-destructive' do
-      let(:map) do
-        described_class.t(:hash_recursion, hashes.t(:symbolize_keys))
-      end
-
-      it 'applies funtions to all values recursively' do
-        expect(map[input]).to eql(output)
-        expect(input).to eql(original)
-      end
+    let(:map) do
+      described_class.t(:hash_recursion, hashes.t(:symbolize_keys))
     end
 
-    context 'when function is destructive' do
-      let(:map) do
-        described_class.t(:hash_recursion, hashes.t(:symbolize_keys!))
-      end
-
-      it 'applies funtions to all values recursively and destructively' do
-        expect(map[input]).to eql(output)
-        expect(input).to eql(output)
-      end
+    it 'applies funtions to all values recursively' do
+      expect(map[input]).to eql(output)
     end
   end
 end

@@ -6,35 +6,23 @@ describe Transproc::HashTransformations do
     it 'returns a new hash with given proc applied to keys' do
       map_keys = described_class.t(:map_keys, ->(key) { key.strip })
 
-      input = { ' foo ' => 'bar' }
+      input = { ' foo ' => 'bar' }.freeze
       output = { 'foo' => 'bar' }
 
       expect(map_keys[input]).to eql(output)
-      expect(input).to eql(' foo ' => 'bar')
     end
   end
 
-  describe '.map_keys!' do
-    it 'returns updated hash with given proc applied to keys' do
-      map_keys = described_class.t(:map_keys!, ->(key) { key.strip })
-
-      input = { ' foo ' => 'bar' }
-      output = { 'foo' => 'bar' }
-
-      expect(map_keys[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_keys!) }
 
   describe '.symbolize_keys' do
     it 'returns a new hash with symbolized keys' do
       symbolize_keys = described_class.t(:symbolize_keys)
 
-      input = { 1 => 'bar' }
+      input = { 1 => 'bar' }.freeze
       output = { '1'.to_sym => 'bar' }
 
       expect(symbolize_keys[input]).to eql(output)
-      expect { symbolize_keys[input] }.not_to change { input }
     end
   end
 
@@ -50,42 +38,20 @@ describe Transproc::HashTransformations do
     end
   end
 
-  describe '.symbolize_keys!' do
-    it 'returns updated hash with symbolized keys' do
-      symbolize_keys = described_class.t(:symbolize_keys!)
-
-      input = { 'foo' => 'bar' }
-      output = { foo: 'bar' }
-
-      symbolize_keys[input]
-
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:symbolize_keys!) }
 
   describe '.stringify_keys' do
     it 'returns a new hash with stringified keys' do
       stringify_keys = described_class.t(:stringify_keys)
 
-      input = { foo: 'bar' }
+      input = { foo: 'bar' }.freeze
       output = { 'foo' => 'bar' }
 
       expect(stringify_keys[input]).to eql(output)
-      expect(input).to eql(foo: 'bar')
     end
   end
 
-  describe '.stringify_keys!' do
-    it 'returns a new hash with stringified keys' do
-      stringify_keys = described_class.t(:stringify_keys!)
-
-      input = { foo: 'bar' }
-      output = { 'foo' => 'bar' }
-
-      expect(stringify_keys[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
+  it { expect(described_class).not_to be_contain(:stringify_keys!) }
 
   describe '.map_values' do
     it 'returns a new hash with given proc applied to values' do
