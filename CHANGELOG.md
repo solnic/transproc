@@ -4,6 +4,11 @@
 
 * Add support of custom `Transproc::Registry` to `Transproc::Transformer` (Kukunin)
 * Add `Transproc::Transformer.t` DSL method to access transformations (Kukunin)
+* Add `Transproc::Transformer.define` method for anonymous transprocs defining (Kukunin)
+
+## Deleted
+
+* Remove all mutating transformations (Kukunin)
 
 [Compare v0.4.2...master](https://github.com/solnic/transproc/compare/v0.4.2...master)
 

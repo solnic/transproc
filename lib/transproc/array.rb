@@ -81,8 +81,8 @@ module Transproc
     # @api public
     def self.group(array, key, keys)
       grouped = Hash.new { |h, k| h[k] = [] }
-      array.each do |source_hash|
-        hash = source_hash.dup
+      array.each do |hash|
+        hash = Hash[hash]
 
         old_group = Coercions.to_tuples(hash.delete(key))
         new_group = keys.inject({}) { |a, e| a.merge(e => hash.delete(e)) }
