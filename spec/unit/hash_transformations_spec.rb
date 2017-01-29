@@ -256,51 +256,31 @@ describe Transproc::HashTransformations do
     end
   end
 
-  describe '.reject_keys!' do
-    it 'returns an updated hash with rejected keys' do
+  describe '.reject_keys' do
+    it 'returns a new hash with rejected keys' do
       reject_keys = described_class.t(:reject_keys, [:name, :age])
 
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
+      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }.freeze
       output = { email: 'jane@doe.org' }
 
       expect(reject_keys[input]).to eql(output)
     end
   end
 
-  describe '.reject_keys' do
+  it { expect(described_class).not_to be_contain(:reject_keys!) }
+
+  describe '.accept_keys' do
     it 'returns a new hash with rejected keys' do
-      reject_keys = described_class.t(:reject_keys, [:name, :age])
-
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
-      output = { email: 'jane@doe.org' }
-
-      expect(reject_keys[input]).to eql(output)
-      expect(input).to eql(name: 'Jane', email: 'jane@doe.org', age: 21)
-    end
-  end
-
-  describe '.accept_keys!' do
-    it 'returns an updated hash with accepted keys' do
       accept_keys = described_class.t(:accept_keys, [:age])
 
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
+      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }.freeze
       output = { age: 21 }
 
       expect(accept_keys[input]).to eql(output)
     end
   end
 
-  describe '.reject_keys' do
-    it 'returns a new hash with rejected keys' do
-      accept_keys = described_class.t(:accept_keys, [:age])
-
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
-      output = { age: 21 }
-
-      expect(accept_keys[input]).to eql(output)
-      expect(input).to eql(name: 'Jane', email: 'jane@doe.org', age: 21)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:accept_keys!) }
 
   describe '.fold' do
     let(:input) do
