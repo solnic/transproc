@@ -9,6 +9,8 @@
 ## Deleted
 
 * Remove all mutating transformations (Kukunin)
+* Remove deprecated `Transproc` global container with `Transproc::Helper`(Kukunin)
+* Remove support of `Transproc::Transformer` without registry (Kukunin)
 
 [Compare v0.4.2...master](https://github.com/solnic/transproc/compare/v0.4.2...master)
 
