@@ -54,10 +54,30 @@ module Transproc
         end
       end
 
+      # Define an anonymous transproc derived from given Transformer
+      # Evaluates block with transformations and returns initialized transproc.
+      # Does not mutate original Transformer
+      #
+      # @example
+      #
+      #   class MyTransformer < Transproc::Transformer[MyContainer]
+      #   end
+      #
+      #   transproc = MyTransformer.define do
+      #     map_values t(:to_string)
+      #   end
+      #   transproc.call(a: 1, b: 2)
+      #   # => {a: '1', b: '2'}
+      #
+      # @yield Block allowing to define transformations. The same as class level DSL
+      #
+      # @return [Function] Composed transproc
+      #
+      # @api public
       def define(&block)
         klass = Class.new(self)
         klass.instance_eval(&block) if block_given?
-        klass.new
+        klass.transproc
       end
 
       # Get a transformation from the container,
