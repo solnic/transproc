@@ -8,9 +8,7 @@ describe Transproc::Transformer do
     context 'without setter argument' do
       subject! { klass.container }
 
-      it 'defaults to Transproc' do
-        is_expected.to eq(Transproc)
-      end
+      it { is_expected.to be_nil }
     end
 
     context 'with setter argument' do
