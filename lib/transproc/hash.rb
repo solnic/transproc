@@ -278,16 +278,7 @@ module Transproc
     #
     # @api public
     def self.fold(hash, key, tuple_key)
-      fold!(Hash[hash], key, tuple_key)
-    end
-
-    # Same as `:fold` but mutates the hash
-    #
-    # @see HashTransformations.fold
-    #
-    # @api public
-    def self.fold!(hash, key, tuple_key)
-      hash.update(key => ArrayTransformations.extract_key(hash[key], tuple_key))
+      hash.merge(key => ArrayTransformations.extract_key(hash[key], tuple_key))
     end
 
     # Splits hash to array by all values from a specified key

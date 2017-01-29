@@ -286,39 +286,31 @@ describe Transproc::HashTransformations do
     let(:input) do
       {
         name: 'Jane',
-        tasks: [{ title: 'be nice', priority: 1 }, { title: 'sleep well' }]
-      }
+        tasks: [
+          { title: 'be nice', priority: 1 }.freeze,
+          { title: 'sleep well' }.freeze
+        ].freeze
+      }.freeze
     end
 
-    it_behaves_like :transforming_immutable_data do
-      let(:arguments) { [:fold, :tasks, :title] }
-      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
+    it 'returns a new hash with folded values' do
+      fold = described_class.t(:fold, :tasks, :title)
+
+      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
+
+      expect(fold[input]).to eql(output)
     end
 
-    it_behaves_like :transforming_immutable_data do
-      let(:arguments) { [:fold, :tasks, :priority] }
-      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
+    it 'uses nil if there was not such attribute' do
+      fold = described_class.t(:fold, :tasks, :priority)
+
+      output = { name: 'Jane', tasks: [1, nil] }
+
+      expect(fold[input]).to eql(output)
     end
   end
 
-  describe '.fold!' do
-    let(:input) do
-      {
-        name: 'Jane',
-        tasks: [{ title: 'be nice', priority: 1 }, { title: 'sleep well' }]
-      }
-    end
-
-    it_behaves_like :mutating_input_data do
-      let(:arguments) { [:fold!, :tasks, :title] }
-      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
-    end
-
-    it_behaves_like :mutating_input_data do
-      let(:arguments) { [:fold!, :tasks, :priority] }
-      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
-    end
-  end
+  it { expect(described_class).not_to be_contain(:fold!) }
 
   describe '.split' do
     let(:input) do
