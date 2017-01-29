@@ -53,6 +53,33 @@ module Transproc
         end
       end
 
+      # Define an anonymous transproc derived from given Transformer
+      # Evaluates block with transformations and returns initialized transproc.
+      # Does not mutate original Transformer
+      #
+      # @example
+      #
+      #   class MyTransformer < Transproc::Transformer[MyContainer]
+      #   end
+      #
+      #   transproc = MyTransformer.define do
+      #     map_values t(:to_string)
+      #   end
+      #   transproc.call(a: 1, b: 2)
+      #   # => {a: '1', b: '2'}
+      #
+      # @yield Block allowing to define transformations. The same as class level DSL
+      #
+      # @return [Function] Composed transproc
+      #
+      # @api public
+      def define(&block)
+        return transproc unless block_given?
+
+        Class.new(self).tap { |klass| klass.instance_eval(&block) }.transproc
+      end
+      alias build define
+
       # Get a transformation from the container,
       # without adding it to the transformation pipeline
       #
@@ -81,15 +108,8 @@ module Transproc
       # @api private
       def method_missing(method, *args, &block)
         if container.contain?(method)
-          if block_given?
-            transformations << t(
-              method,
-              *args,
-              create(container, &block).transproc
-            )
-          else
-            transformations << t(method, *args)
-          end
+          args.push(define(&block)) if block_given?
+          transformations << t(method, *args)
         else
           super
         end
@@ -106,21 +126,12 @@ module Transproc
       end
 
       private
+
       # An array containing the transformation pipeline
       #
       # @api private
       def transformations
         @transformations ||= []
-      end
-
-      # Create and return a new instance of Transproc::Transformer
-      # evaluating the block argument as the class body
-      #
-      # @api private
-      def create(container, &block)
-        klass = self[container]
-        klass.instance_eval(&block)
-        klass
       end
     end
   end
