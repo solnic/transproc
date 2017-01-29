@@ -63,6 +63,8 @@ describe Transproc do
 
   describe 'accessing a function with args' do
     it 'curries the args' do
+      Transproc.register(:map_array, Transproc::ArrayTransformations.t(:map_array))
+      Transproc.register(:to_string, Transproc::Coercions.t(:to_string))
       fn = Transproc(:map_array, Transproc(:to_string))
 
       expect(fn.args).to include(Transproc(:to_string))

@@ -87,7 +87,7 @@ describe Transproc::Function do
     end
 
     it 'plays well with registered functions' do
-      Transproc.register(:to_s, t(:to_string))
+      Transproc.register(:to_s, Transproc::Coercions.t(:to_string))
       fn = t(:to_s)
 
       expect(fn[:ok]).to eql('ok')

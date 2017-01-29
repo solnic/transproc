@@ -390,9 +390,5 @@ module Transproc
         end
       end
     end
-
-    # @deprecated Register methods globally
-    (methods - Registry.instance_methods - Registry.methods)
-      .each { |name| Transproc.register name, t(name) }
   end
 end

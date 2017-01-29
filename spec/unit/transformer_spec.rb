@@ -69,8 +69,18 @@ describe Transproc::Transformer do
   end
 
   describe '#call' do
+    let(:container) do
+      Module.new do
+        extend Transproc::Registry
+
+        import Transproc::HashTransformations
+        import Transproc::ArrayTransformations
+        import Transproc::ClassTransformations
+      end
+    end
+
     let(:klass) do
-      Class.new(Transproc::Transformer) do
+      Class.new(Transproc::Transformer[container]) do
         map_array do
           symbolize_keys
           rename_keys user_name: :name
