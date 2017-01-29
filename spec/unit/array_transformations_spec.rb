@@ -78,7 +78,7 @@ describe Transproc::ArrayTransformations do
 
       input = Array.new(138_706) { |i| { 'key' => i } }
 
-      expect { map[input] }.to_not raise_error(SystemStackError, %r{stack level too deep})
+      expect { map[input] }.to_not raise_error
     end
   end
 
