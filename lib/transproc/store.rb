@@ -46,6 +46,17 @@ module Transproc
       methods.key?(key)
     end
 
+    # Register a new function
+    #
+    # @example
+    #   store.register(:to_json, -> v { v.to_json })
+
+    #   store.register(:to_json) { |v| v.to_json }
+    #
+    def register(name, fn = nil, &block)
+      self.class.new(methods.merge(name => fn || block))
+    end
+
     # Imports proc(s) to the collection from another module
     #
     # @private
