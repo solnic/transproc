@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'transproc/rspec'
 
 describe Transproc::HashTransformations do
   describe '.map_keys' do
