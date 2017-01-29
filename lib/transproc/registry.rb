@@ -59,6 +59,21 @@ module Transproc
       respond_to?(key) || store.contain?(key)
     end
 
+    # Register a new function
+    #
+    # @example
+    #   store.register(:to_json, -> v { v.to_json })
+
+    #   store.register(:to_json) { |v| v.to_json }
+    #
+    def register(name, fn = nil, &block)
+      if contain?(name)
+        raise FunctionAlreadyRegisteredError, "Function #{name} is already defined"
+      end
+      @store = store.register(name, fn, &block)
+      self
+    end
+
     # Imports either a method (converted to a proc) from another module, or
     # all methods from that module.
     #

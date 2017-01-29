@@ -60,6 +60,56 @@ describe Transproc::Registry do
     end
   end
 
+  describe '.register' do
+    it { expect(foo).not_to be_contain(:increment) }
+
+    it { expect(foo).to be_contain(:prefix) }
+
+    def do_register
+      foo.register(:increment, ->(v) { v + 1 })
+    end
+
+    it 'returns self' do
+      expect(do_register).to eq foo
+    end
+
+    it 'registers function' do
+      do_register
+      expect(foo).to be_contain(:increment)
+    end
+
+    it 'preserves previous functions' do
+      do_register
+      expect(foo).to be_contain(:prefix)
+    end
+
+    it 'makes function available' do
+      do_register
+      expect(foo[:increment][2]).to eq 3
+    end
+
+    it 'rejects to overwrite existing' do
+      expect { foo.register(:prefix) {} }
+        .to raise_error(Transproc::FunctionAlreadyRegisteredError)
+    end
+
+    context 'with block argument' do
+      def do_register
+        foo.register(:increment) { |v| v + 1 }
+      end
+
+      it 'registers function' do
+        do_register
+        expect(foo).to be_contain(:increment)
+      end
+
+      it 'makes function available' do
+        do_register
+        expect(foo[:increment][2]).to eq 3
+      end
+    end
+  end
+
   describe '.import' do
     context 'a module' do
       subject(:import) { bar.import foo }
