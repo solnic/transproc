@@ -258,27 +258,22 @@ module Transproc
     #
     # @api public
     def self.unwrap(source_hash, root, selected = nil, prefix: false)
-      hash = Hash[source_hash].merge(root => Hash[source_hash[root]])
-      if nested_hash = hash[root]
+      return source_hash unless source_hash[root]
+
+      add_prefix = ->(key) do
+        combined = [root, key].join('_')
+        root.is_a?(::Symbol) ? combined.to_sym : combined
+      end
+
+      Hash[source_hash].merge(root => Hash[source_hash[root]]).tap do |hash|
+        nested_hash = hash[root]
         keys = nested_hash.keys
         keys &= selected if selected
-        new_keys = if prefix
-          keys.map do |key|
-            if root.is_a?(::Symbol)
-              [root, key].join('_').to_sym
-            else
-              [root, key].join('_')
-            end
-          end
-        else
-          keys
-        end
+        new_keys = prefix ? keys.map(&add_prefix) : keys
 
         hash.update(Hash[new_keys.zip(keys.map { |key| nested_hash.delete(key) })])
         hash.delete(root) if nested_hash.empty?
       end
-
-      hash
     end
 
     # Folds array of tuples to array of values from a specified key
