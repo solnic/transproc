@@ -24,7 +24,7 @@ module Transproc
 
       # @api private
       def inherited(subclass)
-        subclass.container(container)
+        subclass.container(@container) if defined?(@container)
       end
 
       # Get or set the container to resolve transprocs from.
@@ -47,7 +47,8 @@ module Transproc
       # @api private
       def container(container = ::Transproc::Undefined)
         if container == ::Transproc::Undefined
-          @container ||= Transformer::EMPTY_CONTAINER
+          ensure_container_presence!
+          @container
         else
           @container = container
         end
@@ -132,6 +133,13 @@ module Transproc
       # @api private
       def transformations
         @transformations ||= []
+      end
+
+      # @api private
+      def ensure_container_presence!
+        return if defined?(@container)
+        raise ArgumentError, 'Transformer function registry is empty. '\
+                             'Provide your registry via Transproc::Transformer[YourRegistry]'
       end
     end
   end

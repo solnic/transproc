@@ -1,14 +1,21 @@
 require 'spec_helper'
 
 describe Transproc::Transformer do
-  let(:klass) { Class.new(Transproc::Transformer) }
+  let(:container) { Module.new { extend Transproc::Registry } }
+  let(:klass) { Transproc::Transformer[container] }
   let(:transformer) { klass.new }
 
   describe '.container' do
-    context 'without setter argument' do
-      subject! { klass.container }
+    it { expect(klass.container).to eq container }
 
-      it { is_expected.to eq Transproc::Transformer::EMPTY_CONTAINER }
+    context 'with default transformer' do
+      let(:klass) { described_class }
+
+      it 'raises exception because there is no container by default' do
+        message = 'Transformer function registry is empty. '\
+                  'Provide your registry via Transproc::Transformer[YourRegistry]'
+        expect { klass.container }.to raise_error(ArgumentError, message)
+      end
     end
 
     context 'with setter argument' do
@@ -52,16 +59,16 @@ describe Transproc::Transformer do
   end
 
   describe '.[]' do
-    let(:container) { double('Transproc') }
+    let(:another_container) { double('Transproc') }
 
-    subject!(:klass) { Transproc::Transformer[container] }
+    subject(:subclass) { klass[another_container] }
 
-    it { expect(klass.container).to eq(container) }
+    it { expect(subclass.container).to eq(another_container) }
     it { is_expected.to be_a(::Class) }
-    it { expect(klass.ancestors).to include(Transproc::Transformer) }
+    it { expect(subclass.ancestors).to include(Transproc::Transformer) }
 
     it 'does not change super class' do
-      expect(Transproc::Transformer.container).not_to eq(container)
+      expect(klass.container).to eq(container)
     end
 
     context 'with predefined transformer' do
