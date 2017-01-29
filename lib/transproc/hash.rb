@@ -28,9 +28,9 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.map_keys(hash, fn)
-      Hash[hash].tap do |copy|
-        copy.keys.each { |key| copy[fn[key]] = copy.delete(key) }
+    def self.map_keys(source_hash, fn)
+      Hash[source_hash].tap do |hash|
+        hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
       end
     end
 
@@ -105,22 +105,10 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.map_values(hash, fn)
-      map_values!(Hash[hash], fn)
-    end
-
-    # Same as `:map_values` but mutates the hash
-    #
-    # @see HashTransformations.map_values
-    #
-    # @param [Hash]
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def self.map_values!(hash, fn)
-      hash.each { |key, value| hash[key] = fn[value] }
-      hash
+    def self.map_values(source_hash, fn)
+      Hash[source_hash].tap do |hash|
+        hash.each { |key, value| hash[key] = fn[value] }
+      end
     end
 
     # Rename all keys in a hash using provided mapping hash
@@ -135,18 +123,10 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.rename_keys(hash, mapping)
-      rename_keys!(Hash[hash], mapping)
-    end
-
-    # Same as `:rename_keys` but mutates the hash
-    #
-    # @see HashTransformations.rename_keys
-    #
-    # @api public
-    def self.rename_keys!(hash, mapping)
-      mapping.each { |k, v| hash[v] = hash.delete(k) if hash.has_key?(k) }
-      hash
+    def self.rename_keys(source_hash, mapping)
+      Hash[source_hash].tap do |hash|
+        mapping.each { |k, v| hash[v] = hash.delete(k) if hash.key?(k) }
+      end
     end
 
     # Copy all keys in a hash using provided mapping hash
@@ -161,22 +141,14 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.copy_keys(hash, mapping)
-      copy_keys!(Hash[hash], mapping)
-    end
-
-    # Same as `:copy_keys` but mutates the hash
-    #
-    # @see HashTransformations.copy_keys
-    #
-    # @api public
-    def self.copy_keys!(hash, mapping)
-      mapping.each do |original_key, new_keys|
-        [*new_keys].each do |new_key|
-          hash[new_key] = hash[original_key]
+    def self.copy_keys(source_hash, mapping)
+      Hash[source_hash].tap do |hash|
+        mapping.each do |original_key, new_keys|
+          [*new_keys].each do |new_key|
+            hash[new_key] = hash[original_key]
+          end
         end
       end
-      hash
     end
 
     # Rejects specified keys from a hash

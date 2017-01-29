@@ -57,70 +57,46 @@ describe Transproc::HashTransformations do
     it 'returns a new hash with given proc applied to values' do
       map_values = described_class.t(:map_values, ->(value) { value.strip })
 
-      input = { 'foo' => ' bar ' }
+      input = { 'foo' => ' bar ' }.freeze
       output = { 'foo' => 'bar' }
 
       expect(map_values[input]).to eql(output)
-      expect(input).to eql('foo' => ' bar ')
     end
   end
 
-  describe '.map_values!' do
-    it 'returns updated hash with given proc applied to values' do
-      map_values = described_class.t(:map_values!, ->(value) { value.strip })
-
-      input = { 'foo' => ' bar ' }
-      output = { 'foo' => 'bar' }
-
-      expect(map_values[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_values!) }
 
   describe '.rename_keys' do
     it 'returns a new hash with applied functions' do
       map = described_class.t(:rename_keys, 'foo' => :foo)
 
-      input = { 'foo' => 'bar', :bar => 'baz' }
+      input = { 'foo' => 'bar', :bar => 'baz' }.freeze
       output = { foo: 'bar', bar: 'baz' }
 
       expect(map[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar', :bar => 'baz')
     end
 
-    it "only renames keys and never creates new ones" do
+    it 'only renames keys and never creates new ones' do
       map = described_class.t(:rename_keys, 'foo' => :foo, 'bar' => :bar)
 
-      input = { 'bar' => 'baz' }
+      input = { 'bar' => 'baz' }.freeze
       output = { bar: 'baz' }
 
       expect(map[input]).to eql(output)
-      expect(input).to eql('bar' => 'baz')
     end
   end
 
-  describe '.rename_keys!' do
-    it 'returns updated hash with applied functions' do
-      map = described_class.t(:rename_keys!, 'foo' => :foo)
+  it { expect(described_class).not_to be_contain(:rename_keys!) }
 
-      input = { 'foo' => 'bar', :bar => 'baz' }
-      output = { foo: 'bar', bar: 'baz' }
-
-      map[input]
-
-      expect(input).to eql(output)
-    end
-  end
   describe '.copy_keys' do
     context 'with single destination key' do
       it 'returns a new hash with applied functions' do
         map = described_class.t(:copy_keys, 'foo' => :foo)
 
-        input = { 'foo' => 'bar', :bar => 'baz' }
+        input = { 'foo' => 'bar', :bar => 'baz' }.freeze
         output = { 'foo' => 'bar', foo: 'bar', bar: 'baz' }
 
         expect(map[input]).to eql(output)
-        expect(input).to eql('foo' => 'bar', :bar => 'baz')
       end
     end
 
@@ -128,42 +104,15 @@ describe Transproc::HashTransformations do
       it 'returns a new hash with applied functions' do
         map = described_class.t(:copy_keys, 'foo' => [:foo, :baz])
 
-        input = { 'foo' => 'bar', :bar => 'baz' }
+        input = { 'foo' => 'bar', :bar => 'baz' }.freeze
         output = { 'foo' => 'bar', foo: 'bar', baz: 'bar', bar: 'baz' }
 
         expect(map[input]).to eql(output)
-        expect(input).to eql('foo' => 'bar', :bar => 'baz')
       end
     end
   end
 
-  describe '.copy_keys!' do
-    context 'with single destination key' do
-      it 'returns updated hash with applied functions' do
-        map = described_class.t(:copy_keys!, 'foo' => :foo)
-
-        input = { 'foo' => 'bar', :bar => 'baz' }
-        output = { 'foo' => 'bar', foo: 'bar', bar: 'baz' }
-
-        map[input]
-
-        expect(input).to eql(output)
-      end
-    end
-
-    context 'with multiple destination keys' do
-      it 'returns updated hash with applied functions' do
-        map = described_class.t(:copy_keys!, 'foo' => [:foo, :baz])
-
-        input = { 'foo' => 'bar', :bar => 'baz' }
-        output = { 'foo' => 'bar', foo: 'bar', baz: 'bar', bar: 'baz' }
-
-        map[input]
-
-        expect(input).to eql(output)
-      end
-    end
-  end
+  it { expect(described_class).not_to be_contain(:copy_keys!) }
 
   describe '.map_value' do
     it 'applies function to value under specified key' do
