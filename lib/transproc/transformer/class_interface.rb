@@ -125,6 +125,8 @@ module Transproc
         transformations.reduce(:>>)
       end
 
+      private
+
       # An array containing the transformation pipeline
       #
       # @api private
