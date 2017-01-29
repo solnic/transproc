@@ -1,3 +1,3 @@
 module Transproc
-  VERSION = '0.4.2'.freeze
+  VERSION = '1.0.0'.freeze
 end
