@@ -1,40 +1,27 @@
 require 'spec_helper'
-require 'transproc/rspec'
 
 describe Transproc::HashTransformations do
   describe '.map_keys' do
     it 'returns a new hash with given proc applied to keys' do
       map_keys = described_class.t(:map_keys, ->(key) { key.strip })
 
-      input = { ' foo ' => 'bar' }
+      input = { ' foo ' => 'bar' }.freeze
       output = { 'foo' => 'bar' }
 
       expect(map_keys[input]).to eql(output)
-      expect(input).to eql(' foo ' => 'bar')
     end
   end
 
-  describe '.map_keys!' do
-    it 'returns updated hash with given proc applied to keys' do
-      map_keys = described_class.t(:map_keys!, ->(key) { key.strip })
-
-      input = { ' foo ' => 'bar' }
-      output = { 'foo' => 'bar' }
-
-      expect(map_keys[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_keys!) }
 
   describe '.symbolize_keys' do
     it 'returns a new hash with symbolized keys' do
       symbolize_keys = described_class.t(:symbolize_keys)
 
-      input = { 1 => 'bar' }
+      input = { 1 => 'bar' }.freeze
       output = { '1'.to_sym => 'bar' }
 
       expect(symbolize_keys[input]).to eql(output)
-      expect { symbolize_keys[input] }.not_to change { input }
     end
   end
 
@@ -50,111 +37,65 @@ describe Transproc::HashTransformations do
     end
   end
 
-  describe '.symbolize_keys!' do
-    it 'returns updated hash with symbolized keys' do
-      symbolize_keys = described_class.t(:symbolize_keys!)
-
-      input = { 'foo' => 'bar' }
-      output = { foo: 'bar' }
-
-      symbolize_keys[input]
-
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:symbolize_keys!) }
 
   describe '.stringify_keys' do
     it 'returns a new hash with stringified keys' do
       stringify_keys = described_class.t(:stringify_keys)
 
-      input = { foo: 'bar' }
+      input = { foo: 'bar' }.freeze
       output = { 'foo' => 'bar' }
 
       expect(stringify_keys[input]).to eql(output)
-      expect(input).to eql(foo: 'bar')
     end
   end
 
-  describe '.stringify_keys!' do
-    it 'returns a new hash with stringified keys' do
-      stringify_keys = described_class.t(:stringify_keys!)
-
-      input = { foo: 'bar' }
-      output = { 'foo' => 'bar' }
-
-      expect(stringify_keys[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
+  it { expect(described_class).not_to be_contain(:stringify_keys!) }
 
   describe '.map_values' do
     it 'returns a new hash with given proc applied to values' do
       map_values = described_class.t(:map_values, ->(value) { value.strip })
 
-      input = { 'foo' => ' bar ' }
+      input = { 'foo' => ' bar ' }.freeze
       output = { 'foo' => 'bar' }
 
       expect(map_values[input]).to eql(output)
-      expect(input).to eql('foo' => ' bar ')
     end
   end
 
-  describe '.map_values!' do
-    it 'returns updated hash with given proc applied to values' do
-      map_values = described_class.t(:map_values!, ->(value) { value.strip })
-
-      input = { 'foo' => ' bar ' }
-      output = { 'foo' => 'bar' }
-
-      expect(map_values[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_values!) }
 
   describe '.rename_keys' do
     it 'returns a new hash with applied functions' do
       map = described_class.t(:rename_keys, 'foo' => :foo)
 
-      input = { 'foo' => 'bar', :bar => 'baz' }
+      input = { 'foo' => 'bar', :bar => 'baz' }.freeze
       output = { foo: 'bar', bar: 'baz' }
 
       expect(map[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar', :bar => 'baz')
     end
 
-    it "only renames keys and never creates new ones" do
+    it 'only renames keys and never creates new ones' do
       map = described_class.t(:rename_keys, 'foo' => :foo, 'bar' => :bar)
 
-      input = { 'bar' => 'baz' }
+      input = { 'bar' => 'baz' }.freeze
       output = { bar: 'baz' }
 
       expect(map[input]).to eql(output)
-      expect(input).to eql('bar' => 'baz')
     end
   end
 
-  describe '.rename_keys!' do
-    it 'returns updated hash with applied functions' do
-      map = described_class.t(:rename_keys!, 'foo' => :foo)
+  it { expect(described_class).not_to be_contain(:rename_keys!) }
 
-      input = { 'foo' => 'bar', :bar => 'baz' }
-      output = { foo: 'bar', bar: 'baz' }
-
-      map[input]
-
-      expect(input).to eql(output)
-    end
-  end
   describe '.copy_keys' do
     context 'with single destination key' do
       it 'returns a new hash with applied functions' do
         map = described_class.t(:copy_keys, 'foo' => :foo)
 
-        input = { 'foo' => 'bar', :bar => 'baz' }
+        input = { 'foo' => 'bar', :bar => 'baz' }.freeze
         output = { 'foo' => 'bar', foo: 'bar', bar: 'baz' }
 
         expect(map[input]).to eql(output)
-        expect(input).to eql('foo' => 'bar', :bar => 'baz')
       end
     end
 
@@ -162,202 +103,127 @@ describe Transproc::HashTransformations do
       it 'returns a new hash with applied functions' do
         map = described_class.t(:copy_keys, 'foo' => [:foo, :baz])
 
-        input = { 'foo' => 'bar', :bar => 'baz' }
+        input = { 'foo' => 'bar', :bar => 'baz' }.freeze
         output = { 'foo' => 'bar', foo: 'bar', baz: 'bar', bar: 'baz' }
 
         expect(map[input]).to eql(output)
-        expect(input).to eql('foo' => 'bar', :bar => 'baz')
       end
     end
   end
 
-  describe '.copy_keys!' do
-    context 'with single destination key' do
-      it 'returns updated hash with applied functions' do
-        map = described_class.t(:copy_keys!, 'foo' => :foo)
-
-        input = { 'foo' => 'bar', :bar => 'baz' }
-        output = { 'foo' => 'bar', foo: 'bar', bar: 'baz' }
-
-        map[input]
-
-        expect(input).to eql(output)
-      end
-    end
-
-    context 'with multiple destination keys' do
-      it 'returns updated hash with applied functions' do
-        map = described_class.t(:copy_keys!, 'foo' => [:foo, :baz])
-
-        input = { 'foo' => 'bar', :bar => 'baz' }
-        output = { 'foo' => 'bar', foo: 'bar', baz: 'bar', bar: 'baz' }
-
-        map[input]
-
-        expect(input).to eql(output)
-      end
-    end
-  end
+  it { expect(described_class).not_to be_contain(:copy_keys!) }
 
   describe '.map_value' do
     it 'applies function to value under specified key' do
       transformation =
         described_class.t(:map_value, :user, described_class.t(:symbolize_keys))
 
-      input = { user: { 'name' => 'Jane' } }
+      input = { user: { 'name' => 'Jane' }.freeze }.freeze
       output = { user: { name: 'Jane' } }
 
       expect(transformation[input]).to eql(output)
-      expect(input).to eql(user: { 'name' => 'Jane' })
     end
   end
 
-  describe '.map_value!' do
-    it 'applies function to value under specified key' do
-      transformation =
-        described_class
-        .t(:map_value!, :user, described_class.t(:symbolize_keys))
-
-      input = { user: { 'name' => 'Jane' } }
-      output = { user: { name: 'Jane' } }
-
-      transformation[input]
-
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_value!) }
 
   describe '.nest' do
     it 'returns new hash with keys nested under a new key' do
       nest = described_class.t(:nest, :baz, ['foo'])
 
-      input = { 'foo' => 'bar' }
+      input = { 'foo' => 'bar' }.freeze
       output = { baz: { 'foo' => 'bar' } }
 
       expect(nest[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
-
-  describe '.nest!' do
-    it 'returns new hash with keys nested under a new key' do
-      nest = described_class.t(:nest!, :baz, %w(one two not-here))
-
-      input = { 'foo' => 'bar', 'one' => nil, 'two' => false }
-      output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
-
-      nest[input]
-
-      expect(input).to eql(output)
     end
 
     it 'returns new hash with keys nested under the existing key' do
-      nest = described_class.t(:nest!, :baz, ['two'])
-
-      input  = { 'foo' => 'bar', baz: { 'one' => nil }, 'two' => false }
-      output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
-
-      nest[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'rewrites the existing key if its value is not a hash' do
-      nest = described_class.t(:nest!, :baz, ['two'])
-
-      input  = { 'foo' => 'bar', baz: 'one', 'two' => false }
-      output = { 'foo' => 'bar', baz: { 'two' => false } }
-
-      nest[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'returns new hash with an empty hash under a new key when nest-keys are missing' do
-      nest = described_class.t(:nest!, :baz, ['foo'])
-
-      input = { 'bar' => 'foo' }
-      output = { 'bar' => 'foo', baz: {} }
-
-      nest[input]
-
-      expect(input).to eql(output)
-    end
-  end
-
-  describe '.unwrap!' do
-    it 'returns updated hash with nested keys lifted to the root' do
-      unwrap = described_class.t(:unwrap!, 'wrapped', %w(one))
-
-      input = { 'foo' => 'bar', 'wrapped' => { 'one' => nil, 'two' => false } }
-      output = { 'foo' => 'bar', 'one' => nil, 'wrapped' => { 'two' => false } }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'lifts all keys if none are passed' do
-      unwrap = described_class.t(:unwrap!, 'wrapped')
-
-      input = { 'wrapped' => { 'one' => nil, 'two' => false } }
-      output = { 'one' => nil, 'two' => false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'ignores unknown keys' do
-      unwrap = described_class.t(:unwrap!, 'wrapped', %w(one two three))
-
-      input = { 'wrapped' => { 'one' => nil, 'two' => false } }
-      output = { 'one' => nil, 'two' => false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'prefixes unwrapped keys and retains root string type if prefix option is truthy' do
-      unwrap = described_class.t(:unwrap!, 'wrapped', prefix: true)
-
-      input = { 'wrapped' => { one: nil, two: false } }
-      output = { 'wrapped_one' => nil, 'wrapped_two' => false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'prefixes unwrapped keys and retains root type if prefix option is truthy' do
-      unwrap = described_class.t(:unwrap!, :wrapped, prefix: true)
-
-      input = { wrapped: { 'one' => nil, 'two' => false } }
-      output = { wrapped_one: nil, wrapped_two: false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-  end
-
-  describe '.unwrap' do
-    it 'returns new hash with nested keys lifted to the root' do
-      unwrap = described_class.t(:unwrap, 'wrapped')
+      nest = described_class.t(:nest, :baz, ['two'])
 
       input = {
         'foo' => 'bar',
-        'wrapped' => { 'one' => nil, 'two' => false }
+        baz: { 'one' => nil }.freeze,
+        'two' => false
       }.freeze
 
-      expect(unwrap[input]).to eql(
-        'foo' => 'bar',
-        'one' => nil,
-        'two' => false
-      )
+      output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
+
+      expect(nest[input]).to eql(output)
+    end
+
+    it 'rewrites the existing key if its value is not a hash' do
+      nest = described_class.t(:nest, :baz, ['two'])
+
+      input  = { 'foo' => 'bar', baz: 'one', 'two' => false }.freeze
+      output = { 'foo' => 'bar', baz: { 'two' => false } }
+
+      expect(nest[input]).to eql(output)
+    end
+
+    it 'returns new hash with an empty hash under a new key when nest-keys are missing' do
+      nest = described_class.t(:nest, :baz, ['foo'])
+
+      input = { 'bar' => 'foo' }.freeze
+      output = { 'bar' => 'foo', baz: {} }
+
+      expect(nest[input]).to eql(output)
     end
   end
+
+  it { expect(described_class).not_to be_contain(:nest!) }
+
+  describe '.unwrap' do
+    it 'returns new hash with nested keys lifted to the root' do
+      unwrap = described_class.t(:unwrap, 'wrapped', %w(one))
+
+      input = {
+        'foo' => 'bar',
+        'wrapped' => { 'one' => nil, 'two' => false }.freeze
+      }.freeze
+
+      output = { 'foo' => 'bar', 'one' => nil, 'wrapped' => { 'two' => false } }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'lifts all keys if none are passed' do
+      unwrap = described_class.t(:unwrap, 'wrapped')
+
+      input = { 'wrapped' => { 'one' => nil, 'two' => false }.freeze }.freeze
+      output = { 'one' => nil, 'two' => false }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'ignores unknown keys' do
+      unwrap = described_class.t(:unwrap, 'wrapped', %w(one two three))
+
+      input = { 'wrapped' => { 'one' => nil, 'two' => false }.freeze }.freeze
+      output = { 'one' => nil, 'two' => false }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'prefixes unwrapped keys and retains root string type if prefix option is truthy' do
+      unwrap = described_class.t(:unwrap, 'wrapped', prefix: true)
+
+      input = { 'wrapped' => { one: nil, two: false }.freeze }.freeze
+      output = { 'wrapped_one' => nil, 'wrapped_two' => false }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'prefixes unwrapped keys and retains root type if prefix option is truthy' do
+      unwrap = described_class.t(:unwrap, :wrapped, prefix: true)
+
+      input = { wrapped: { 'one' => nil, 'two' => false }.freeze }.freeze
+      output = { wrapped_one: nil, wrapped_two: false }
+
+      expect(unwrap[input]).to eql(output)
+    end
+  end
+
+  it { expect(described_class).not_to be_contain(:unwrap!) }
 
   describe 'nested transform' do
     it 'applies functions to nested hashes' do
@@ -389,89 +255,61 @@ describe Transproc::HashTransformations do
     end
   end
 
-  describe '.reject_keys!' do
-    it 'returns an updated hash with rejected keys' do
+  describe '.reject_keys' do
+    it 'returns a new hash with rejected keys' do
       reject_keys = described_class.t(:reject_keys, [:name, :age])
 
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
+      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }.freeze
       output = { email: 'jane@doe.org' }
 
       expect(reject_keys[input]).to eql(output)
     end
   end
 
-  describe '.reject_keys' do
+  it { expect(described_class).not_to be_contain(:reject_keys!) }
+
+  describe '.accept_keys' do
     it 'returns a new hash with rejected keys' do
-      reject_keys = described_class.t(:reject_keys, [:name, :age])
-
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
-      output = { email: 'jane@doe.org' }
-
-      expect(reject_keys[input]).to eql(output)
-      expect(input).to eql(name: 'Jane', email: 'jane@doe.org', age: 21)
-    end
-  end
-
-  describe '.accept_keys!' do
-    it 'returns an updated hash with accepted keys' do
       accept_keys = described_class.t(:accept_keys, [:age])
 
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
+      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }.freeze
       output = { age: 21 }
 
       expect(accept_keys[input]).to eql(output)
     end
   end
 
-  describe '.reject_keys' do
-    it 'returns a new hash with rejected keys' do
-      accept_keys = described_class.t(:accept_keys, [:age])
-
-      input = { name: 'Jane', email: 'jane@doe.org', age: 21 }
-      output = { age: 21 }
-
-      expect(accept_keys[input]).to eql(output)
-      expect(input).to eql(name: 'Jane', email: 'jane@doe.org', age: 21)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:accept_keys!) }
 
   describe '.fold' do
     let(:input) do
       {
         name: 'Jane',
-        tasks: [{ title: 'be nice', priority: 1 }, { title: 'sleep well' }]
-      }
+        tasks: [
+          { title: 'be nice', priority: 1 }.freeze,
+          { title: 'sleep well' }.freeze
+        ].freeze
+      }.freeze
     end
 
-    it_behaves_like :transforming_immutable_data do
-      let(:arguments) { [:fold, :tasks, :title] }
-      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
+    it 'returns a new hash with folded values' do
+      fold = described_class.t(:fold, :tasks, :title)
+
+      output = { name: 'Jane', tasks: ['be nice', 'sleep well'] }
+
+      expect(fold[input]).to eql(output)
     end
 
-    it_behaves_like :transforming_immutable_data do
-      let(:arguments) { [:fold, :tasks, :priority] }
-      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
+    it 'uses nil if there was not such attribute' do
+      fold = described_class.t(:fold, :tasks, :priority)
+
+      output = { name: 'Jane', tasks: [1, nil] }
+
+      expect(fold[input]).to eql(output)
     end
   end
 
-  describe '.fold!' do
-    let(:input) do
-      {
-        name: 'Jane',
-        tasks: [{ title: 'be nice', priority: 1 }, { title: 'sleep well' }]
-      }
-    end
-
-    it_behaves_like :mutating_input_data do
-      let(:arguments) { [:fold!, :tasks, :title] }
-      let(:output)    { { name: 'Jane', tasks: ['be nice', 'sleep well'] } }
-    end
-
-    it_behaves_like :mutating_input_data do
-      let(:arguments) { [:fold!, :tasks, :priority] }
-      let(:output)    { { name: 'Jane', tasks: [1, nil] } }
-    end
-  end
+  it { expect(described_class).not_to be_contain(:fold!) }
 
   describe '.split' do
     let(:input) do

@@ -28,18 +28,10 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.map_keys(hash, fn)
-      map_keys!(Hash[hash], fn)
-    end
-
-    # Same as `:map_keys` but mutates the hash
-    #
-    # @see HashTransformations.map_keys
-    #
-    # @api public
-    def self.map_keys!(hash, fn)
-      hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
-      hash
+    def self.map_keys(source_hash, fn)
+      source_hash.dup.tap do |hash|
+        hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
+      end
     end
 
     # Symbolize all keys in a hash
@@ -54,16 +46,7 @@ module Transproc
     #
     # @api public
     def self.symbolize_keys(hash)
-      symbolize_keys!(Hash[hash])
-    end
-
-    # Same as `:symbolize_keys` but mutates the hash
-    #
-    # @see HashTransformations.symbolize_keys!
-    #
-    # @api public
-    def self.symbolize_keys!(hash)
-      map_keys!(hash, Coercions[:to_symbol].fn)
+      map_keys(hash, Coercions[:to_symbol].fn)
     end
 
     # Symbolize keys in a hash recursively
@@ -108,16 +91,7 @@ module Transproc
     #
     # @api public
     def self.stringify_keys(hash)
-      stringify_keys!(Hash[hash])
-    end
-
-    # Same as `:stringify_keys` but mutates the hash
-    #
-    # @see HashTransformations.stringify_keys
-    #
-    # @api public
-    def self.stringify_keys!(hash)
-      map_keys!(hash, Coercions[:to_string].fn)
+      map_keys(hash, Coercions[:to_string].fn)
     end
 
     # Map all values in a hash using transformation function
@@ -131,22 +105,10 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.map_values(hash, fn)
-      map_values!(Hash[hash], fn)
-    end
-
-    # Same as `:map_values` but mutates the hash
-    #
-    # @see HashTransformations.map_values
-    #
-    # @param [Hash]
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def self.map_values!(hash, fn)
-      hash.each { |key, value| hash[key] = fn[value] }
-      hash
+    def self.map_values(source_hash, fn)
+      source_hash.dup.tap do |hash|
+        hash.each { |key, value| hash[key] = fn[value] }
+      end
     end
 
     # Rename all keys in a hash using provided mapping hash
@@ -155,24 +117,16 @@ module Transproc
     #   Transproc(:rename_keys, user_name: :name)[user_name: 'Jane']
     #   # => {:name => "Jane"}
     #
-    # @param [Hash] hash The input hash
+    # @param [Hash] source_hash The input hash
     # @param [Hash] mapping The key-rename mapping
     #
     # @return [Hash]
     #
     # @api public
-    def self.rename_keys(hash, mapping)
-      rename_keys!(Hash[hash], mapping)
-    end
-
-    # Same as `:rename_keys` but mutates the hash
-    #
-    # @see HashTransformations.rename_keys
-    #
-    # @api public
-    def self.rename_keys!(hash, mapping)
-      mapping.each { |k, v| hash[v] = hash.delete(k) if hash.has_key?(k) }
-      hash
+    def self.rename_keys(source_hash, mapping)
+      source_hash.dup.tap do |hash|
+        mapping.each { |k, v| hash[v] = hash.delete(k) if hash.key?(k) }
+      end
     end
 
     # Copy all keys in a hash using provided mapping hash
@@ -181,28 +135,20 @@ module Transproc
     #   Transproc(:copy_keys, user_name: :name)[user_name: 'Jane']
     #   # => {:user_name => "Jane", :name => "Jane"}
     #
-    # @param [Hash] hash The input hash
+    # @param [Hash] source_hash The input hash
     # @param [Hash] mapping The key-copy mapping
     #
     # @return [Hash]
     #
     # @api public
-    def self.copy_keys(hash, mapping)
-      copy_keys!(Hash[hash], mapping)
-    end
-
-    # Same as `:copy_keys` but mutates the hash
-    #
-    # @see HashTransformations.copy_keys
-    #
-    # @api public
-    def self.copy_keys!(hash, mapping)
-      mapping.each do |original_key, new_keys|
-        [*new_keys].each do |new_key|
-          hash[new_key] = hash[original_key]
+    def self.copy_keys(source_hash, mapping)
+      source_hash.dup.tap do |hash|
+        mapping.each do |original_key, new_keys|
+          [*new_keys].each do |new_key|
+            hash[new_key] = hash[original_key]
+          end
         end
       end
-      hash
     end
 
     # Rejects specified keys from a hash
@@ -218,15 +164,6 @@ module Transproc
     #
     # @api public
     def self.reject_keys(hash, keys)
-      reject_keys!(Hash[hash], keys)
-    end
-
-    # Same as `:reject_keys` but mutates the hash
-    #
-    # @see HashTransformations.reject_keys
-    #
-    # @api public
-    def self.reject_keys!(hash, keys)
       hash.reject { |k, _| keys.include?(k) }
     end
 
@@ -243,16 +180,7 @@ module Transproc
     #
     # @api public
     def self.accept_keys(hash, keys)
-      accept_keys!(Hash[hash], keys)
-    end
-
-    # Same as `:accept_keys` but mutates the hash
-    #
-    # @see HashTransformations.accept
-    #
-    # @api public
-    def self.accept_keys!(hash, keys)
-      reject_keys!(hash, hash.keys - keys)
+      reject_keys(hash, hash.keys - keys)
     end
 
     # Map a key in a hash with the provided transformation function
@@ -270,15 +198,6 @@ module Transproc
       hash.merge(key => fn[hash[key]])
     end
 
-    # Same as `:map_value` but mutates the hash
-    #
-    # @see HashTransformations.map_value
-    #
-    # @api public
-    def self.map_value!(hash, key, fn)
-      hash.update(key => fn[hash[key]])
-    end
-
     # Nest values from specified keys under a new key
     #
     # @example
@@ -290,25 +209,17 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.nest(hash, key, keys)
-      nest!(Hash[hash], key, keys)
-    end
+    def self.nest(source_hash, root, keys)
+      nest_keys = source_hash.keys & keys
 
-    # Same as `:nest` but mutates the hash
-    #
-    # @see HashTransformations.nest
-    #
-    # @api public
-    def self.nest!(hash, root, keys)
-      nest_keys = hash.keys & keys
-
-      if nest_keys.size > 0
+      if !nest_keys.empty?
+        hash = source_hash.dup
         child = Hash[nest_keys.zip(nest_keys.map { |key| hash.delete(key) })]
         old_nest = hash[root]
         new_nest = old_nest.is_a?(Hash) ? old_nest.merge(child) : child
-        hash.update(root => new_nest)
+        hash.merge(root => new_nest)
       else
-        hash.update(root => {})
+        source_hash.merge(root => {})
       end
     end
 
@@ -318,9 +229,9 @@ module Transproc
     #   Transproc(:unwrap, :address, [:street, :zipcode])[address: { street: 'Street', zipcode: '123' }]
     #   # => {street: "Street", zipcode: "123"}
     #
-    # @param [Hash] hash
+    # @param [Hash] source_hash
     # @param [Mixed] root The root key to unwrap values from
-    # @param [Array] keys The keys that should be unwrapped (optional)
+    # @param [Array] selected The keys that should be unwrapped (optional)
     # @param [Hash] options hash of options (optional)
     # @option options [Boolean] :prefix if true, unwrapped keys will be prefixed
     #                           with the root key followed by an underscore (_)
@@ -328,37 +239,23 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.unwrap(hash, root, keys = nil, prefix: false)
-      copy = Hash[hash].merge(root => Hash[hash[root]])
-      unwrap!(copy, root, keys, prefix: prefix)
-    end
+    def self.unwrap(source_hash, root, selected = nil, prefix: false)
+      return source_hash unless source_hash[root]
 
-    # Same as `:unwrap` but mutates the hash
-    #
-    # @see HashTransformations.unwrap
-    #
-    # @api public
-    def self.unwrap!(hash, root, selected = nil, prefix: false)
-      if nested_hash = hash[root]
+      add_prefix = ->(key) do
+        combined = [root, key].join('_')
+        root.is_a?(::Symbol) ? combined.to_sym : combined
+      end
+
+      source_hash.merge(root => source_hash[root].dup).tap do |hash|
+        nested_hash = hash[root]
         keys = nested_hash.keys
         keys &= selected if selected
-        new_keys = if prefix
-          keys.map do |key|
-            if root.is_a?(::Symbol)
-              [root, key].join('_').to_sym
-            else
-              [root, key].join('_')
-            end
-          end
-        else
-          keys
-        end
+        new_keys = prefix ? keys.map(&add_prefix) : keys
 
         hash.update(Hash[new_keys.zip(keys.map { |key| nested_hash.delete(key) })])
         hash.delete(root) if nested_hash.empty?
       end
-
-      hash
     end
 
     # Folds array of tuples to array of values from a specified key
@@ -381,16 +278,7 @@ module Transproc
     #
     # @api public
     def self.fold(hash, key, tuple_key)
-      fold!(Hash[hash], key, tuple_key)
-    end
-
-    # Same as `:fold` but mutates the hash
-    #
-    # @see HashTransformations.fold
-    #
-    # @api public
-    def self.fold!(hash, key, tuple_key)
-      hash.update(key => ArrayTransformations.extract_key(hash[key], tuple_key))
+      hash.merge(key => ArrayTransformations.extract_key(hash[key], tuple_key))
     end
 
     # Splits hash to array by all values from a specified key
@@ -493,10 +381,10 @@ module Transproc
     #
     # @api public
     def self.deep_merge(hash, other)
-      Hash[hash].merge(other) do |_, original_value, new_value|
+      hash.merge(other) do |_, original_value, new_value|
         if original_value.respond_to?(:to_hash) &&
            new_value.respond_to?(:to_hash)
-          deep_merge(Hash[original_value], Hash[new_value])
+          deep_merge(original_value.dup, new_value.dup)
         else
           new_value
         end

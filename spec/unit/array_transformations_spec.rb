@@ -7,45 +7,25 @@ describe Transproc::ArrayTransformations do
     it 'extracts values by key from all hashes' do
       extract_key = described_class.t(:extract_key, 'name')
 
-      original = [
-        { 'name' => 'Alice', 'role' => 'sender' },
-        { 'name' => 'Bob', 'role' => 'receiver' },
-        { 'role' => 'listener' }
-      ]
-
-      input = original
-
-      output = ['Alice', 'Bob', nil]
-
-      expect(extract_key[input]).to eql(output)
-      expect(input).to eql(original)
-    end
-  end
-
-  describe '.extract_key!' do
-    it 'extracts values by key from all hashes' do
-      extract_key = described_class.t(:extract_key!, 'name')
-
       input = [
         { 'name' => 'Alice', 'role' => 'sender' },
         { 'name' => 'Bob', 'role' => 'receiver' },
         { 'role' => 'listener' }
-      ]
+      ].freeze
 
       output = ['Alice', 'Bob', nil]
 
       expect(extract_key[input]).to eql(output)
-      expect(input).to eql(output)
     end
   end
+
+  it { expect(described_class).not_to be_contain(:extract_key!) }
 
   describe '.insert_key' do
     it 'wraps values to tuples with given key' do
       insert_key = described_class.t(:insert_key, 'name')
 
-      original = ['Alice', 'Bob', nil]
-
-      input = original
+      input = ['Alice', 'Bob', nil].freeze
 
       output = [
         { 'name' => 'Alice' },
@@ -54,36 +34,16 @@ describe Transproc::ArrayTransformations do
       ]
 
       expect(insert_key[input]).to eql(output)
-      expect(input).to eql(original)
     end
   end
 
-  describe '.insert_key!' do
-    it 'wraps values to tuples with given key' do
-      insert_key = described_class.t(:insert_key!, 'name')
-
-      original = ['Alice', 'Bob', nil]
-
-      input = original
-
-      output = [
-        { 'name' => 'Alice' },
-        { 'name' => 'Bob' },
-        { 'name' => nil }
-      ]
-
-      expect(insert_key[input]).to eql(output)
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:insert_key!) }
 
   describe '.add_keys' do
     it 'returns a new array with missed keys added to tuples' do
       add_keys = described_class.t(:add_keys, [:foo, :bar, :baz])
 
-      original = [{ foo: 'bar' }, { bar: 'baz' }]
-
-      input = original
+      input = [{ foo: 'bar' }, { bar: 'baz' }].freeze
 
       output = [
         { foo: 'bar', bar: nil, baz: nil },
@@ -91,38 +51,19 @@ describe Transproc::ArrayTransformations do
       ]
 
       expect(add_keys[input]).to eql(output)
-      expect(input).to eql(original)
     end
   end
 
-  describe '.add_keys!' do
-    it 'adds missed keys to tuples' do
-      add_keys = described_class.t(:add_keys!, [:foo, :bar, :baz])
-
-      original = [{ foo: 'bar' }, { bar: 'baz' }]
-
-      input = original
-
-      output = [
-        { foo: 'bar', bar: nil, baz: nil },
-        { foo: nil, bar: 'baz', baz: nil }
-      ]
-
-      expect(add_keys[input]).to eql(output)
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:add_keys!) }
 
   describe '.map_array' do
     it 'applies funtions to all values' do
       map = described_class.t(:map_array, hashes[:symbolize_keys])
 
-      original = [
-        { 'name' => 'Jane', 'title' => 'One' },
-        { 'name' => 'Jane', 'title' => 'Two' }
-      ]
-
-      input = original
+      input = [
+        { 'name' => 'Jane', 'title' => 'One' }.freeze,
+        { 'name' => 'Jane', 'title' => 'Two' }.freeze
+      ].freeze
 
       output = [
         { name: 'Jane', title: 'One' },
@@ -130,37 +71,18 @@ describe Transproc::ArrayTransformations do
       ]
 
       expect(map[input]).to eql(output)
-      expect(input).to eql(original)
     end
 
     it 'handles huge arrays' do
       map = described_class.t(:map_array, hashes[:symbolize_keys])
 
-      input = 138706.times.map { |i| { 'key' => i } }
+      input = Array.new(138_706) { |i| { 'key' => i } }
 
-      expect { map[input] }.to_not raise_error(SystemStackError, /stack level too deep/)
+      expect { map[input] }.to_not raise_error(SystemStackError, %r{stack level too deep})
     end
   end
 
-  describe '.map_array!' do
-    it 'updates array with the result of the function applied to each value' do
-      map = described_class.t(:map_array!, hashes[:symbolize_keys])
-
-      input = [
-        { 'name' => 'Jane', 'title' => 'One' },
-        { 'name' => 'Jane', 'title' => 'Two' }
-      ]
-
-      output = [
-        { name: 'Jane', title: 'One' },
-        { name: 'Jane', title: 'Two' }
-      ]
-
-      map[input]
-
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_array!) }
 
   describe '.wrap' do
     it 'returns a new array with wrapped hashes' do
