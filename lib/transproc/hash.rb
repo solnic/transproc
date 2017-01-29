@@ -247,9 +247,9 @@ module Transproc
     #   Transproc(:unwrap, :address, [:street, :zipcode])[address: { street: 'Street', zipcode: '123' }]
     #   # => {street: "Street", zipcode: "123"}
     #
-    # @param [Hash] hash
+    # @param [Hash] source_hash
     # @param [Mixed] root The root key to unwrap values from
-    # @param [Array] keys The keys that should be unwrapped (optional)
+    # @param [Array] selected The keys that should be unwrapped (optional)
     # @param [Hash] options hash of options (optional)
     # @option options [Boolean] :prefix if true, unwrapped keys will be prefixed
     #                           with the root key followed by an underscore (_)
@@ -257,17 +257,8 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.unwrap(hash, root, keys = nil, prefix: false)
-      copy = Hash[hash].merge(root => Hash[hash[root]])
-      unwrap!(copy, root, keys, prefix: prefix)
-    end
-
-    # Same as `:unwrap` but mutates the hash
-    #
-    # @see HashTransformations.unwrap
-    #
-    # @api public
-    def self.unwrap!(hash, root, selected = nil, prefix: false)
+    def self.unwrap(source_hash, root, selected = nil, prefix: false)
+      hash = Hash[source_hash].merge(root => Hash[source_hash[root]])
       if nested_hash = hash[root]
         keys = nested_hash.keys
         keys &= selected if selected

@@ -173,79 +173,58 @@ describe Transproc::HashTransformations do
 
   it { expect(described_class).not_to be_contain(:nest!) }
 
-  describe '.unwrap!' do
-    it 'returns updated hash with nested keys lifted to the root' do
-      unwrap = described_class.t(:unwrap!, 'wrapped', %w(one))
-
-      input = { 'foo' => 'bar', 'wrapped' => { 'one' => nil, 'two' => false } }
-      output = { 'foo' => 'bar', 'one' => nil, 'wrapped' => { 'two' => false } }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'lifts all keys if none are passed' do
-      unwrap = described_class.t(:unwrap!, 'wrapped')
-
-      input = { 'wrapped' => { 'one' => nil, 'two' => false } }
-      output = { 'one' => nil, 'two' => false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'ignores unknown keys' do
-      unwrap = described_class.t(:unwrap!, 'wrapped', %w(one two three))
-
-      input = { 'wrapped' => { 'one' => nil, 'two' => false } }
-      output = { 'one' => nil, 'two' => false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'prefixes unwrapped keys and retains root string type if prefix option is truthy' do
-      unwrap = described_class.t(:unwrap!, 'wrapped', prefix: true)
-
-      input = { 'wrapped' => { one: nil, two: false } }
-      output = { 'wrapped_one' => nil, 'wrapped_two' => false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-
-    it 'prefixes unwrapped keys and retains root type if prefix option is truthy' do
-      unwrap = described_class.t(:unwrap!, :wrapped, prefix: true)
-
-      input = { wrapped: { 'one' => nil, 'two' => false } }
-      output = { wrapped_one: nil, wrapped_two: false }
-
-      unwrap[input]
-
-      expect(input).to eql(output)
-    end
-  end
-
   describe '.unwrap' do
     it 'returns new hash with nested keys lifted to the root' do
-      unwrap = described_class.t(:unwrap, 'wrapped')
+      unwrap = described_class.t(:unwrap, 'wrapped', %w(one))
 
       input = {
         'foo' => 'bar',
-        'wrapped' => { 'one' => nil, 'two' => false }
+        'wrapped' => { 'one' => nil, 'two' => false }.freeze
       }.freeze
 
-      expect(unwrap[input]).to eql(
-        'foo' => 'bar',
-        'one' => nil,
-        'two' => false
-      )
+      output = { 'foo' => 'bar', 'one' => nil, 'wrapped' => { 'two' => false } }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'lifts all keys if none are passed' do
+      unwrap = described_class.t(:unwrap, 'wrapped')
+
+      input = { 'wrapped' => { 'one' => nil, 'two' => false }.freeze }.freeze
+      output = { 'one' => nil, 'two' => false }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'ignores unknown keys' do
+      unwrap = described_class.t(:unwrap, 'wrapped', %w(one two three))
+
+      input = { 'wrapped' => { 'one' => nil, 'two' => false }.freeze }.freeze
+      output = { 'one' => nil, 'two' => false }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'prefixes unwrapped keys and retains root string type if prefix option is truthy' do
+      unwrap = described_class.t(:unwrap, 'wrapped', prefix: true)
+
+      input = { 'wrapped' => { one: nil, two: false }.freeze }.freeze
+      output = { 'wrapped_one' => nil, 'wrapped_two' => false }
+
+      expect(unwrap[input]).to eql(output)
+    end
+
+    it 'prefixes unwrapped keys and retains root type if prefix option is truthy' do
+      unwrap = described_class.t(:unwrap, :wrapped, prefix: true)
+
+      input = { wrapped: { 'one' => nil, 'two' => false }.freeze }.freeze
+      output = { wrapped_one: nil, wrapped_two: false }
+
+      expect(unwrap[input]).to eql(output)
     end
   end
+
+  it { expect(described_class).not_to be_contain(:unwrap!) }
 
   describe 'nested transform' do
     it 'applies functions to nested hashes' do
