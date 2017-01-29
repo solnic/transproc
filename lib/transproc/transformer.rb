@@ -44,8 +44,6 @@ module Transproc
   #
   # @api public
   class Transformer
-    EMPTY_CONTAINER = Module.new { extend Transproc::Registry }.freeze
-
     extend ClassInterface
 
     # Execute the transformation pipeline with the given input.
