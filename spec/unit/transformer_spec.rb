@@ -36,6 +36,37 @@ describe Transproc::Transformer do
     end
   end
 
+  describe 'inheritance' do
+    let(:container) do
+      Module.new do
+        extend Transproc::Registry
+
+        def self.arbitrary(value, fn)
+          fn[value]
+        end
+      end
+    end
+    let(:superclass) do
+      Class.new(Transproc::Transformer[container]) do
+        arbitrary ->(v) { v + 1 }
+      end
+    end
+    let(:subclass) do
+      Class.new(superclass) do
+        arbitrary ->(v) { v * 2 }
+      end
+    end
+
+    it 'inherits container from superclass' do
+      expect(subclass.container).to eq superclass.container
+    end
+
+    it 'combines transprocs from every level of inheritance' do
+      expect(superclass.new.call(2)).to eq 3
+      expect(subclass.new.call(2)).to eq 6
+    end
+  end
+
   describe '.t' do
     let(:container) do
       Module.new do

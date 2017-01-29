@@ -25,6 +25,7 @@ module Transproc
       # @api private
       def inherited(subclass)
         subclass.container(container)
+        subclass.transformations << transproc unless transformations.empty?
       end
 
       # Get or set the container to resolve transprocs from.
@@ -98,13 +99,14 @@ module Transproc
         transformations.reduce(:>>)
       end
 
-      private
       # An array containing the transformation pipeline
       #
       # @api private
       def transformations
         @transformations ||= []
       end
+
+      private
 
       # Create and return a new instance of Transproc::Transformer
       # evaluating the block argument as the class body
