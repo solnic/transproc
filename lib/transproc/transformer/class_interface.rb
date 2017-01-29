@@ -25,7 +25,6 @@ module Transproc
       # @api private
       def inherited(subclass)
         subclass.container(container)
-        subclass.transformations << transproc unless transformations.empty?
       end
 
       # Get or set the container to resolve transprocs from.
@@ -75,9 +74,9 @@ module Transproc
       #
       # @api public
       def define(&block)
-        klass = Class.new(self)
-        klass.instance_eval(&block) if block_given?
-        klass.transproc
+        return transproc unless block_given?
+
+        Class.new(self).tap { |klass| klass.instance_eval(&block) }.transproc
       end
 
       # Get a transformation from the container,
@@ -108,7 +107,7 @@ module Transproc
       # @api private
       def method_missing(method, *args, &block)
         if container.contain?(method)
-          args.push(create(container, &block).transproc) if block_given?
+          args.push(define(&block)) if block_given?
           transformations << t(method, *args)
         else
           super
@@ -130,18 +129,6 @@ module Transproc
       # @api private
       def transformations
         @transformations ||= []
-      end
-
-      private
-
-      # Create and return a new instance of Transproc::Transformer
-      # evaluating the block argument as the class body
-      #
-      # @api private
-      def create(container, &block)
-        klass = self[container]
-        klass.instance_eval(&block)
-        klass
       end
     end
   end

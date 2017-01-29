@@ -47,23 +47,9 @@ describe Transproc::Transformer do
       expect(subclass.container).to eq superclass.container
     end
 
-    it 'combines transprocs from every level of inheritance' do
+    it 'does not inherit transproc from superclass' do
       expect(superclass.new.call(2)).to eq 3
-      expect(subclass.new.call(2)).to eq 6
-    end
-
-    context 'with nested transformations' do
-      let(:subclass) do
-        Class.new(superclass) do
-          arbitrary do
-            arbitrary ->(v) { v * 2 }
-          end
-        end
-      end
-
-      it 'does not interfere into nested transformations' do
-        expect(subclass.new.call(2)).to eq 6
-      end
+      expect(subclass.new.call(2)).to eq 4
     end
   end
 
@@ -135,16 +121,16 @@ describe Transproc::Transformer do
         end
       end
 
-      it 'inherits transformations from superclass' do
-        transproc = klass.define do
-          map_value :attr, ->(v) { v * 2 }
-        end
-        expect(transproc.call(attr: 2)).to eq(attr: 6)
-      end
-
       it 'just initializes transformer if no block was given' do
         transproc = klass.define
         expect(transproc.call(attr: 2)).to eq(attr: 3)
+      end
+
+      it 'does not inherit transproc from superclass' do
+        transproc = klass.define do
+          map_value :attr, ->(v) { v * 2 }
+        end
+        expect(transproc.call(attr: 2)).to eq(attr: 4)
       end
     end
   end
