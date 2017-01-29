@@ -29,7 +29,7 @@ module Transproc
     #
     # @api public
     def self.map_keys(source_hash, fn)
-      source_hash.dup.tap do |hash|
+      Hash[source_hash].tap do |hash|
         hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
       end
     end
@@ -106,7 +106,7 @@ module Transproc
     #
     # @api public
     def self.map_values(source_hash, fn)
-      source_hash.dup.tap do |hash|
+      Hash[source_hash].tap do |hash|
         hash.each { |key, value| hash[key] = fn[value] }
       end
     end
@@ -124,7 +124,7 @@ module Transproc
     #
     # @api public
     def self.rename_keys(source_hash, mapping)
-      source_hash.dup.tap do |hash|
+      Hash[source_hash].tap do |hash|
         mapping.each { |k, v| hash[v] = hash.delete(k) if hash.key?(k) }
       end
     end
@@ -142,7 +142,7 @@ module Transproc
     #
     # @api public
     def self.copy_keys(source_hash, mapping)
-      source_hash.dup.tap do |hash|
+      Hash[source_hash].tap do |hash|
         mapping.each do |original_key, new_keys|
           [*new_keys].each do |new_key|
             hash[new_key] = hash[original_key]
@@ -164,7 +164,7 @@ module Transproc
     #
     # @api public
     def self.reject_keys(hash, keys)
-      hash.reject { |k, _| keys.include?(k) }
+      Hash[hash].reject { |k, _| keys.include?(k) }
     end
 
     # Accepts specified keys from a hash
@@ -213,7 +213,7 @@ module Transproc
       nest_keys = source_hash.keys & keys
 
       if !nest_keys.empty?
-        hash = source_hash.dup
+        hash = Hash[source_hash]
         child = Hash[nest_keys.zip(nest_keys.map { |key| hash.delete(key) })]
         old_nest = hash[root]
         new_nest = old_nest.is_a?(Hash) ? old_nest.merge(child) : child
@@ -247,7 +247,7 @@ module Transproc
         root.is_a?(::Symbol) ? combined.to_sym : combined
       end
 
-      source_hash.merge(root => source_hash[root].dup).tap do |hash|
+      Hash[source_hash].merge(root => Hash[source_hash[root]]).tap do |hash|
         nested_hash = hash[root]
         keys = nested_hash.keys
         keys &= selected if selected
@@ -381,10 +381,10 @@ module Transproc
     #
     # @api public
     def self.deep_merge(hash, other)
-      hash.merge(other) do |_, original_value, new_value|
+      Hash[hash].merge(other) do |_, original_value, new_value|
         if original_value.respond_to?(:to_hash) &&
            new_value.respond_to?(:to_hash)
-          deep_merge(original_value.dup, new_value.dup)
+          deep_merge(Hash[original_value], Hash[new_value])
         else
           new_value
         end
