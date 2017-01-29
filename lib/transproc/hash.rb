@@ -216,15 +216,6 @@ module Transproc
       hash.merge(key => fn[hash[key]])
     end
 
-    # Same as `:map_value` but mutates the hash
-    #
-    # @see HashTransformations.map_value
-    #
-    # @api public
-    def self.map_value!(hash, key, fn)
-      hash.update(key => fn[hash[key]])
-    end
-
     # Nest values from specified keys under a new key
     #
     # @example
@@ -236,25 +227,17 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.nest(hash, key, keys)
-      nest!(Hash[hash], key, keys)
-    end
+    def self.nest(source_hash, root, keys)
+      nest_keys = source_hash.keys & keys
 
-    # Same as `:nest` but mutates the hash
-    #
-    # @see HashTransformations.nest
-    #
-    # @api public
-    def self.nest!(hash, root, keys)
-      nest_keys = hash.keys & keys
-
-      if nest_keys.size > 0
+      if !nest_keys.empty?
+        hash = Hash[source_hash]
         child = Hash[nest_keys.zip(nest_keys.map { |key| hash.delete(key) })]
         old_nest = hash[root]
         new_nest = old_nest.is_a?(Hash) ? old_nest.merge(child) : child
-        hash.update(root => new_nest)
+        hash.merge(root => new_nest)
       else
-        hash.update(root => {})
+        source_hash.merge(root => {})
       end
     end
 

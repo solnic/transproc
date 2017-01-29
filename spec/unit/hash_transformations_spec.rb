@@ -119,86 +119,59 @@ describe Transproc::HashTransformations do
       transformation =
         described_class.t(:map_value, :user, described_class.t(:symbolize_keys))
 
-      input = { user: { 'name' => 'Jane' } }
+      input = { user: { 'name' => 'Jane' }.freeze }.freeze
       output = { user: { name: 'Jane' } }
 
       expect(transformation[input]).to eql(output)
-      expect(input).to eql(user: { 'name' => 'Jane' })
     end
   end
 
-  describe '.map_value!' do
-    it 'applies function to value under specified key' do
-      transformation =
-        described_class
-        .t(:map_value!, :user, described_class.t(:symbolize_keys))
-
-      input = { user: { 'name' => 'Jane' } }
-      output = { user: { name: 'Jane' } }
-
-      transformation[input]
-
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_value!) }
 
   describe '.nest' do
     it 'returns new hash with keys nested under a new key' do
       nest = described_class.t(:nest, :baz, ['foo'])
 
-      input = { 'foo' => 'bar' }
+      input = { 'foo' => 'bar' }.freeze
       output = { baz: { 'foo' => 'bar' } }
 
       expect(nest[input]).to eql(output)
-      expect(input).to eql('foo' => 'bar')
-    end
-  end
-
-  describe '.nest!' do
-    it 'returns new hash with keys nested under a new key' do
-      nest = described_class.t(:nest!, :baz, %w(one two not-here))
-
-      input = { 'foo' => 'bar', 'one' => nil, 'two' => false }
-      output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
-
-      nest[input]
-
-      expect(input).to eql(output)
     end
 
     it 'returns new hash with keys nested under the existing key' do
-      nest = described_class.t(:nest!, :baz, ['two'])
+      nest = described_class.t(:nest, :baz, ['two'])
 
-      input  = { 'foo' => 'bar', baz: { 'one' => nil }, 'two' => false }
+      input = {
+        'foo' => 'bar',
+        baz: { 'one' => nil }.freeze,
+        'two' => false
+      }.freeze
+
       output = { 'foo' => 'bar', baz: { 'one' => nil, 'two' => false } }
 
-      nest[input]
-
-      expect(input).to eql(output)
+      expect(nest[input]).to eql(output)
     end
 
     it 'rewrites the existing key if its value is not a hash' do
-      nest = described_class.t(:nest!, :baz, ['two'])
+      nest = described_class.t(:nest, :baz, ['two'])
 
-      input  = { 'foo' => 'bar', baz: 'one', 'two' => false }
+      input  = { 'foo' => 'bar', baz: 'one', 'two' => false }.freeze
       output = { 'foo' => 'bar', baz: { 'two' => false } }
 
-      nest[input]
-
-      expect(input).to eql(output)
+      expect(nest[input]).to eql(output)
     end
 
     it 'returns new hash with an empty hash under a new key when nest-keys are missing' do
-      nest = described_class.t(:nest!, :baz, ['foo'])
+      nest = described_class.t(:nest, :baz, ['foo'])
 
-      input = { 'bar' => 'foo' }
+      input = { 'bar' => 'foo' }.freeze
       output = { 'bar' => 'foo', baz: {} }
 
-      nest[input]
-
-      expect(input).to eql(output)
+      expect(nest[input]).to eql(output)
     end
   end
+
+  it { expect(described_class).not_to be_contain(:nest!) }
 
   describe '.unwrap!' do
     it 'returns updated hash with nested keys lifted to the root' do
