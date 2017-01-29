@@ -60,12 +60,10 @@ describe Transproc::ArrayTransformations do
     it 'applies funtions to all values' do
       map = described_class.t(:map_array, hashes[:symbolize_keys])
 
-      original = [
-        { 'name' => 'Jane', 'title' => 'One' },
-        { 'name' => 'Jane', 'title' => 'Two' }
-      ]
-
-      input = original
+      input = [
+        { 'name' => 'Jane', 'title' => 'One' }.freeze,
+        { 'name' => 'Jane', 'title' => 'Two' }.freeze
+      ].freeze
 
       output = [
         { name: 'Jane', title: 'One' },
@@ -73,37 +71,18 @@ describe Transproc::ArrayTransformations do
       ]
 
       expect(map[input]).to eql(output)
-      expect(input).to eql(original)
     end
 
     it 'handles huge arrays' do
       map = described_class.t(:map_array, hashes[:symbolize_keys])
 
-      input = 138706.times.map { |i| { 'key' => i } }
+      input = Array.new(138_706) { |i| { 'key' => i } }
 
-      expect { map[input] }.to_not raise_error(SystemStackError, /stack level too deep/)
+      expect { map[input] }.to_not raise_error(SystemStackError, %r{stack level too deep})
     end
   end
 
-  describe '.map_array!' do
-    it 'updates array with the result of the function applied to each value' do
-      map = described_class.t(:map_array!, hashes[:symbolize_keys])
-
-      input = [
-        { 'name' => 'Jane', 'title' => 'One' },
-        { 'name' => 'Jane', 'title' => 'Two' }
-      ]
-
-      output = [
-        { name: 'Jane', title: 'One' },
-        { name: 'Jane', title: 'Two' }
-      ]
-
-      map[input]
-
-      expect(input).to eql(output)
-    end
-  end
+  it { expect(described_class).not_to be_contain(:map_array!) }
 
   describe '.wrap' do
     it 'returns a new array with wrapped hashes' do

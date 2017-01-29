@@ -38,16 +38,7 @@ module Transproc
     #
     # @api public
     def self.map_array(array, fn)
-      map_array!(array.dup, fn)
-    end
-
-    # Same as `map_array` but mutates the array
-    #
-    # @see ArrayTransformations.map_array
-    #
-    # @api public
-    def self.map_array!(array, fn)
-      array.map! { |value| fn[value] }
+      array.map { |value| fn[value] }
     end
 
     # Wrap array values using HashTransformations.nest function
@@ -194,7 +185,7 @@ module Transproc
     #
     # @api public
     def self.extract_key(array, key)
-      map_array!(Array[*array], ->(v) { v[key] })
+      map_array(array, ->(v) { v[key] })
     end
 
     # Wraps every value of the array to tuple with given key
@@ -213,7 +204,7 @@ module Transproc
     #
     # @api public
     def self.insert_key(array, key)
-      map_array!(Array[*array], ->(v) { { key => v } })
+      map_array(array, ->(v) { { key => v } })
     end
 
     # Adds missing keys with nil value to all tuples in array
@@ -226,7 +217,7 @@ module Transproc
     #
     def self.add_keys(array, keys)
       base = keys.inject({}) { |a, e| a.merge(e => nil) }
-      map_array!(Array[*array], ->(v) { base.merge(v) })
+      map_array(array, ->(v) { base.merge(v) })
     end
 
     # @deprecated Register methods globally
