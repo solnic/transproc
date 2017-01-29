@@ -29,6 +29,11 @@ describe Transproc::Transformer do
 
     it { expect(klass.container).to eq(container) }
     it { is_expected.to be_a(::Class) }
+    it { expect(klass.ancestors).to include(Transproc::Transformer) }
+
+    it 'does not change super class' do
+      expect(Transproc::Transformer.container).not_to eq(container)
+    end
   end
 
   describe '.t' do
