@@ -117,7 +117,7 @@ module Transproc
     #   Transproc(:rename_keys, user_name: :name)[user_name: 'Jane']
     #   # => {:name => "Jane"}
     #
-    # @param [Hash] hash The input hash
+    # @param [Hash] source_hash The input hash
     # @param [Hash] mapping The key-rename mapping
     #
     # @return [Hash]
@@ -135,7 +135,7 @@ module Transproc
     #   Transproc(:copy_keys, user_name: :name)[user_name: 'Jane']
     #   # => {:user_name => "Jane", :name => "Jane"}
     #
-    # @param [Hash] hash The input hash
+    # @param [Hash] source_hash The input hash
     # @param [Hash] mapping The key-copy mapping
     #
     # @return [Hash]
