@@ -93,6 +93,20 @@ describe Transproc::Registry do
         .to raise_error(Transproc::FunctionAlreadyRegisteredError)
     end
 
+    it 'registers and fetches transproc function' do
+      function = foo[:prefix, '1']
+      foo.register(:prefix_one, function)
+
+      expect(foo[:prefix_one]).to eq function
+    end
+
+    it 'registers and fetches composite' do
+      composite = foo[:prefix, '1'] + foo[:prefix, '2']
+      foo.register(:double_prefix, composite)
+
+      expect(foo[:double_prefix]).to eq composite
+    end
+
     context 'with block argument' do
       def do_register
         foo.register(:increment) { |v| v + 1 }

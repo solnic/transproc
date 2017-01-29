@@ -45,7 +45,9 @@ module Transproc
     # @alias :t
     #
     def [](fn, *args)
-      Function.new(fetch(fn), args: args, name: fn)
+      fetched = fetch(fn)
+      return fetched if already_wrapped?(fetched)
+      Function.new(fetched, args: args, name: fn)
     end
     alias_method :t, :[]
 
@@ -130,6 +132,13 @@ module Transproc
       respond_to?(fn) ? method(fn) : store.fetch(fn)
     rescue
       raise FunctionNotFoundError.new(fn, self)
+    end
+
+    private
+
+    # @api private
+    def already_wrapped?(func)
+      func.is_a?(Transproc::Function) || func.is_a?(Transproc::Composite)
     end
   end
 end
