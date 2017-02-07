@@ -100,6 +100,14 @@ describe Transproc::Registry do
       expect(foo[:prefix_one]).to eq function
     end
 
+    it 'allows to overwrite function arguments' do
+      foo.register(:map_array, Transproc::ArrayTransformations.t(:map_array))
+
+      fn = foo[:map_array, ->(value) { value.to_sym }]
+
+      expect(fn.call(%w(a b c))).to eq([:a, :b, :c])
+    end
+
     it 'registers and fetches composite' do
       composite = foo[:prefix, '1'] + foo[:prefix, '2']
       foo.register(:double_prefix, composite)

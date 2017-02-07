@@ -46,8 +46,9 @@ module Transproc
     #
     def [](fn, *args)
       fetched = fetch(fn)
-      return fetched if already_wrapped?(fetched)
-      Function.new(fetched, args: args, name: fn)
+
+      return Function.new(fetched, args: args, name: fn) unless already_wrapped?(fetched)
+      args.empty? ? fetched : fetched.with(*args)
     end
     alias_method :t, :[]
 
