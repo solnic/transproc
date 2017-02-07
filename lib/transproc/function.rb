@@ -85,7 +85,8 @@ module Transproc
     #
     # @api public
     def to_ast
-      [name, args]
+      args_ast = args.map { |arg| arg.respond_to?(:to_ast) ? arg.to_ast : arg }
+      [name, args_ast]
     end
 
     # Converts a transproc to a simple proc
