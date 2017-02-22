@@ -45,15 +45,15 @@ Or install it yourself as:
 Simple transformations are defined as easy as:
 
 ```ruby
-increament = Transproc::Function.new(-> (data) { data + 1 })
-increament[1] # => 2
+increment = Transproc::Function.new(-> (data) { data + 1 })
+increment[1] # => 2
 ```
 
 It's easy to compose transformations:
 
 ```ruby
 to_string = Transproc::Function.new(:to_s.to_proc)
-(increament >> to_string)[1] => '2'
+(increment >> to_string)[1] => '2'
 ```
 
 It's easy to pass additional arguments to transformations:
