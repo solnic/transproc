@@ -98,6 +98,21 @@ describe Transproc::Function do
       expect(fn[:ok]).to eql('ok')
       expect(fn.to_ast).to eql([:to_string, []])
     end
+
+    it 'plays well with functions as arguments' do
+      container.register(:map_array, Transproc::ArrayTransformations.t(:map_array))
+      container.register(:to_symbol, Transproc::Coercions.t(:to_symbol))
+      fn = container.t(:map_array, container.t(:to_symbol))
+
+      expect(fn.call(%w(a b c))).to eql([:a, :b, :c])
+      expect(fn.to_ast).to eql(
+        [
+          :map_array, [
+            [:to_symbol, []]
+          ]
+        ]
+      )
+    end
   end
 
   describe '#==' do
