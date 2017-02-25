@@ -26,4 +26,5 @@ group :tools do
   gem 'guard'
   gem 'guard-rspec'
   gem 'guard-rubocop'
+  gem 'hotch'
 end
