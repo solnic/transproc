@@ -1,3 +1,11 @@
+# v1.0.2 2017-02-25
+
+## Fixed
+
+* `combine` works fine when there are missing nodes for deeply nested arrays (Kukunin)
+
+[Compare v1.0.1...v1.0.2](https://github.com/solnic/transproc/compare/v1.0.1...v1.0.2)
+
 # v1.0.1 2017-02-25
 
 * `combine` is now multiple times faster, depending on the level of nesting (Kukunin + splattael) 
