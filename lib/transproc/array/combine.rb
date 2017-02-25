@@ -1,6 +1,8 @@
 module Transproc
   module ArrayTransformations
     class Combine
+      EMPTY_ARRAY = [].freeze
+
       class << self
         def combine(array, mappings)
           root, nodes = array
@@ -23,7 +25,7 @@ module Transproc
         end
 
         def element_candidates(element, candidates, keys)
-          candidates[element_candidates_key(element, keys)] || []
+          candidates[element_candidates_key(element, keys)] || EMPTY_ARRAY
         end
 
         def group_nodes(nodes, mappings)
