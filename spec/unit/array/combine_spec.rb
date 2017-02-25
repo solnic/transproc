@@ -71,18 +71,6 @@ describe Transproc::ArrayTransformations do
       it { is_expected.to eq([{name: 'Jane', email: 'jane@doe.org', tasks: []}]) }
     end
 
-    context 'without candidates array' do
-      let(:input) do
-        [[], [[]]]
-      end
-
-      let(:mappings) { [[:lines, {id: :order_id}]] }
-
-      it 'does not crash' do
-        expect { result }.not_to raise_error
-      end
-    end
-
     context 'with double mapping' do
       let(:input) do
         [
@@ -107,6 +95,33 @@ describe Transproc::ArrayTransformations do
           ]}
         ]
         is_expected.to eql(output)
+      end
+    end
+
+    context 'with empty array' do
+      let(:input) do
+        []
+      end
+
+      let(:mappings) { [[:page, {page_id: :id}]] }
+
+      it { is_expected.to eq [] }
+    end
+
+    context 'with empty nested array' do
+      let(:input) do
+        [
+          [],
+          [
+            []
+          ]
+        ]
+      end
+
+      let(:mappings) { [[:menu_items, {id: :menu_id}, [[:page, {page_id: :id}]]]] }
+
+      it 'does not crash' do
+        expect { result }.not_to raise_error
       end
     end
 
@@ -157,55 +172,6 @@ describe Transproc::ArrayTransformations do
         ]
         is_expected.to eql(output)
       end
-    end
-
-    it 'merges hashes from arrays using provided join keys' do
-      input = [
-        # parent users
-        [
-          { name: 'Jane', email: 'jane@doe.org' }.freeze,
-          { name: 'Joe', email: 'joe@doe.org' }.freeze
-        ].freeze,
-        [
-          [
-            # user tasks
-            [
-              { user: 'Jane', title: 'One' }.freeze,
-              { user: 'Jane', title: 'Two' }.freeze,
-              { user: 'Joe', title: 'Three' }.freeze
-            ].freeze,
-            [
-              # task tags
-              [
-                { task: 'One', tag: 'red' }.freeze,
-                { task: 'Three', tag: 'blue' }.freeze
-              ].freeze
-            ].freeze
-          ].freeze
-        ].freeze
-      ].freeze
-
-      output = [
-        { name: 'Jane', email: 'jane@doe.org', tasks: [
-          { user: 'Jane', title: 'One', tags: [{ task: 'One', tag: 'red' }] },
-          { user: 'Jane', title: 'Two', tags: [] }]
-        },
-        {
-          name: 'Joe', email: 'joe@doe.org', tasks: [
-            {
-              user: 'Joe', title: 'Three', tags: [
-                { task: 'Three', tag: 'blue' }
-              ]
-            }
-          ]
-        }
-      ]
-
-      combine = described_class.t(:combine, [
-        [:tasks, { name: :user }, [[:tags, title: :task]]]
-      ])
-
-      expect(combine[input]).to eql(output)
     end
   end
 end

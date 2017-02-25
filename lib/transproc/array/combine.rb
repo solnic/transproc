@@ -5,8 +5,9 @@ module Transproc
 
       class << self
         def combine(array, mappings)
+          return EMPTY_ARRAY if array.empty?
           root, nodes = array
-          return root if nodes.nil?
+          return root if nodes.nil? || nodes.empty?
           groups = group_nodes(nodes, mappings)
 
           root.map do |element|
