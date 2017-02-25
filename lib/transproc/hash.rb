@@ -209,18 +209,26 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.nest(source_hash, root, keys)
-      nest_keys = source_hash.keys & keys
+    def self.nest(hash, root, keys)
+      child = {}
 
-      if !nest_keys.empty?
-        hash = Hash[source_hash]
-        child = Hash[nest_keys.zip(nest_keys.map { |key| hash.delete(key) })]
-        old_nest = hash[root]
-        new_nest = old_nest.is_a?(Hash) ? old_nest.merge(child) : child
-        hash.merge(root => new_nest)
-      else
-        source_hash.merge(root => {})
+      keys.each do |key|
+        child[key] = hash[key] if hash.key?(key)
       end
+
+      output = Hash[hash]
+
+      child.each_key { |key| output.delete(key) }
+
+      old_root = hash[root]
+
+      if old_root.is_a?(Hash)
+        output[root] = old_root.merge(child)
+      else
+        output[root] = child
+      end
+
+      output
     end
 
     # Collapse a nested hash from a specified key
