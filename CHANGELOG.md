@@ -1,4 +1,11 @@
-## v1.0.0 2017-01-29
+# v1.0.1 2017-02-25
+
+* `combine` is now multiple times faster, depending on the level of nesting (Kukunin + splattael) 
+* `nest` (thus `wrap` too) is ~2x faster now (solnic)
+
+[Compare v1.0.0...v1.0.1](https://github.com/solnic/transproc/compare/v1.0.0...v1.0.1)
+
+# v1.0.0 2017-01-29
 
 ## Added
 
@@ -14,7 +21,7 @@
 
 [Compare v0.4.2...v1.0.0](https://github.com/solnic/transproc/compare/v0.4.2...v1.0.0)
 
-## v0.4.2 2017-01-12
+# v0.4.2 2017-01-12
 
 ## Added
 
@@ -26,7 +33,7 @@
 
 [Compare v0.4.1...v0.4.2](https://github.com/solnic/transproc/compare/v0.4.1...v0.4.2)
 
-## v0.4.1 2016-11-08
+# v0.4.1 2016-11-08
 
 ## Added
 
@@ -38,7 +45,7 @@
 
 [Compare v0.4.0...v0.4.1](https://github.com/solnic/transproc/compare/v0.4.0...v0.4.1)
 
-## v0.4.0 2015-11-23
+# v0.4.0 2015-11-23
 
 ## Fixed
 
@@ -50,7 +57,7 @@
 
 [Compare v0.3.2...v0.4.0](https://github.com/solnic/transproc/compare/v0.3.2...v0.4.0)
 
-## v0.3.2 2015-08-17
+# v0.3.2 2015-08-17
 
 ## Changed
 
@@ -62,7 +69,7 @@
 
 [Compare v0.3.1...v0.3.2](https://github.com/solnic/transproc/compare/v0.3.1...v0.3.2)
 
-## v0.3.1 2015-08-06
+# v0.3.1 2015-08-06
 
 ### Added
 
@@ -74,7 +81,7 @@
 
 [Compare v0.3.0...v0.3.1](https://github.com/solnic/transproc/compare/v0.3.0...v0.3.1)
 
-## v0.3.0 2015-07-12
+# v0.3.0 2015-07-12
 
 This release deprecates a couple of APIs and changes the way functions can be
 accessed. The global `Transproc()` function registry is now deprecated and you
@@ -104,7 +111,7 @@ in 1.0.0.
 
 [Compare v0.2.4...v0.3.0](https://github.com/solnic/transproc/compare/v0.2.4...v0.3.0)
 
-## v0.2.4 2015-06-20
+# v0.2.4 2015-06-20
 
 ### Added
 
@@ -118,7 +125,7 @@ in 1.0.0.
 
 [Compare v0.2.3...v0.2.4](https://github.com/solnic/transproc/compare/v0.2.3...v0.2.4)
 
-## v0.2.3 2015-06-02
+# v0.2.3 2015-06-02
 
 ### Added
 
@@ -134,7 +141,7 @@ in 1.0.0.
 
 [Compare v0.2.2...v0.2.3](https://github.com/solnic/transproc/compare/v0.2.2...v0.2.3)
 
-## v0.2.2 2015-05-22
+# v0.2.2 2015-05-22
 
 ### Added
 
@@ -148,7 +155,7 @@ in 1.0.0.
 
 [Compare v0.2.1...v0.2.2](https://github.com/solnic/transproc/compare/v0.2.1...v0.2.2)
 
-## v0.2.1 2015-05-17
+# v0.2.1 2015-05-17
 
 ### Added
 
@@ -177,7 +184,7 @@ in 1.0.0.
 
 [Compare v0.2.0...v0.2.1](https://github.com/solnic/transproc/compare/v0.2.0...v0.2.1)
 
-## v0.2.0 2015-04-14
+# v0.2.0 2015-04-14
 
 ### Added
 
@@ -199,7 +206,7 @@ in 1.0.0.
 
 [Compare v0.1.3...v0.2.0](https://github.com/solnic/transproc/compare/v0.1.3...v0.2.0)
 
-## v0.1.3 2015-04-07
+# v0.1.3 2015-04-07
 
 ### Added
 
@@ -212,7 +219,7 @@ in 1.0.0.
 
 [Compare v0.1.2...v0.1.3](https://github.com/solnic/transproc/compare/v0.1.2...v0.1.3)
 
-## v0.1.2 2015-03-14
+# v0.1.2 2015-03-14
 
 ### Changed
 
@@ -220,7 +227,7 @@ in 1.0.0.
 
 [Compare v0.1.1...v0.1.2](https://github.com/solnic/transproc/compare/v0.1.1...v0.1.2)
 
-## v0.1.1 2015-03-13
+# v0.1.1 2015-03-13
 
 ### Changed
 
@@ -234,7 +241,7 @@ in 1.0.0.
 
 [Compare v0.1.0...v0.1.1](https://github.com/solnic/transproc/compare/v0.1.0...v0.1.1)
 
-## v0.1.0 2014-12-28
+# v0.1.0 2014-12-28
 
 ### Added
 
@@ -247,6 +254,6 @@ in 1.0.0.
 
 [Compare v0.0.1...v0.1.0](https://github.com/solnic/transproc/compare/v0.0.1...v0.1.0)
 
-## v0.0.1 2014-12-24
+# v0.0.1 2014-12-24
 
 First public release \o/
