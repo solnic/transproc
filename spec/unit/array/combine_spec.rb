@@ -24,21 +24,6 @@ describe Transproc::ArrayTransformations do
       it { is_expected.to eq input.first }
     end
 
-    it 'does not modify its input' do
-      input = [
-        [{ name: 'Jane' }],
-        [[{ user: 'Jane', title: 'One' }]]
-      ]
-
-      output = [
-        { name: 'Jane', tasks: [{ user: 'Jane', title: 'One' }] }
-      ]
-
-      combined = described_class.combine(input, [[:tasks, name: :user]])
-
-      expect(combined).to eql(output)
-    end
-
     context 'with one group' do
       let(:input) do
         [
@@ -84,6 +69,18 @@ describe Transproc::ArrayTransformations do
       let(:mappings) { [[:tasks, {name: :user}]] }
 
       it { is_expected.to eq([{name: 'Jane', email: 'jane@doe.org', tasks: []}]) }
+    end
+
+    context 'without candidates array' do
+      let(:input) do
+        [[], [[]]]
+      end
+
+      let(:mappings) { [[:lines, {id: :order_id}]] }
+
+      it 'does not crash' do
+        expect { result }.not_to raise_error
+      end
     end
 
     context 'with double mapping' do
