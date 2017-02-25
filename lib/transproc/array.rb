@@ -59,7 +59,7 @@ module Transproc
     # @api public
     def self.wrap(array, key, keys)
       nest = HashTransformations[:nest, key, keys]
-      map_array(array, nest)
+      array.map { |element| nest.call(element) }
     end
 
     # Group array values using provided root key and value keys
