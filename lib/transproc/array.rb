@@ -1,5 +1,6 @@
 require 'transproc/coercions'
 require 'transproc/hash'
+require 'transproc/array/combine'
 
 module Transproc
   # Transformation functions for Array objects
@@ -118,53 +119,8 @@ module Transproc
       array.flat_map { |item| HashTransformations.split(item, key, keys) }
     end
 
-    CACHE = Hash.new { |h, k| h[k] = {} }
-
-    def self.combine(array, mappings, cache = CACHE.dup)
-      root, groups = array
-
-      root.map do |parent|
-        child_hash = {}
-
-        for candidates in groups
-          index = groups.index(candidates)
-          data = mappings[index]
-
-          key = data[0]
-          keys = data[1]
-
-          children =
-            if data.size == 2
-              candidates
-            else
-              combine(candidates, data[2])
-            end
-
-          child_keys = keys.size > 1 ? keys.values : keys.values[0]
-          pk_names = keys.size > 1 ? keys.keys : keys.keys[0]
-
-          pkey_value =
-            if pk_names.is_a?(Array)
-              parent.values_at(*pk_names)
-            else
-              parent[pk_names]
-            end
-
-          cache[key][child_keys] ||= children.group_by do |child|
-            if child_keys.is_a?(Array)
-              child.values_at(*child_keys)
-            else
-              child[child_keys]
-            end
-          end
-
-          child_arr = cache[key][child_keys][pkey_value] || []
-
-          child_hash[key] = child_arr
-        end
-
-        parent.merge(child_hash)
-      end
+    def self.combine(array, mappings)
+      Combine.combine(array, mappings)
     end
 
     # Converts the array of hashes to array of values, extracted by given key
