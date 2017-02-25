@@ -98,14 +98,14 @@ describe Transproc::ArrayTransformations do
       end
     end
 
-    context 'with empty array' do
+    context 'with non-array argument' do
       let(:input) do
-        []
+        123
       end
 
       let(:mappings) { [[:page, {page_id: :id}]] }
 
-      it { is_expected.to eq [] }
+      it { is_expected.to eq(123) }
     end
 
     context 'with empty nested array' do
