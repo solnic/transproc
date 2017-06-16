@@ -1,6 +1,6 @@
 if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   require 'yaml'
-  rubies = YAML.load(File.read(SPEC_ROOT.join('../../.travis.yml')))['rvm']
+  rubies = YAML.load(File.read(File.join(__dir__, '..', '.travis.yml')))['rvm']
   latest_mri = rubies.select { |v| v =~ /\A\d+\.\d+.\d+\z/ }.max
 
   if RUBY_VERSION == latest_mri
