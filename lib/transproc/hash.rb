@@ -94,20 +94,26 @@ module Transproc
       map_keys(hash, Coercions[:to_string].fn)
     end
 
-    # Map all values in a hash using transformation function
-    #
-    # @example
-    #   Transproc(:map_values, -> v { v.upcase })[:name => 'Jane']
-    #   # => {"name" => "JANE"}
-    #
-    # @param [Hash]
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def self.map_values(source_hash, fn)
-      Hash[source_hash].tap do |hash|
-        hash.each { |key, value| hash[key] = fn[value] }
+    if RUBY_VERSION >= '2.4'
+      # Map all values in a hash using transformation function
+      #
+      # @example
+      #   Transproc(:map_values, -> v { v.upcase })[:name => 'Jane']
+      #   # => {"name" => "JANE"}
+      #
+      # @param [Hash]
+      #
+      # @return [Hash]
+      #
+      # @api public
+      def self.map_values(source_hash, fn)
+        Hash[source_hash].transform_values!(&fn)
+      end
+    else
+      def self.map_values(source_hash, fn)
+        Hash[source_hash].tap do |hash|
+          hash.each { |key, value| hash[key] = fn[value] }
+        end
       end
     end
 
