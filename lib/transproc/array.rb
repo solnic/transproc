@@ -65,7 +65,7 @@ module Transproc
     # Group array values using provided root key and value keys
     #
     # @example
-    #   fn = Transproc(:group, :tags, [:tag_name])
+    #   fn = Transproc(:group, :tags, [:tag])
     #
     #   fn.call [
     #     { task: 'Group it', tag: 'task' },
@@ -98,10 +98,10 @@ module Transproc
     # Ungroup array values using provided root key and value keys
     #
     # @example
-    #   fn = Transproc(:group, :tags, [:tag_name])
+    #   fn = Transproc(:ungroup, :tags, [:tag])
     #
     #   fn.call [
-    #     { task: 'Group it', tags: [{ tag: 'task' }, { tag: 'important' }]
+    #     { task: 'Group it', tags: [{ tag: 'task' }, { tag: 'important' }] }
     #   ]
     #   # => [
     #     { task: 'Group it', tag: 'task' },
