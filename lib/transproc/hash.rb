@@ -173,20 +173,26 @@ module Transproc
       Hash[hash].reject { |k, _| keys.include?(k) }
     end
 
-    # Accepts specified keys from a hash
-    #
-    # @example
-    #   Transproc(:accept_keys, [:name])[name: 'Jane', email: 'jane@doe.org']
-    #   # => {:name=>"Jane"}
-    #
-    # @param [Hash] hash The input hash
-    # @param [Array] keys The keys to be accepted
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def self.accept_keys(hash, keys)
-      reject_keys(hash, hash.keys - keys)
+    if RUBY_VERSION >= '2.5'
+      # Accepts specified keys from a hash
+      #
+      # @example
+      #   Transproc(:accept_keys, [:name])[name: 'Jane', email: 'jane@doe.org']
+      #   # => {:name=>"Jane"}
+      #
+      # @param [Hash] hash The input hash
+      # @param [Array] keys The keys to be accepted
+      #
+      # @return [Hash]
+      #
+      # @api public
+      def self.accept_keys(hash, keys)
+        Hash[hash].slice(*keys)
+      end
+    else
+      def self.accept_keys(hash, keys)
+        reject_keys(hash, hash.keys - keys)
+      end
     end
 
     # Map a key in a hash with the provided transformation function
