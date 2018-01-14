@@ -17,20 +17,26 @@ module Transproc
   module HashTransformations
     extend Registry
 
-    # Map all keys in a hash with the provided transformation function
-    #
-    # @example
-    #   Transproc(:map_keys, -> s { s.upcase })['name' => 'Jane']
-    #   # => {"NAME" => "Jane"}
-    #
-    # @param [Hash]
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def self.map_keys(source_hash, fn)
-      Hash[source_hash].tap do |hash|
-        hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
+    if RUBY_VERSION >= '2.5'
+      # Map all keys in a hash with the provided transformation function
+      #
+      # @example
+      #   Transproc(:map_keys, -> s { s.upcase })['name' => 'Jane']
+      #   # => {"NAME" => "Jane"}
+      #
+      # @param [Hash]
+      #
+      # @return [Hash]
+      #
+      # @api public
+      def self.map_keys(source_hash, fn)
+        Hash[source_hash].transform_keys!(&fn)
+      end
+    else
+      def self.map_keys(source_hash, fn)
+        Hash[source_hash].tap do |hash|
+          hash.keys.each { |key| hash[fn[key]] = hash.delete(key) }
+        end
       end
     end
 
