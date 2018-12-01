@@ -1,6 +1,5 @@
 [gem]: https://rubygems.org/gems/transproc
 [travis]: https://travis-ci.org/solnic/transproc
-[gemnasium]: https://gemnasium.com/solnic/transproc
 [codeclimate]: https://codeclimate.com/github/solnic/transproc
 [coveralls]: https://coveralls.io/r/solnic/transproc
 [inchpages]: http://inch-ci.org/github/solnic/transproc
@@ -9,7 +8,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/transproc.svg)][gem]
 [![Build Status](https://travis-ci.org/solnic/transproc.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/solnic/transproc.svg)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/solnic/transproc/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/solnic/transproc/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/solnic/transproc.svg?branch=master)][inchpages]
