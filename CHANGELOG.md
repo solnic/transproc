@@ -1,4 +1,4 @@
-# v1.0.3 to-be-released
+# v1.0.3 2018-12-01
 
 ## Changed
 
