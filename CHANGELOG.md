@@ -1,8 +1,8 @@
-# to-be-released
+# v1.0.3 to-be-released
 
 ## Changed
 
-* [BREAKING] Added minimal Ruby version to the gemspec file (flash-gordon)
+* [BREAKING] Added minimal Ruby version to the gemspec file. Transproc now works with Ruby 2.3 and above (flash-gordon)
 * Performance improvements introduced by using new built-in methods in `Hash` (v-kolesnikov + flash-gordon)
 
 [Compare v1.0.2...master](https://github.com/solnic/transproc/compare/v1.0.2...master)
