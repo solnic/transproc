@@ -1,3 +1,12 @@
+# to-be-released
+
+## Changed
+
+* [BREAKING] Added minimal Ruby version to the gemspec file (flash-gordon)
+* Performance improvements introduced by using new built-in methods in `Hash` (v-kolesnikov + flash-gordon)
+
+[Compare v1.0.2...master](https://github.com/solnic/transproc/compare/v1.0.2...master)
+
 # v1.0.2 2017-02-25
 
 ## Fixed
@@ -8,7 +17,7 @@
 
 # v1.0.1 2017-02-25
 
-* `combine` is now multiple times faster, depending on the level of nesting (Kukunin + splattael) 
+* `combine` is now multiple times faster, depending on the level of nesting (Kukunin + splattael)
 * `nest` (thus `wrap` too) is ~2x faster now (solnic)
 
 [Compare v1.0.0...v1.0.1](https://github.com/solnic/transproc/compare/v1.0.0...v1.0.1)
