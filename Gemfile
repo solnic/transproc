@@ -5,17 +5,16 @@ gemspec
 group :test do
   gem 'equalizer'
 
-  if RUBY_VERSION >= '2.1'
-    gem 'anima'
-    platform :mri do
+  gem 'anima'
+
+  platform :mri do
+    if RUBY_VERSION >= '2.5'
       gem 'mutant', github: 'mbj/mutant', branch: 'master'
       gem 'mutant-rspec'
-
-      gem 'codeclimate-test-reporter', require: false
-      gem 'simplecov', require: false
     end
-  else
-    gem 'anima', '~> 0.2.0'
+
+    gem 'codeclimate-test-reporter', require: false
+    gem 'simplecov', require: false
   end
 end
 
