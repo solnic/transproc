@@ -8,11 +8,6 @@ group :test do
   gem 'anima'
 
   platform :mri do
-    if RUBY_VERSION >= '2.5'
-      gem 'mutant', github: 'mbj/mutant', branch: 'master'
-      gem 'mutant-rspec'
-    end
-
     gem 'codeclimate-test-reporter', require: false
     gem 'simplecov', require: false
   end
