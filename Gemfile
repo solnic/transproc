@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'dry-equalizer'
+  gem 'rspec', '~> 3.8'
+  gem 'dry-equalizer', '~> 0.2'
 
   platform :mri do
     gem 'simplecov', require: false
