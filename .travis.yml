@@ -1,21 +1,21 @@
-dist: trusty
 language: ruby
-sudo: required
 cache: bundler
 bundler_args: --without tools
-before_script: gem update --system
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+after_script:
+  - "[ -d coverage ] && ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 script: 'bundle exec rake spec'
-after_success:
-  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
 rvm:
   - 2.3.8
-  - 2.4.5
-  - 2.5.3
-  - 2.6
-  - jruby-9.2.4.1
+  - 2.6.3
+  - 2.5.5
+  - 2.4.6
+  - jruby-9.2.7.0
 env:
   global:
-    - JRUBY_OPTS='--dev -J-Xmx1024M'
     - COVERAGE='true'
 notifications:
   webhooks:
