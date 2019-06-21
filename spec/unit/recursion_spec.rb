@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Transproc::Recursion do
   let(:hashes) { Transproc::HashTransformations }
 

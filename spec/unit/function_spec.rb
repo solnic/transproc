@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Transproc::Function do
   let(:container) do
     Module.new do

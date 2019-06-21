@@ -1,5 +1,4 @@
 require 'dry/equalizer'
-require 'spec_helper'
 
 describe Transproc::ClassTransformations do
   describe '.constructor_inject' do

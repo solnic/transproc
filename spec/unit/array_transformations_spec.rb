@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Transproc::ArrayTransformations do
   let(:hashes) { Transproc::HashTransformations }
 

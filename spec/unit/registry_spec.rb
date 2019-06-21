@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Transproc::Registry do
   before { module Transproc::Test; end         }
   after  { Transproc.send :remove_const, :Test }

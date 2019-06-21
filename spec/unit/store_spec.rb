@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 describe Transproc::Store do
   let(:store) { described_class.new methods      }
   let(:methods) { { foo: instance_double(Proc) } }

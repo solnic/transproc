@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 describe Transproc::FunctionNotFoundError do
   it 'complains that the function not registered' do
     Foo = Module.new { extend Transproc::Registry }

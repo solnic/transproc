@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Transproc::HashTransformations do
   describe '.map_keys' do
     it 'returns a new hash with given proc applied to keys' do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Transproc::Coercions do
   describe '.identity' do
     let(:fn) { described_class.t(:identity) }

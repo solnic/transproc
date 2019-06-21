@@ -1,5 +1,4 @@
 require 'ostruct'
-require 'spec_helper'
 
 describe Transproc::ProcTransformations do
   describe '.bind' do

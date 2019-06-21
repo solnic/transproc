@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'forwardable'
 
 describe Transproc::ArrayTransformations do

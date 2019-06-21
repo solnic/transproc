@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Transproc do
   describe 'composition' do
     it 'allows composing two transformation functions' do
