@@ -1,66 +1,76 @@
-inherit_from: .rubocop_todo.yml
-
-# Exclude temporary files
 AllCops:
-  Exclude:
-    - tmp/**/*
+  TargetRubyVersion: 2.4
 
-# Allow global Transproc method definition
-Style/MethodName:
-  Exclude:
-    - lib/transproc.rb
-
-# No need to handle LoadError in Rakefile
-Lint/HandleExceptions:
-  Exclude:
-    - rakelib/*.rake
-    - spec/spec_helper.rb
-
-# It’s quite readable when we know what we are doing
-Lint/AssignmentInCondition:
+Style/EachWithObject:
   Enabled: false
 
-# The enforced style doesn’t match Vim’s defaults
-Style/AlignParameters:
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+
+Style/Alias:
   Enabled: false
 
-# UTF-8 is perfectly fine in comments
-Style/AsciiComments:
+Style/LambdaCall:
   Enabled: false
 
-# Allow using braces for value-returning blocks
-Style/BlockDelimiters:
+Style/StabbyLambdaParentheses:
   Enabled: false
 
-# Documentation checked by Inch CI
+Style/FormatString:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
-# Early returns have their vices
-Style/GuardClause:
+Layout/SpaceInLambdaLiteral:
   Enabled: false
 
-# Need to be skipped for >-> usage
-Style/Lambda:
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+
+Metrics/LineLength:
+  Max: 100
+
+Metrics/MethodLength:
+  Max: 22
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Metrics/CyclomaticComplexity:
+  Enabled: true
+  Max: 10
+
+Lint/BooleanSymbol:
   Enabled: false
 
-# Multiline block chains are ok
-Style/MultilineBlockChain:
+Style/AccessModifierDeclarations:
   Enabled: false
 
-# Even a single escaped slash can be confusing
-Style/RegexpLiteral:
-  EnforcedStyle: percent_r
+Style/BlockDelimiters:
+  Enabled: false
 
-# Don’t introduce semantic fail/raise distinction
-Style/SignalException:
-  EnforcedStyle: only_raise
+Layout/IndentFirstArrayElement:
+  EnforcedStyle: consistent
 
-# Allow compact style for specs
 Style/ClassAndModuleChildren:
   Exclude:
-    - spec/**/*_spec.rb
+    - 'spec/**/*_spec.rb'
 
-# Allow logical `or`/`and` in conditionals
-Style/AndOr:
-  EnforcedStyle: conditionals
+Lint/HandleExceptions:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+Naming/FileName:
+  Exclude:
+    - 'lib/dry-*.rb'

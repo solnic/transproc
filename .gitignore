@@ -13,3 +13,5 @@
 *.o
 *.a
 mkmf.log
+.rubocop.yml
+
