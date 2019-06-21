@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'ostruct'
+require 'dry/equalizer'
 
 describe Transproc::Transformer do
   let(:container) { Module.new { extend Transproc::Registry } }
@@ -245,12 +247,12 @@ describe Transproc::Transformer do
 
     before do
       module Test
-        class User
-          include Anima.new(:name, :address)
+        class User < OpenStruct
+          include Dry::Equalizer(:name, :address)
         end
 
-        class Address
-          include Anima.new(:city, :street, :zipcode)
+        class Address < OpenStruct
+          include Dry::Equalizer(:city, :street, :zipcode)
         end
       end
     end

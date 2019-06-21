@@ -1,9 +1,10 @@
+require 'dry/equalizer'
 require 'spec_helper'
 
 describe Transproc::ClassTransformations do
   describe '.constructor_inject' do
     let(:klass) do
-      Struct.new(:name, :age) { include Equalizer.new(:name, :age) }
+      Struct.new(:name, :age) { include Dry::Equalizer.new(:name, :age) }
     end
 
     it 'returns a new object initialized with the given arguments' do
@@ -21,12 +22,13 @@ describe Transproc::ClassTransformations do
   describe '.set_ivars' do
     let(:klass) do
       Class.new do
-        include Anima.new(:name, :age)
+        include Dry::Equalizer.new(:name, :age)
 
-        attr_reader :test
+        attr_reader :name, :age, :test
 
-        def initialize(*args)
-          super
+        def initialize(name:, age:)
+          @name = name
+          @age = age
           @test = true
         end
       end

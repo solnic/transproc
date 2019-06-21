@@ -3,9 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'equalizer'
-
-  gem 'anima'
+  gem 'dry-equalizer'
 
   platform :mri do
     gem 'codeclimate-test-reporter', require: false

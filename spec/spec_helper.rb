@@ -11,9 +11,6 @@ if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   end
 end
 
-require 'equalizer'
-require 'anima'
-require 'ostruct'
 require 'transproc/all'
 
 begin
