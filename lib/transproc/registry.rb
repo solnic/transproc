@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 module Transproc
   # Container to define transproc functions in, and access them via `[]` method

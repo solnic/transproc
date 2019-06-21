@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Transproc
   module Deprecations
     def self.announce(name, msg)

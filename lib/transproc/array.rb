@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'transproc/coercions'
 require 'transproc/hash'
 require 'transproc/array/combine'

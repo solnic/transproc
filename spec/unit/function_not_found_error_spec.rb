@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Transproc::FunctionNotFoundError do
   it 'complains that the function not registered' do
     Foo = Module.new { extend Transproc::Registry }

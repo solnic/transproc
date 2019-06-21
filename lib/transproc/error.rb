@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Transproc
   Error = Class.new(StandardError)
   FunctionAlreadyRegisteredError = Class.new(Error)

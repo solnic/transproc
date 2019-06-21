@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'transproc/version'
 require 'transproc/function'
 require 'transproc/functions'

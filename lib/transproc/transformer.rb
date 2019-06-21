@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'transproc/transformer/class_interface'
 
 module Transproc

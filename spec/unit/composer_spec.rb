@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Transproc::Composer do
   before do
     module Foo

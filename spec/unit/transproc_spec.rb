@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Transproc do
   describe 'composition' do
     it 'allows composing two transformation functions' do

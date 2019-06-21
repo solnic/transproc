@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Transproc::Function do
   let(:container) do
     Module.new do

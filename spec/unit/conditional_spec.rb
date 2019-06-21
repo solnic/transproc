@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Transproc::Conditional do
   describe '.not' do
     let(:fn) { described_class.t(:not, -> value { value.is_a? String }) }
