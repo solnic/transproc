@@ -2,7 +2,7 @@
 
 module Transproc
   class Transformer
-    # @api private
+    # @api public
     module ClassInterface
       # Return a base Transproc::Transformer class with the
       # container configured to the passed argument.
