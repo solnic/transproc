@@ -42,7 +42,7 @@ describe Transproc::Transformer do
 
         result = klass.to_string
 
-        expect(result).to eql([func])
+        expect(result).to eql(func)
       end
 
       it 'registers a transformation with args' do
@@ -52,7 +52,7 @@ describe Transproc::Transformer do
 
         result = klass.rename_keys(id: :user_id)
 
-        expect(result).to eql([func])
+        expect(result).to eql(func)
       end
 
       it 'registers a transformation with a block' do
@@ -63,7 +63,7 @@ describe Transproc::Transformer do
 
         result = klass.map_array { rename_keys(id: :user_id) }
 
-        expect(result).to eql([func])
+        expect(result).to eql(func)
       end
 
       it 'registers a transformation with args and a block' do
@@ -73,7 +73,7 @@ describe Transproc::Transformer do
 
         result = klass.map_value(:user) { rename_keys(id: :user_id) }
 
-        expect(result).to eql([func])
+        expect(result).to eql(func)
       end
 
       it 'works with #method' do
@@ -81,7 +81,7 @@ describe Transproc::Transformer do
 
         func = klass.t(:to_string)
 
-        expect(klass.method(:to_string).()).to eql([func])
+        expect(klass.method(:to_string).()).to eql(func)
       end
     end
 
