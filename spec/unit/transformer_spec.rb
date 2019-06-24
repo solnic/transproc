@@ -60,9 +60,9 @@ describe Transproc::Transformer do
       expect(subclass.container).to be(superclass.container)
     end
 
-    it 'does not inherit transproc from superclass' do
+    it 'inherits transproc from superclass' do
       expect(superclass.new.call(2)).to be(3)
-      expect(subclass.new.call(2)).to be(4)
+      expect(subclass.new.call(2)).to be(6)
     end
   end
 
@@ -102,7 +102,6 @@ describe Transproc::Transformer do
       end
 
       it "inherits parent's transproc" do
-        pending 'not implemented yet'
         expect(klass[container].transproc).to eql(klass.transproc)
       end
     end
@@ -185,6 +184,7 @@ describe Transproc::Transformer do
         transproc = klass.define do
           map_value :attr, ->(v) { v * 2 }
         end
+
         expect(transproc.call(attr: 2)).to eq(attr: 4)
       end
     end
@@ -246,9 +246,11 @@ describe Transproc::Transformer do
           symbolize_keys
           rename_keys user_name: :name
           nest :address, [:city, :street, :zipcode]
+
           map_value :address do
             constructor_inject Test::Address
           end
+
           constructor_inject Test::User
         end
       end

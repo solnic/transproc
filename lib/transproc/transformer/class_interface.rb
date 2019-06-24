@@ -19,14 +19,20 @@ module Transproc
       #
       # @api public
       def [](container)
-        klass = Class.new(Transformer)
+        klass = Class.new(self)
         klass.container(container)
         klass
       end
 
       # @api private
       def inherited(subclass)
+        super
+
         subclass.container(@container) if defined?(@container)
+
+        if transformations.any?
+          subclass.instance_variable_set('@transformations', transformations.dup)
+        end
       end
 
       # Get or set the container to resolve transprocs from.
@@ -79,7 +85,7 @@ module Transproc
       def define(&block)
         return transproc unless block_given?
 
-        Class.new(self).tap { |klass| klass.instance_eval(&block) }.transproc
+        Class.new(Transformer[container]).tap { |klass| klass.instance_eval(&block) }.transproc
       end
       alias build define
 
