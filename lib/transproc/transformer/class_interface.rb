@@ -2,7 +2,7 @@
 
 module Transproc
   class Transformer
-    # @api private
+    # @api public
     module ClassInterface
       # Return a base Transproc::Transformer class with the
       # container configured to the passed argument.
@@ -19,14 +19,20 @@ module Transproc
       #
       # @api public
       def [](container)
-        klass = Class.new(Transformer)
+        klass = Class.new(self)
         klass.container(container)
         klass
       end
 
       # @api private
       def inherited(subclass)
+        super
+
         subclass.container(@container) if defined?(@container)
+
+        if transformations.any?
+          subclass.instance_variable_set('@transformations', transformations.dup)
+        end
       end
 
       # Get or set the container to resolve transprocs from.
@@ -79,7 +85,7 @@ module Transproc
       def define(&block)
         return transproc unless block_given?
 
-        Class.new(self).tap { |klass| klass.instance_eval(&block) }.transproc
+        Class.new(Transformer[container]).tap { |klass| klass.instance_eval(&block) }.transproc
       end
       alias build define
 
@@ -110,17 +116,15 @@ module Transproc
 
       # @api private
       def method_missing(method, *args, &block)
-        if container.contain?(method)
-          args.push(define(&block)) if block_given?
-          transformations << t(method, *args)
-        else
-          super
-        end
+        super unless container.contain?(method)
+        func = block ? t(method, *args, define(&block)) : t(method, *args)
+        transformations << func
+        func
       end
 
       # @api private
       def respond_to_missing?(method, _include_private = false)
-        container.contain?(method) || super
+        super || container.contain?(method)
       end
 
       # @api private
