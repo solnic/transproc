@@ -9,23 +9,26 @@ describe Transproc::Transformer do
   let(:transformer) { klass.new }
 
   describe '.container' do
-    it { expect(klass.container).to eq container }
+    it 'returns the configured container' do
+      expect(klass.container).to be(container)
+    end
 
     context 'with default transformer' do
-      let(:klass) { described_class }
-
       it 'raises exception because there is no container by default' do
         message = 'Transformer function registry is empty. '\
                   'Provide your registry via Transproc::Transformer[YourRegistry]'
-        expect { klass.container }.to raise_error(ArgumentError, message)
+
+        expect { klass.superclass.container }.to raise_error(ArgumentError, message)
       end
     end
 
     context 'with setter argument' do
-      subject! { klass.container({}) }
+      let(:container) { double(:custom_container) }
 
       it 'sets and returns the container' do
-        expect(klass.container).to eq({})
+        klass.container(container)
+
+        expect(klass.container).to be(container)
       end
     end
   end
@@ -40,11 +43,13 @@ describe Transproc::Transformer do
         end
       end
     end
+
     let(:superclass) do
       Class.new(Transproc::Transformer[container]) do
         arbitrary ->(v) { v + 1 }
       end
     end
+
     let(:subclass) do
       Class.new(superclass) do
         arbitrary ->(v) { v * 2 }
@@ -52,38 +57,54 @@ describe Transproc::Transformer do
     end
 
     it 'inherits container from superclass' do
-      expect(subclass.container).to eq superclass.container
+      expect(subclass.container).to be(superclass.container)
     end
 
     it 'does not inherit transproc from superclass' do
-      expect(superclass.new.call(2)).to eq 3
-      expect(subclass.new.call(2)).to eq 4
+      expect(superclass.new.call(2)).to be(3)
+      expect(subclass.new.call(2)).to be(4)
     end
   end
 
   describe '.[]' do
-    let(:another_container) { double('Transproc') }
-
     subject(:subclass) { klass[another_container] }
 
-    it { expect(subclass.container).to eq(another_container) }
-    it { is_expected.to be_a(::Class) }
-    it { expect(subclass.ancestors).to include(Transproc::Transformer) }
+    let(:another_container) { double('Transproc') }
 
-    it 'does not change super class' do
-      expect(klass.container).to eq(container)
+    it 'sets a container' do
+      expect(subclass.container).to be(another_container)
     end
 
-    context 'with predefined transformer' do
-      let(:klass) do
-        Class.new(Transproc::Transformer) do
-          map_value :attr, t(:to_symbol)
-        end
-      end
+    it 'returns a class' do
+      expect(subclass).to be_a(Class)
+    end
+
+    it 'creates a subclass of Transformer' do
+      expect(subclass).to be < Transproc::Transformer
+    end
+
+    it 'does not change super class' do
+      expect(klass.container).to be(container)
     end
 
     it 'does not inherit transproc' do
       expect(klass[container].transproc).to be_nil
+    end
+
+    context 'with predefined transformer' do
+      let(:klass) do
+        Class.new(Transproc::Transformer[container]) do
+          container.import Transproc::Coercions
+          container.import Transproc::HashTransformations
+
+          map_value :attr, t(:to_symbol)
+        end
+      end
+
+      it "inherits parent's transproc" do
+        pending 'not implemented yet'
+        expect(klass[container].transproc).to eql(klass.transproc)
+      end
     end
   end
 
@@ -99,12 +120,14 @@ describe Transproc::Transformer do
         end
       end
     end
+
     let(:klass) { Transproc::Transformer[container] }
 
     it 'defines anonymous transproc' do
       transproc = klass.define do
         map_value(:attr, t(:to_symbol))
       end
+
       expect(transproc[attr: 'abc']).to eq(attr: :abc)
     end
 
@@ -112,6 +135,7 @@ describe Transproc::Transformer do
       transproc = klass.build do
         map_value(:attr, t(:to_symbol))
       end
+
       expect(transproc[attr: 'abc']).to eq(attr: :abc)
     end
 
@@ -119,6 +143,7 @@ describe Transproc::Transformer do
       klass.define do
         map_value(:attr, :to_sym.to_proc)
       end
+
       expect(klass.transproc).to be_nil
     end
 
@@ -132,12 +157,14 @@ describe Transproc::Transformer do
           end
         end
       end
+
       let(:klass) { described_class[container] }
 
       it 'uses a container from the transformer' do
         transproc = klass.define do
           arbitrary ->(v) { v + 1 }
         end
+
         expect(transproc.call(2)).to eq 3
       end
     end
@@ -164,6 +191,8 @@ describe Transproc::Transformer do
   end
 
   describe '.t' do
+    subject(:klass) { Transproc::Transformer[container] }
+
     let(:container) do
       Module.new do
         extend Transproc::Registry
@@ -177,9 +206,9 @@ describe Transproc::Transformer do
       end
     end
 
-    subject!(:klass) { Transproc::Transformer[container] }
-
-    it { expect(klass.t(:custom, '_bar')).to eq container[:custom, '_bar'] }
+    it 'returns a registed function' do
+      expect(klass.t(:custom, '_bar')).to eql(container[:custom, '_bar'])
+    end
 
     it 'is useful in DSL' do
       transproc = Class.new(klass) do
@@ -224,6 +253,7 @@ describe Transproc::Transformer do
         end
       end
     end
+
     let(:input) do
       [
         { 'user_name' => 'Jane',
@@ -233,7 +263,8 @@ describe Transproc::Transformer do
         }
       ]
     end
-    let(:output) do
+
+    let(:expected_output) do
       [
         Test::User.new(
           name: 'Jane',
@@ -258,28 +289,30 @@ describe Transproc::Transformer do
       end
     end
 
-    subject! { transformer.call(input) }
-
-    it { is_expected.to eq(output) }
+    it "transforms input" do
+      expect(transformer.(input)).to eql(expected_output)
+    end
 
     context 'with custom registry' do
       let(:klass) do
         Class.new(Transproc::Transformer[registry]) do
-          custom ' is awesome'
+          append ' is awesome'
         end
       end
+
       let(:registry) do
         Module.new do
           extend Transproc::Registry
 
-          def self.custom(value, suffix)
+          def self.append(value, suffix)
             value + suffix
           end
         end
       end
-      let(:input) { 'transproc' }
 
-      it { is_expected.to eq('transproc is awesome') }
+      it 'uses custom functions' do
+        expect(transformer.('transproc')).to eql('transproc is awesome')
+      end
     end
   end
 end
