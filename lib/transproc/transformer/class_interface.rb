@@ -124,7 +124,7 @@ module Transproc
 
       # @api private
       def respond_to_missing?(method, _include_private = false)
-        container.contain?(method) || super
+        super || container.contain?(method)
       end
 
       # @api private
