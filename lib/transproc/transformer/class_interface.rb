@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'transproc/compiler'
+
 module Transproc
   class Transformer
     # @api public
@@ -30,9 +32,7 @@ module Transproc
 
         subclass.container(@container) if defined?(@container)
 
-        if transformations.any?
-          subclass.instance_variable_set('@transformations', transformations.dup)
-        end
+        subclass.instance_variable_set('@ast', ast.dup) if ast.any?
       end
 
       # Get or set the container to resolve transprocs from.
@@ -83,11 +83,31 @@ module Transproc
       #
       # @api public
       def define(&block)
-        return transproc unless block_given?
-
-        Class.new(Transformer[container]).tap { |klass| klass.instance_eval(&block) }.transproc
+        Class.new(self[container], &block).transproc
       end
       alias build define
+
+      # @api private
+      def transproc
+        compiler.(ast)
+      end
+
+      # @api public
+      def new
+        super.tap do |transformer|
+          transformer.instance_variable_set('@transproc', compiler(transformer).call(ast))
+        end
+      end
+
+      # @api private
+      def compiler(transformer = nil)
+        Compiler.new(container, transformer)
+      end
+
+      # @api private
+      def node(&block)
+        [:t, Class.new(Transformer[container], &block).ast]
+      end
 
       # Get a transformation from the container,
       # without adding it to the transformation pipeline
@@ -115,11 +135,9 @@ module Transproc
       end
 
       # @api private
-      def method_missing(method, *args, &block)
-        super unless container.contain?(method)
-        func = block ? t(method, *args, define(&block)) : t(method, *args)
-        transformations << func
-        func
+      def method_missing(meth, *args, &block)
+        arg_nodes = *args.map { |a| [:arg, a] }
+        ast << [:fn, (block ? [meth, [*arg_nodes, node(&block)]] : [meth, arg_nodes])]
       end
 
       # @api private
@@ -127,19 +145,14 @@ module Transproc
         super || container.contain?(method)
       end
 
-      # @api private
-      def transproc
-        transformations.reduce(:>>)
-      end
-
-      private
-
       # An array containing the transformation pipeline
       #
       # @api private
-      def transformations
-        @transformations ||= []
+      def ast
+        @ast ||= []
       end
+
+      private
 
       # @api private
       def ensure_container_presence!

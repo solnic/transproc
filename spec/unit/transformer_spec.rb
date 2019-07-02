@@ -33,65 +33,6 @@ describe Transproc::Transformer do
     end
   end
 
-  describe '.method_missing' do
-    context 'when the method name matches a registered function' do
-      it 'registers a transformation without args' do
-        container.import(Transproc::Coercions)
-
-        func = klass.t(:to_string)
-
-        result = klass.to_string
-
-        expect(result).to eql(func)
-      end
-
-      it 'registers a transformation with args' do
-        container.import(Transproc::HashTransformations)
-
-        func = klass.t(:rename_keys, id: :user_id)
-
-        result = klass.rename_keys(id: :user_id)
-
-        expect(result).to eql(func)
-      end
-
-      it 'registers a transformation with a block' do
-        container.import(Transproc::ArrayTransformations)
-        container.import(Transproc::HashTransformations)
-
-        func = klass.t(:map_array, klass.t(:rename_keys, id: :user_id))
-
-        result = klass.map_array { rename_keys(id: :user_id) }
-
-        expect(result).to eql(func)
-      end
-
-      it 'registers a transformation with args and a block' do
-        container.import(Transproc::HashTransformations)
-
-        func = klass.t(:map_value, :user, klass.t(:rename_keys, id: :user_id))
-
-        result = klass.map_value(:user) { rename_keys(id: :user_id) }
-
-        expect(result).to eql(func)
-      end
-
-      it 'works with #method' do
-        container.import(Transproc::Coercions)
-
-        func = klass.t(:to_string)
-
-        expect(klass.method(:to_string).()).to eql(func)
-      end
-    end
-
-    context 'when the method name does not match any registered function' do
-      it 'raises NoMethodError' do
-        expect { klass.not_here }.to raise_error(NoMethodError, /not_here/)
-      end
-    end
-  end
-
   describe 'inheritance' do
     let(:container) do
       Module.new do
@@ -147,7 +88,7 @@ describe Transproc::Transformer do
     end
 
     it 'does not inherit transproc' do
-      expect(klass[container].transproc).to be_nil
+      expect(klass[container].new.transproc).to be_nil
     end
 
     context 'with predefined transformer' do
@@ -161,7 +102,7 @@ describe Transproc::Transformer do
       end
 
       it "inherits parent's transproc" do
-        expect(klass[container].transproc).to eql(klass.transproc)
+        expect(klass[container].new.transproc).to eql(klass.new.transproc)
       end
     end
   end
@@ -202,7 +143,7 @@ describe Transproc::Transformer do
         map_value(:attr, :to_sym.to_proc)
       end
 
-      expect(klass.transproc).to be_nil
+      expect(klass.new.transproc).to be_nil
     end
 
     context 'with custom container' do
@@ -239,12 +180,12 @@ describe Transproc::Transformer do
         expect(transproc.call(attr: 2)).to eq(attr: 3)
       end
 
-      it 'does not inherit transproc from superclass' do
+      it 'inherits transproc from superclass' do
         transproc = klass.define do
           map_value :attr, ->(v) { v * 2 }
         end
 
-        expect(transproc.call(attr: 2)).to eq(attr: 4)
+        expect(transproc.call(attr: 2)).to eq(attr: 6)
       end
     end
   end

@@ -48,6 +48,8 @@ module Transproc
   class Transformer
     extend ClassInterface
 
+    attr_reader :transproc
+
     # Execute the transformation pipeline with the given input.
     #
     # @example
@@ -65,7 +67,7 @@ module Transproc
     #
     # @api public
     def call(input)
-      self.class.transproc.call(input)
+      transproc.call(input)
     end
   end
 end
