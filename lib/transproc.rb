@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'transproc/version'
+require 'transproc/constants'
 require 'transproc/function'
 require 'transproc/functions'
 require 'transproc/composer'
@@ -9,10 +10,6 @@ require 'transproc/store'
 require 'transproc/registry'
 require 'transproc/transformer'
 require 'transproc/support/deprecations'
-
-module Transproc
-  Undefined = Object.new.freeze
-end
 
 require 'transproc/array'
 require 'transproc/hash'
