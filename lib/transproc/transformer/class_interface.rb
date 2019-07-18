@@ -106,15 +106,6 @@ module Transproc
       def t(fn, *args)
         container[fn, *args]
       end
-
-      private
-
-      # @api private
-      def ensure_container_presence!
-        return if defined?(@container)
-        raise ArgumentError, 'Transformer function registry is empty. '\
-                             'Provide your registry via Transproc::Transformer[YourRegistry]'
-      end
     end
   end
 end
