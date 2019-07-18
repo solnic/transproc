@@ -74,9 +74,7 @@ module Transproc
       # @api public
       def new
         super.tap do |transformer|
-          if dsl
-            transformer.instance_variable_set('@transproc', dsl.(transformer))
-          end
+          transformer.instance_variable_set('@transproc', dsl.(transformer)) if dsl
         end
       end
 
