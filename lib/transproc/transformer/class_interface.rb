@@ -5,7 +5,54 @@ require 'transproc/compiler'
 module Transproc
   class Transformer
     # @api public
+    class DSL
+      # @api private
+      attr_reader :container
+
+      # @api private
+      attr_reader :ast
+
+      # @api private
+      def initialize(container, ast: [], &block)
+        @container = container
+        @ast = ast
+        instance_eval(&block) if block
+      end
+
+      # @api private
+      def dup
+        self.class.new(container, ast: ast.dup)
+      end
+
+      # @api private
+      def call(transformer)
+        Compiler.new(container, transformer).(ast)
+      end
+
+      private
+
+      # @api private
+      def node(&block)
+        [:t, self.class.new(container, &block).ast]
+      end
+
+      # @api private
+      def respond_to_missing?(method, _include_private = false)
+        super || container.contain?(method)
+      end
+
+      # @api private
+      def method_missing(meth, *args, &block)
+        arg_nodes = *args.map { |a| [:arg, a] }
+        ast << [:fn, (block ? [meth, [*arg_nodes, node(&block)]] : [meth, arg_nodes])]
+      end
+    end
+
+    # @api public
     module ClassInterface
+      # @api private
+      attr_reader :dsl
+
       # Return a base Transproc::Transformer class with the
       # container configured to the passed argument.
       #
@@ -32,7 +79,7 @@ module Transproc
 
         subclass.container(@container) if defined?(@container)
 
-        subclass.instance_variable_set('@ast', ast.dup) if ast.any?
+        subclass.instance_variable_set('@dsl', dsl.dup) if dsl
       end
 
       # Get or set the container to resolve transprocs from.
@@ -62,51 +109,19 @@ module Transproc
         end
       end
 
-      # Define an anonymous transproc derived from given Transformer
-      # Evaluates block with transformations and returns initialized transproc.
-      # Does not mutate original Transformer
-      #
-      # @example
-      #
-      #   class MyTransformer < Transproc::Transformer[MyContainer]
-      #   end
-      #
-      #   transproc = MyTransformer.define do
-      #     map_values t(:to_string)
-      #   end
-      #   transproc.call(a: 1, b: 2)
-      #   # => {a: '1', b: '2'}
-      #
-      # @yield Block allowing to define transformations. The same as class level DSL
-      #
-      # @return [Function] Composed transproc
-      #
       # @api public
-      def define(&block)
-        Class.new(self[container], &block).transproc
-      end
-      alias build define
-
-      # @api private
-      def transproc
-        compiler.(ast)
+      def define!(&block)
+        @dsl = DSL.new(container, &block)
+        self
       end
 
       # @api public
       def new
         super.tap do |transformer|
-          transformer.instance_variable_set('@transproc', compiler(transformer).call(ast))
+          if dsl
+            transformer.instance_variable_set('@transproc', dsl.(transformer))
+          end
         end
-      end
-
-      # @api private
-      def compiler(transformer = nil)
-        Compiler.new(container, transformer)
-      end
-
-      # @api private
-      def node(&block)
-        [:t, Class.new(Transformer[container], &block).ast]
       end
 
       # Get a transformation from the container,
@@ -132,24 +147,6 @@ module Transproc
       # @api public
       def t(fn, *args)
         container[fn, *args]
-      end
-
-      # @api private
-      def method_missing(meth, *args, &block)
-        arg_nodes = *args.map { |a| [:arg, a] }
-        ast << [:fn, (block ? [meth, [*arg_nodes, node(&block)]] : [meth, arg_nodes])]
-      end
-
-      # @api private
-      def respond_to_missing?(method, _include_private = false)
-        super || container.contain?(method)
-      end
-
-      # An array containing the transformation pipeline
-      #
-      # @api private
-      def ast
-        @ast ||= []
       end
 
       private

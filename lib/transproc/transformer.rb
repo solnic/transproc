@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'transproc/transformer/class_interface'
+require 'transproc/transformer/deprecated/class_interface'
 
 module Transproc
   # Transfomer class for defining transprocs with a class DSL.
@@ -47,6 +48,7 @@ module Transproc
   # @api public
   class Transformer
     extend ClassInterface
+    extend Deprecated::ClassInterface
 
     attr_reader :transproc
 

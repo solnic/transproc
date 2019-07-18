@@ -1,7 +1,9 @@
 RSpec.describe Transproc::Transformer, 'instance methods' do
   subject(:transformer) do
     Class.new(Transproc::Transformer[registry]) do
-      map_array(&:capitalize)
+      define! do
+        map_array(&:capitalize)
+      end
 
       def capitalize(input)
         input.upcase
