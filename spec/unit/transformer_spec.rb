@@ -13,15 +13,6 @@ describe Transproc::Transformer do
       expect(klass.container).to be(container)
     end
 
-    context 'with default transformer' do
-      it 'raises exception because there is no container by default' do
-        message = 'Transformer function registry is empty. '\
-                  'Provide your registry via Transproc::Transformer[YourRegistry]'
-
-        expect { klass.superclass.container }.to raise_error(ArgumentError, message)
-      end
-    end
-
     context 'with setter argument' do
       let(:container) { double(:custom_container) }
 

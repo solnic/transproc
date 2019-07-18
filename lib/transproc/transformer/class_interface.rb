@@ -56,13 +56,17 @@ module Transproc
       # @return [Transproc::Registry]
       #
       # @api private
-      def container(container = ::Transproc::Undefined)
-        if container == ::Transproc::Undefined
-          ensure_container_presence!
-          @container
+      def container(container = Undefined)
+        if container.equal?(Undefined)
+          @container ||= Module.new.extend(Transproc::Registry)
         else
           @container = container
         end
+      end
+
+      # @api public
+      def import(*args)
+        container.import(*args)
       end
 
       # @api public
@@ -101,15 +105,6 @@ module Transproc
       # @api public
       def t(fn, *args)
         container[fn, *args]
-      end
-
-      private
-
-      # @api private
-      def ensure_container_presence!
-        return if defined?(@container)
-        raise ArgumentError, 'Transformer function registry is empty. '\
-                             'Provide your registry via Transproc::Transformer[YourRegistry]'
       end
     end
   end
