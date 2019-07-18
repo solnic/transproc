@@ -8,18 +8,26 @@ describe Transproc::Transformer do
   let(:klass) { Transproc::Transformer[container] }
   let(:transformer) { klass.new }
 
+  describe '.import' do
+    it 'allows importing functions into an auto-configured registry' do
+      klass = Class.new(Transproc::Transformer) do
+        import Transproc::ArrayTransformations
+        import Transproc::Coercions
+
+        define! do
+          map_array(&:to_symbol)
+        end
+      end
+
+      transformer = klass.new
+
+      expect(transformer.(['foo', 'bar'])).to eql([:foo, :bar])
+    end
+  end
+
   describe '.container' do
     it 'returns the configured container' do
       expect(klass.container).to be(container)
-    end
-
-    context 'with default transformer' do
-      it 'raises exception because there is no container by default' do
-        message = 'Transformer function registry is empty. '\
-                  'Provide your registry via Transproc::Transformer[YourRegistry]'
-
-        expect { klass.superclass.container }.to raise_error(ArgumentError, message)
-      end
     end
 
     context 'with setter argument' do

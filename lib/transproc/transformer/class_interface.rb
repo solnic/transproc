@@ -56,13 +56,17 @@ module Transproc
       # @return [Transproc::Registry]
       #
       # @api private
-      def container(container = ::Transproc::Undefined)
-        if container == ::Transproc::Undefined
-          ensure_container_presence!
-          @container
+      def container(container = Undefined)
+        if container.equal?(Undefined)
+          @container ||= Module.new.extend(Transproc::Registry)
         else
           @container = container
         end
+      end
+
+      # @api public
+      def import(*args)
+        container.import(*args)
       end
 
       # @api public
