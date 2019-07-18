@@ -13,12 +13,11 @@ if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   end
 end
 
-require 'transproc/all'
-
 begin
   require 'byebug'
-rescue LoadError
-end
+rescue LoadError;end
+
+require 'transproc/all'
 
 root = Pathname(__FILE__).dirname
 Dir[root.join('support/*.rb').to_s].each { |f| require f }
