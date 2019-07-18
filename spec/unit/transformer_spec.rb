@@ -229,6 +229,28 @@ describe Transproc::Transformer do
     end
   end
 
+  describe '.method_missing' do
+    it 'responds to missing when there is a corresponding function' do
+      container.import Transproc::HashTransformations
+
+      expect(klass.method(:map_values)).to be_a(Method)
+    end
+
+    it 'responds to missing when there is a corresponding instance method' do
+      pending
+
+      klass.define_method(:map_values) {}
+
+      expect(klass.method(:map_values)).to be_a(Method)
+    end
+
+    it 'raises when there is no corresponding function or instance method' do
+      pending
+
+      expect { klass.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
+
   describe '#call' do
     let(:container) do
       Module.new do
