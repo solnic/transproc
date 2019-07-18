@@ -1,3 +1,15 @@
+# v1.1.0 2019-07-18
+
+This is the last transproc release before the project will be forked to `dry-transformer`.
+
+## Added
+
+* New DSL for defining transformers using `define!` method, which now supports instance methods as transformation functions (@solnic)
+* Simplified transformer class definition - registry is auto-configured and you can use `import` at the transformer class level (@solnic)
+* New `HashTransformation.deep_stringify_keys` function
+
+[Compare v1.0.3...v1.1.0](https://github.com/solnic/transproc/compare/v1.0.3...v1.1.0)
+
 # v1.0.3 2018-12-01
 
 ## Changed
