@@ -102,6 +102,35 @@ module Transproc
       map_keys(hash, Coercions[:to_string].fn)
     end
 
+    # Stringify keys in a hash recursively
+    #
+    # @example
+    #   input = { :foo => "bar", :baz => [{ :one => 1 }] }
+    #
+    #   t(:deep_stringify_keys)[input]
+    #   # => { "foo" => "bar", "baz" => [{ "one" => 1 }] }
+    #
+    # @param [Hash]
+    #
+    # @return [Hash]
+    #
+    # @api public
+    def self.deep_stringify_keys(hash)
+      hash.each_with_object({}) do |(key, value), output|
+        output[key.to_s] =
+          case value
+          when Hash
+            deep_stringify_keys(value)
+          when Array
+            value.map { |item|
+              item.is_a?(Hash) ? deep_stringify_keys(item) : item
+            }
+          else
+            value
+          end
+      end
+    end
+
     if RUBY_VERSION >= '2.4'
       # Map all values in a hash using transformation function
       #
