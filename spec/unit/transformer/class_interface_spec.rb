@@ -79,13 +79,17 @@ describe Transproc::Transformer do
 
     let(:superclass) do
       Class.new(Transproc::Transformer[container]) do
-        arbitrary ->(v) { v + 1 }
+        define! do
+          arbitrary ->(v) { v + 1 }
+        end
       end
     end
 
     let(:subclass) do
       Class.new(superclass) do
-        arbitrary ->(v) { v * 2 }
+        define! do
+          arbitrary ->(v) { v * 2 }
+        end
       end
     end
 

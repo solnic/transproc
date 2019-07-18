@@ -71,7 +71,8 @@ module Transproc
 
       # @api public
       def define!(&block)
-        @dsl = DSL.new(container, &block)
+        @dsl ||= DSL.new(container)
+        @dsl.instance_eval(&block)
         self
       end
 
