@@ -76,8 +76,8 @@ module Transproc
       end
 
       # @api public
-      def new
-        super.tap do |transformer|
+      def new(*args)
+        super(*args).tap do |transformer|
           transformer.instance_variable_set('@transproc', dsl.(transformer)) if dsl
         end
       end

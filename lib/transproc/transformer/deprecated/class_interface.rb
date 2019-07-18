@@ -6,10 +6,10 @@ module Transproc
       # @api public
       module ClassInterface
         # @api public
-        def new
-          transformer = super
-          transformer.instance_variable_set('@transproc', transproc) if transformations.any?
-          transformer
+        def new(*args)
+          super(*args).tap do |transformer|
+            transformer.instance_variable_set('@transproc', transproc) if transformations.any?
+          end
         end
 
         # @api private

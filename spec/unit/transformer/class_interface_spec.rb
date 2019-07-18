@@ -25,6 +25,31 @@ describe Transproc::Transformer do
     end
   end
 
+  describe '.new' do
+    it 'supports arguments' do
+      klass = Class.new(Transproc::Transformer) do
+        import Transproc::ArrayTransformations
+        import Transproc::Coercions
+
+        define! do
+          map_array(&:to_symbol)
+        end
+
+        def initialize(good)
+          @good = good
+        end
+
+        def good?
+          @good
+        end
+      end
+
+      transformer = klass.new(true)
+
+      expect(transformer).to be_good
+    end
+  end
+
   describe '.container' do
     it 'returns the configured container' do
       expect(klass.container).to be(container)
