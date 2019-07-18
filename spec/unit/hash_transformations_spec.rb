@@ -50,6 +50,17 @@ describe Transproc::HashTransformations do
     end
   end
 
+  describe '.deep_stringify_keys' do
+    it 'returns a new hash with symbolized keys' do
+      stringify_keys = described_class.t(:deep_stringify_keys)
+
+      input = { foo: 'bar', baz: [{ one: 1 }, 'two'] }
+      output = { 'foo' => 'bar', 'baz' => [{ 'one' => 1 }, 'two'] }
+
+      expect(stringify_keys[input]).to eql(output)
+    end
+  end
+
   it { expect(described_class).not_to be_contain(:stringify_keys!) }
 
   describe '.map_values' do
