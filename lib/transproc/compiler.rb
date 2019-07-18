@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Transproc
   # @api private
   class Compiler
