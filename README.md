@@ -2,7 +2,7 @@
 [travis]: https://travis-ci.org/solnic/transproc
 [codeclimate]: https://codeclimate.com/github/solnic/transproc
 [coveralls]: https://coveralls.io/r/solnic/transproc
-[inchpages]: http://inch-ci.org/github/solnic/transproc
+[inchpages]: https://inch-ci.org/github/solnic/transproc
 
 # Transproc
 
@@ -10,7 +10,7 @@
 [![Build Status](https://travis-ci.org/solnic/transproc.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/solnic/transproc/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/solnic/transproc/badges/coverage.svg)][codeclimate]
-[![Inline docs](http://inch-ci.org/github/solnic/transproc.svg?branch=master)][inchpages]
+[![Inline docs](https://inch-ci.org/github/solnic/transproc.svg?branch=master)][inchpages]
 
 Transproc is a small library that allows you to compose procs into a functional pipeline using left-to-right function composition.
 
@@ -20,7 +20,7 @@ or `>>` in F#.
 `transproc` provides a mechanism to define and compose transformations,
 along with a number of built-in transformations.
 
-It's currently used as the data mapping backend in [Ruby Object Mapper](http://rom-rb.org).
+It's currently used as the data mapping backend in [Ruby Object Mapper](https://rom-rb.org).
 
 ## Installation
 
@@ -92,13 +92,13 @@ M[:map_array, M[:to_string]].([1, 2, 3]) # => ['1', '2', '3']
 `transproc` comes with a lot of built-in functions. They come in the form of
 modules with class methods, which you can import into a registry:
 
-* [Coercions](http://www.rubydoc.info/gems/transproc/Transproc/Coercions)
-* [Array transformations](http://www.rubydoc.info/gems/transproc/Transproc/ArrayTransformations)
-* [Hash transformations](http://www.rubydoc.info/gems/transproc/Transproc/HashTransformations)
-* [Class transformations](http://www.rubydoc.info/gems/transproc/Transproc/ClassTransformations)
-* [Proc transformations](http://www.rubydoc.info/gems/transproc/Transproc/ProcTransformations)
-* [Conditional](http://www.rubydoc.info/gems/transproc/Transproc/Conditional)
-* [Recursion](http://www.rubydoc.info/gems/transproc/Transproc/Recursion)
+* [Coercions](https://www.rubydoc.info/gems/transproc/Transproc/Coercions)
+* [Array transformations](https://www.rubydoc.info/gems/transproc/Transproc/ArrayTransformations)
+* [Hash transformations](https://www.rubydoc.info/gems/transproc/Transproc/HashTransformations)
+* [Class transformations](https://www.rubydoc.info/gems/transproc/Transproc/ClassTransformations)
+* [Proc transformations](https://www.rubydoc.info/gems/transproc/Transproc/ProcTransformations)
+* [Conditional](https://www.rubydoc.info/gems/transproc/Transproc/Conditional)
+* [Recursion](https://www.rubydoc.info/gems/transproc/Transproc/Recursion)
 
 You can import everything with:
 
@@ -235,7 +235,7 @@ transformation.call('[{"name":"Jane"}]')
 
 ## Credits
 
-This project is inspired by the work of following people:
+This project is inspired by the work of the following people:
 
 * [Markus Schirp](https://github.com/mbj) and [morpher](https://github.com/mbj/morpher) project
 * [Josep M. Bach](https://github.com/txus) and [kleisli](https://github.com/txus/kleisli) project
