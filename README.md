@@ -51,7 +51,7 @@ It's easy to compose transformations:
 
 ```ruby
 to_string = Transproc::Function.new(:to_s.to_proc)
-(increment >> to_string)[1] => '2'
+(increment >> to_string)[1] # => '2'
 ```
 
 It's easy to pass additional arguments to transformations:
