@@ -1,3 +1,11 @@
+# v1.1.1 2019-12-21
+
+## Fixed
+
+- Keyword warnings on Ruby 2.7 (flash-gordon)
+
+[Compare v1.1.0...v1.1.1](https://github.com/solnic/transproc/compare/v1.1.0...v1.1.1)
+
 # v1.1.0 2019-07-18
 
 This is the last transproc release before the project will be forked to `dry-transformer`.
