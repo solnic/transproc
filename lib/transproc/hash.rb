@@ -19,6 +19,8 @@ module Transproc
   module HashTransformations
     extend Registry
 
+    EMPTY_HASH =  {}.freeze
+
     if RUBY_VERSION >= '2.5'
       # Map all keys in a hash with the provided transformation function
       #
@@ -296,8 +298,9 @@ module Transproc
     # @return [Hash]
     #
     # @api public
-    def self.unwrap(source_hash, root, selected = nil, prefix: false)
+    def self.unwrap(source_hash, root, selected = nil, options = EMPTY_HASH)
       return source_hash unless source_hash[root]
+      options, selected = selected, nil if options.empty? && selected.is_a?(::Hash)
 
       add_prefix = ->(key) do
         combined = [root, key].join('_')
@@ -308,7 +311,7 @@ module Transproc
         nested_hash = hash[root]
         keys = nested_hash.keys
         keys &= selected if selected
-        new_keys = prefix ? keys.map(&add_prefix) : keys
+        new_keys = options[:prefix] ? keys.map(&add_prefix) : keys
 
         hash.update(Hash[new_keys.zip(keys.map { |key| nested_hash.delete(key) })])
         hash.delete(root) if nested_hash.empty?

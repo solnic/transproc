@@ -13,6 +13,12 @@ if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   end
 end
 
+if defined? Warning
+  require 'warning'
+
+  Warning.process { |w| raise RuntimeError, w } unless ENV['NO_WARNING']
+end
+
 begin
   require 'byebug'
 rescue LoadError;end

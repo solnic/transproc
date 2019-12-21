@@ -14,3 +14,7 @@ group :tools do
   gem 'byebug', platform: :mri
   gem 'benchmark-ips'
 end
+
+group :test do
+  gem 'warning' if defined? Warning
+end
