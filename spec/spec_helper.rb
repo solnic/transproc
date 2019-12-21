@@ -16,6 +16,7 @@ end
 if defined? Warning
   require 'warning'
 
+  Warning.ignore(/rspec/)
   Warning.process { |w| raise RuntimeError, w } unless ENV['NO_WARNING']
 end
 
