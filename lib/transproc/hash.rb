@@ -19,7 +19,7 @@ module Transproc
   module HashTransformations
     extend Registry
 
-    EMPTY_HASH =  {}.freeze
+    EMPTY_HASH = {}.freeze
 
     if RUBY_VERSION >= '2.5'
       # Map all keys in a hash with the provided transformation function

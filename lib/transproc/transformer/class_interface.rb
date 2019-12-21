@@ -77,11 +77,12 @@ module Transproc
       end
 
       # @api public
-      def new(*args)
-        super(*args).tap do |transformer|
+      def new(*)
+        super.tap do |transformer|
           transformer.instance_variable_set('@transproc', dsl.(transformer)) if dsl
         end
       end
+      ruby2_keywords(:new) if respond_to?(:ruby2_keywords, true)
 
       # Get a transformation from the container,
       # without adding it to the transformation pipeline

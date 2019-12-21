@@ -6,11 +6,12 @@ module Transproc
       # @api public
       module ClassInterface
         # @api public
-        def new(*args)
-          super(*args).tap do |transformer|
+        def new(*)
+          super.tap do |transformer|
             transformer.instance_variable_set('@transproc', transproc) if transformations.any?
           end
         end
+        ruby2_keywords(:new) if respond_to?(:ruby2_keywords, true)
 
         # @api private
         def inherited(subclass)
