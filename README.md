@@ -1,3 +1,5 @@
+# :warning: The project was ported to [dry-rb/dry-transformer](https://github.com/dry-rb/dry-transformer) :warning:
+
 [gem]: https://rubygems.org/gems/transproc
 [travis]: https://travis-ci.org/solnic/transproc
 [codeclimate]: https://codeclimate.com/github/solnic/transproc
